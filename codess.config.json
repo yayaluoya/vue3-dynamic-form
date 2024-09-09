@@ -1,0 +1,10 @@
+{
+    "dependent": [
+        {
+            "package": "file:codess",
+            "prefix": ""
+        }
+    ],
+    "installRecord": {},
+    "document": "https://www.npmjs.com/package/codess"
+}

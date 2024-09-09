@@ -1,0 +1,1 @@
+{"version":3,"file":"SingleDependence.d.ts","sourceRoot":"","sources":["../src/SingleDependence.ts"],"names":[],"mappings":"AAAA;;;GAGG;AACH,qBAAa,gBAAgB;IAC3B,OAAO,CAAC,MAAM,CAAC,OAAO,CAAa;IAEnC;;;;OAIG;IACH,MAAM,CAAC,GAAG,CAAC,GAAG,EAAE,GAAG,EAAE,KAAK,EAAE,GAAG;IAI/B;;;;OAIG;IACH,MAAM,CAAC,GAAG,CAAC,CAAC,EAAE,GAAG,EAAE,GAAG,GAAG,CAAC;CAG3B"}

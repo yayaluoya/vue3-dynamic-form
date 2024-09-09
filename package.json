@@ -6,16 +6,23 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "codess": "codess b"
   },
   "dependencies": {
+    "color": "^4.2.3",
+    "element-plus": "^2.8.2",
+    "nanoid": "^5.0.7",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.3.3",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
+    "codess": "^1.1.5",
+    "sass-embedded": "^1.78.0",
     "vite": "^5.3.1"
   }
 }

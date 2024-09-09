@@ -1,0 +1,1 @@
+{"version":3,"file":"WindowSizeChangeE.d.ts","sourceRoot":"","sources":["../../../src/web/event/WindowSizeChangeE.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,iBAAiB,CAAC;AAG5C;;GAEG;AACH,qBACa,iBAAkB,SAAQ,SAAS,CAAC,QAAQ,CAAC;IACxD,SAAS;IACT,MAAM,CAAC,QAAQ,CAAC,QAAQ,EAAE,iBAAiB,CAAC;IAC5C,MAAM,CAAC,QAAQ,CAAC,CAAC,EAAE,iBAAiB,CAAC;;CAQtC"}
