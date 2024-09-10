@@ -85,9 +85,6 @@ export default defineComponent({
         display: flex !important;
       }
     }
-    &:hover {
-      background-color: #eff2f5;
-    }
     > .drag-handler,
     > .handler-button {
       padding: 2px 3px;

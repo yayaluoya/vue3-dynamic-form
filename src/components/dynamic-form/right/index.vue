@@ -18,15 +18,20 @@ export default defineComponent({
     },
   },
   setup(props, ctx) {
+    const activeName = ref("con");
     return () => {
       return (
         <div class="right">
-          {props.activateCon?.renderRight({
-            ctx,
-            formConfig: props.formConfig,
-            cons: props.cons,
-            activateCon: props.activateCon,
-          })}
+          <el-tabs
+            model-value={activeName.value}
+            onTabChange={(v) => {
+              activeName.value = v;
+            }}
+          >
+            <el-tab-pane label="组件设置" name="con"></el-tab-pane>
+            <el-tab-pane label="表单设置" name="form"></el-tab-pane>
+          </el-tabs>
+          <el-scrollbar wrap-class="scrollbar-wrapper"></el-scrollbar>
         </div>
       );
     };
@@ -35,23 +40,18 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.right:deep {
+.right {
   width: 100%;
   display: flex;
   flex-direction: column;
-  > .item {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    > span {
-      font-size: 15px;
-      color: #818194;
-      margin-bottom: 5px;
+  > .el-tabs {
+    width: 100%;
+    ::v-deep .el-tabs__header {
+      margin-bottom: 0;
     }
   }
-  > .item:nth-last-child(1) {
-    margin-bottom: 0;
+  > .el-scrollbar {
+    height: calc(var(--height) - 40px);
   }
 }
 </style>

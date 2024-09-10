@@ -6,7 +6,7 @@ import { DocumentCopy } from "@element-plus/icons-vue";
 import Right from "./right/index.vue";
 import Item from "./item.vue";
 import { WindowSizeChangeE } from "./tool/web/event/WindowSizeChangeE";
-import { Button, Test } from "./controls";
+import { Button } from "./controls";
 import { BaseCon } from "./controls/BaseCon.jsx";
 import { ArrayUtils } from "./tool/ArrayUtils";
 
@@ -17,6 +17,10 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    extendCons: {
+      type: Array,
+      default: () => [],
+    },
     formConfig: {
       type: Object,
       required: true,
@@ -24,23 +28,31 @@ export default defineComponent({
   },
   emits: ["update:cons"],
   setup(props, ctx) {
-    const contentElRef = ref();
+    const rootElRef = ref();
     const bScrollbarRef = ref();
+    const leftTabsActiveNames = ref("con");
     /** 拖拽中 */
     const draggableLoading = ref(false);
     /** 控件列表 */
     const Cons = reactive([
       {
-        launch: true,
         label: "基础类型",
         cons: [Button],
       },
       {
-        launch: true,
-        label: "其它类型",
-        cons: [Test],
+        label: "高级类型",
+        cons: [],
+      },
+      {
+        label: "容器类型",
+        cons: [],
+      },
+      {
+        label: "扩展类型",
+        cons: props.extendCons,
       },
     ]);
+    const ConsCollapseActiveNames = ref(Cons.map((_) => _.label));
 
     /** 当前激活的控件 */
     const activateCon = ref(null);
@@ -81,6 +93,11 @@ export default defineComponent({
       }
     }
 
+    /** 清除 */
+    function clear() {
+      ctx.emit("update:cons", []);
+    }
+
     /** 移动控件 */
     function moveF(con, type) {
       BaseCon.moveCon(props.cons, con, type);
@@ -98,9 +115,8 @@ export default defineComponent({
     }
 
     function getContentHeight() {
-      let contentHeight = contentElRef.value.getBoundingClientRect().height;
-      let el = contentElRef.value.querySelector(".dynamic-form-draggable");
-      el.style.setProperty("min-height", `${contentHeight - 11}px`);
+      let rootHeight = rootElRef.value.getBoundingClientRect().height;
+      rootElRef.value.style.setProperty("--height", `${rootHeight}px`);
     }
     onMounted(() => {
       getContentHeight();
@@ -111,8 +127,10 @@ export default defineComponent({
     });
 
     return {
-      contentElRef,
+      rootElRef,
       bScrollbarRef,
+      leftTabsActiveNames,
+      ConsCollapseActiveNames,
       draggableLoading,
       draggableC,
       Cons,
@@ -122,68 +140,94 @@ export default defineComponent({
       removeF,
       moveF,
       mouseOn,
+      positionToOnCon,
+      clear,
     };
   },
 });
 </script>
 
 <template>
-  <div class="dynamic-form">
+  <div class="dynamic-form" ref="rootElRef">
     <div class="a">
-      <el-scrollbar wrap-class="scrollbar-wrapper">
-        <div class="content__">
-          <template v-for="(item, index) in Cons" :key="index">
-            <div class="tab" @click="item.launch = !item.launch">
-              <span>{{ item.label }}</span>
-            </div>
-            <div
-              class="list"
-              :class="{
-                hide: !item.launch,
-              }"
-            >
-              <Draggable
-                :class="draggableC.class"
-                :list="item.cons"
-                :group="{ name: draggableC.group, pull: 'clone', put: false }"
-                :clone="cloneComponent"
-                :sort="false"
-                @start="draggableLoading = true"
-                @end="draggableLoading = false"
-                item-key="type"
-              >
-                <template #item="{ element: Con }">
-                  <div
-                    class="draggable-item"
-                    :class="{
-                      on: Con.ConType === activateCon?.conType,
+      <el-tabs v-model="leftTabsActiveNames">
+        <el-tab-pane label="组件库" name="con">
+          <el-scrollbar wrap-class="scrollbar-wrapper">
+            <div class="content__">
+              <el-collapse v-model="ConsCollapseActiveNames">
+                <el-collapse-item
+                  v-for="(item, index) in Cons"
+                  :key="index"
+                  :title="item.label"
+                  :name="item.label"
+                >
+                  <Draggable
+                    :class="draggableC.class"
+                    :list="item.cons"
+                    :group="{
+                      name: draggableC.group,
+                      pull: 'clone',
+                      put: false,
                     }"
+                    :clone="cloneComponent"
+                    :sort="false"
+                    @start="draggableLoading = true"
+                    @end="draggableLoading = false"
+                    item-key="type"
                   >
-                    <span>{{ Con.ConName }}</span>
-                    <div class="draggable-show-item">
-                      <Item
-                        drag
-                        :formConfig="formConfig"
-                        :cons="cons"
-                        :con="Con.I"
-                      />
-                    </div>
-                  </div>
-                </template>
-              </Draggable>
+                    <template #item="{ element: Con }">
+                      <div
+                        class="draggable-item"
+                        :class="{
+                          on: Con.ConType === activateCon?.conType,
+                        }"
+                      >
+                        <span>{{ Con.ConName }}</span>
+                        <div class="draggable-show-item">
+                          <Item
+                            drag
+                            :formConfig="formConfig"
+                            :cons="cons"
+                            :con="Con.I"
+                          />
+                        </div>
+                      </div>
+                    </template>
+                  </Draggable>
+                </el-collapse-item>
+              </el-collapse>
             </div>
-          </template>
-        </div>
-      </el-scrollbar>
+          </el-scrollbar>
+        </el-tab-pane>
+        <el-tab-pane label="表单模板" name="template"></el-tab-pane>
+      </el-tabs>
     </div>
     <div class="b">
+      <div class="top">
+        <div></div>
+        <div>
+          <el-button
+            style="margin-right: 10px"
+            type="primary"
+            link
+            @click="clear()"
+          >
+            清空
+          </el-button>
+          <el-icon @click="positionToOnCon()"><Aim /></el-icon>
+        </div>
+      </div>
       <div
         class="content"
-        ref="contentElRef"
+        :class="{
+          draggableLoading: draggableLoading,
+        }"
         @mouseover="mouseOn = true"
         @mouseleave="mouseOn = false"
       >
-        <span class="null" v-if="cons.length <= 0">拖到这里来</span>
+        <span class="null" v-if="cons.length <= 0"
+          >请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</span
+        >
         <el-scrollbar wrap-class="scrollbar-wrapper" ref="bScrollbarRef">
           <div class="content__">
             <Draggable
@@ -207,6 +251,7 @@ export default defineComponent({
             >
               <template #item="{ element: con }">
                 <Item
+                  :data-key="con.key"
                   :formConfig="formConfig"
                   :cons="cons"
                   :con="con"
@@ -233,52 +278,46 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .dynamic-form {
+  --height: 0;
   width: 100%;
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
-  padding: 10px;
 
   > .a,
   > .b,
   > .c {
     box-sizing: border-box;
     background: #ffffff;
+    height: var(--height);
   }
 
   > .a {
     width: 260px;
     box-sizing: border-box;
     display: flex;
-    margin-right: 10px;
-    > .el-scrollbar {
+    > .el-tabs {
       width: 100%;
-      .content__ {
-        display: flex;
-        flex-direction: column;
-        > .tab {
+      ::v-deep .el-tabs__header {
+        margin-bottom: 0;
+      }
+      ::v-deep .el-tabs__nav-scroll {
+        padding: 0 10px;
+      }
+      .el-scrollbar {
+        width: 100%;
+        height: calc(var(--height) - 40px);
+        .content__ {
           display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 5px;
-          cursor: pointer;
-          > span {
-            font-family: "Source Han Sans CN";
-            font-style: normal;
-            font-weight: 400;
-            font-size: 13px;
-            line-height: 20px;
-            /* identical to box height */
-            color: #818194;
+          flex-direction: column;
+          padding: 0 10px;
+          ::v-deep .el-collapse-item__header {
+            font-weight: bold;
           }
-        }
-        > .list {
-          margin-bottom: 12px;
-          &.hide {
-            display: none !important;
+          ::v-deep .el-collapse-item__content {
+            padding-bottom: 10px;
           }
-          > .dynamic-form-draggable {
+          .dynamic-form-draggable {
             width: 100%;
             display: flex;
             flex-direction: row;
@@ -318,9 +357,9 @@ export default defineComponent({
               }
             }
           }
-        }
-        > .list:nth-last-child(1) {
-          margin-bottom: 0px;
+          > .list:nth-last-child(1) {
+            margin-bottom: 0px;
+          }
         }
       }
     }
@@ -330,36 +369,68 @@ export default defineComponent({
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
+    > .top {
+      height: 40px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      box-sizing: border-box;
+      > div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      > div:nth-child(1) {
+      }
+      > div:nth-child(2) {
+        > .el-icon {
+          cursor: pointer;
+        }
+      }
+    }
     > .content {
       width: 100%;
-      height: 100%;
+      height: calc(var(--height) - 40px);
       display: flex;
       flex-direction: column;
-      flex: 1 1 0;
-      border: 1px dashed rgb(122 122 134 / 50%);
       position: relative;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
+      &.draggableLoading {
+        .dynamic-form-draggable {
+          box-shadow: 0px 0px 4px #409eff;
+        }
+      }
       > .null {
         position: absolute;
-        color: gray;
-        font-size: 16px;
+        color: #999;
+        font-size: 18px;
         pointer-events: none;
+        z-index: 2;
       }
       > .el-scrollbar {
         width: 100%;
+        position: relative;
+        z-index: 1;
+        background-color: #f3f3f3;
+        box-sizing: border-box;
         .content__ {
           width: 100%;
           box-sizing: border-box;
-          padding: 5px;
           position: relative;
           display: flex;
           flex-direction: row;
           align-items: center;
           justify-content: center;
+          padding: 10px;
           > .dynamic-form-draggable {
+            padding: 5px;
+            background-color: white;
             width: 100%;
+            min-height: calc(var(--height) - 40px - 20px);
             display: flex;
             flex-direction: column;
             ::v-deep > .draggable-item {
@@ -373,7 +444,6 @@ export default defineComponent({
     }
   }
   > .c {
-    margin-left: 10px;
     width: 280px;
     box-sizing: border-box;
     display: flex;

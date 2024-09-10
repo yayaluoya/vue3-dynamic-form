@@ -9,6 +9,7 @@ export default defineComponent({
   components: { DynamicForm },
   setup() {
     let cons = ref([]);
+    let extendCons = ref([Test]);
     let formConfig = ref(getFormConfig());
     console.log(
       ConT.toCons(JSON.parse(ConT.toConfigs([new Button(), new Test()])))
@@ -16,6 +17,7 @@ export default defineComponent({
     return {
       cons,
       formConfig,
+      extendCons,
     };
   },
 });
@@ -25,6 +27,7 @@ export default defineComponent({
   <div class="home">
     <DynamicForm
       :cons="cons"
+      :extendCons="extendCons"
       :formConfig="formConfig"
       @update:cons="
         (v) => {
