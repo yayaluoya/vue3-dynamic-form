@@ -2,7 +2,6 @@ import { customAlphabet } from "nanoid";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import { getFormConfig } from "../config/getFormConfig";
 import { FontStyle } from "../com/FontStyle";
-import { ArrayUtils } from "../tool/ArrayUtils";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 21);
@@ -122,16 +121,6 @@ export class BaseCon {
     return this.childs;
   }
 
-  /**
-   * 删除子元素
-   * @param {BaseCon} con
-   */
-  removeChild(con) {
-    let childs = [...this.childs];
-    ArrayUtils.eliminate(childs, (_) => _.key == con.key);
-    childs.forEach((_) => _.removeChild(con));
-  }
-
   /** 是否必填字段 */
   getRequired() {
     return this.formItemProps.required;
@@ -214,7 +203,8 @@ export class BaseCon {
               "controller",
               activateCon?.key == this.key ? "on" : "",
             ].join(" ")}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               ctx.emit("activateConF", this);
             }}
           >

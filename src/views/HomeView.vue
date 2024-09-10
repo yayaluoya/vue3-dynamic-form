@@ -12,6 +12,7 @@ export default defineComponent({
     let extendCons = ref([Test]);
     let formConfig = ref(getFormConfig());
     console.log(
+      "转换",
       ConT.toCons(JSON.parse(ConT.toConfigs([new Button(), new Test()])))
     );
     return {

@@ -1,17 +1,16 @@
 <script>
 import { ref, reactive, defineComponent, onMounted, onUnmounted } from "vue";
-import Draggable from "vuedraggable";
 import draggableC from "./config/draggableC";
 import { DocumentCopy } from "@element-plus/icons-vue";
 import Right from "./right/index.vue";
-import Item from "./item.vue";
+import Item from "./com/item.vue";
 import { WindowSizeChangeE } from "./tool/web/event/WindowSizeChangeE";
-import { Button, Grid, Card, LabelPage, Table } from "./controls";
-import { BaseCon } from "./controls/BaseCon.jsx";
-import { ArrayUtils } from "./tool/ArrayUtils";
+import { Button, Subfield, Card, LabelPage, Table } from "./controls";
+import Draggable from "vuedraggable";
+import DraggableCon from "./com/draggable.vue";
 
 export default defineComponent({
-  components: { Draggable, Item, Right, DocumentCopy },
+  components: { Draggable, DraggableCon, Item, Right, DocumentCopy },
   props: {
     cons: {
       type: Array,
@@ -45,7 +44,7 @@ export default defineComponent({
       },
       {
         label: "容器类型",
-        cons: [Grid, Table, LabelPage, Card],
+        cons: [Subfield, Table, LabelPage, Card],
       },
       {
         label: "扩展类型",
@@ -79,39 +78,14 @@ export default defineComponent({
       }, 0);
     }
 
-    /** 删除控件 */
-    function removeF(con) {
-      /** @type {BaseCon[]} */
-      const list = [...props.cons];
-      ArrayUtils.eliminate(list, (_) => _.key == con.key);
-      list.forEach((_) => {
-        _.removeChild(con);
-      });
-      ctx.emit("update:cons", list);
-      if (activateCon.value?.key == con.key) {
-        activateCon.value = null;
-      }
-    }
-
-    /** 清除 */
-    function clear() {
-      ctx.emit("update:cons", []);
-    }
-
-    /** 移动控件 */
-    function moveF(con, type) {
-      BaseCon.moveCon(props.cons, con, type);
-      ctx.emit("update:cons", [...props.cons]);
+    /** 更新控件列表 */
+    function updateCons(cons) {
+      ctx.emit("update:cons", cons);
     }
 
     /** 克隆组件 */
     function cloneComponent(Con) {
       return new Con();
-    }
-
-    /** 拖拽改变 */
-    function draggableChange(list) {
-      ctx.emit("update:cons", [...list]);
     }
 
     function getContentHeight() {
@@ -134,14 +108,11 @@ export default defineComponent({
       draggableLoading,
       draggableC,
       Cons,
-      cloneComponent,
-      draggableChange,
       activateCon,
-      removeF,
-      moveF,
       mouseOn,
+      cloneComponent,
       positionToOnCon,
-      clear,
+      updateCons,
     };
   },
 });
@@ -184,12 +155,7 @@ export default defineComponent({
                       >
                         <span>{{ Con.ConName }}</span>
                         <div class="draggable-show-item">
-                          <Item
-                            drag
-                            :formConfig="formConfig"
-                            :cons="cons"
-                            :con="Con.I"
-                          />
+                          <Item drag :formConfig="formConfig" :con="Con.I" />
                         </div>
                       </div>
                     </template>
@@ -210,7 +176,7 @@ export default defineComponent({
             style="margin-right: 10px"
             type="primary"
             link
-            @click="clear()"
+            @click="updateCons([])"
           >
             清空
           </el-button>
@@ -230,42 +196,22 @@ export default defineComponent({
         >
         <el-scrollbar wrap-class="scrollbar-wrapper" ref="bScrollbarRef">
           <div class="content__">
-            <Draggable
-              :class="draggableC.class"
-              :group="draggableC.group"
-              :modelValue="cons"
-              @update:modelValue="draggableChange"
-              @change="
-                ({ added, removed, moved }) => {
-                  (added || moved) && (activateCon = (added || moved).element);
+            <DraggableCon
+              class="draggable-con"
+              :cons="cons"
+              :formConfig="formConfig"
+              :activateCon="activateCon"
+              @update:cons="
+                (_) => {
+                  updateCons(_);
                 }
               "
-              @start="
-                ({ oldIndex }) => {
-                  activateCon = cons[oldIndex];
+              @update:activateCon="
+                (_) => {
+                  activateCon = _;
                 }
               "
-              :animation="draggableC.animation"
-              item-key="renderKey"
-              handle=".drag-handler"
-            >
-              <template #item="{ element: con }">
-                <Item
-                  :data-key="con.key"
-                  :formConfig="formConfig"
-                  :cons="cons"
-                  :con="con"
-                  :activateCon="activateCon"
-                  @activateConF="
-                    (v) => {
-                      activateCon = v;
-                    }
-                  "
-                  @removeF="removeF"
-                  @moveF="moveF"
-                />
-              </template>
-            </Draggable>
+            />
           </div>
         </el-scrollbar>
       </div>
@@ -426,18 +372,8 @@ export default defineComponent({
           align-items: center;
           justify-content: center;
           padding: 10px;
-          > .dynamic-form-draggable {
-            padding: 5px;
-            background-color: white;
-            width: 100%;
+          > .draggable-con {
             min-height: calc(var(--height) - 40px - 20px);
-            display: flex;
-            flex-direction: column;
-            ::v-deep > .draggable-item {
-              > *:not(.draggable-show-item) {
-                display: none;
-              }
-            }
           }
         }
       }

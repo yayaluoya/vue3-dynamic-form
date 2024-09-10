@@ -1,7 +1,7 @@
 <script lang="jsx">
 import { defineComponent } from "vue";
-import { BaseCon } from "./controls/BaseCon";
-import { getFormConfig } from "./config/getFormConfig";
+import { BaseCon } from "../controls/BaseCon";
+import { getFormConfig } from "../config/getFormConfig";
 
 export default defineComponent({
   components: {},
@@ -12,7 +12,7 @@ export default defineComponent({
     },
     cons: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     con: {
       type: Object,
@@ -38,7 +38,7 @@ export default defineComponent({
       /** @type {ReturnType<getFormConfig>} */
       let formConfig = props.formConfig;
       /** @type {BaseCon[]} */
-      let cons = props.con;
+      let cons = props.cons;
       /** @type {BaseCon} */
       let con = props.con;
       /** @type {boolean} */
