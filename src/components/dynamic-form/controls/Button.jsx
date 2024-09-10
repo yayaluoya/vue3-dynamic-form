@@ -5,7 +5,7 @@ import { BaseCon } from "./BaseCon";
  */
 export class Button extends BaseCon {
   /** 控件类型 */
-  static ConType = "button";
+  static ConType = "Button";
   /** 控件名字 */
   static ConName = "按钮";
   /** 单例对象 */

@@ -233,36 +233,47 @@ export class BaseCon {
               >
                 <Back />
               </el-icon>
-              <el-icon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  ctx.emit("moveF", this, "up");
-                }}
-              >
-                <Top />
-              </el-icon>
-              <el-icon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  ctx.emit("moveF", this, "down");
-                }}
-              >
-                <Bottom />
-              </el-icon>
-              <el-icon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  ctx.emit("removeF", this);
-                }}
-              >
-                <DeleteFilled />
-              </el-icon>
+              {this.getHandler(...arguments)}
             </div>
             <div class="form-item">{this.renderFormItem(...arguments)}</div>
           </div>
         )}
       </el-col>
     );
+  }
+
+  /**
+   * 获取handler元素
+   * @param {RenderOp} op
+   * @returns
+   */
+  getHandler({ ctx }) {
+    return [
+      <el-icon
+        onClick={(e) => {
+          e.stopPropagation();
+          ctx.emit("moveF", this, "up");
+        }}
+      >
+        <Top />
+      </el-icon>,
+      <el-icon
+        onClick={(e) => {
+          e.stopPropagation();
+          ctx.emit("moveF", this, "down");
+        }}
+      >
+        <Bottom />
+      </el-icon>,
+      <el-icon
+        onClick={(e) => {
+          e.stopPropagation();
+          ctx.emit("removeF", this);
+        }}
+      >
+        <DeleteFilled />
+      </el-icon>,
+    ];
   }
 
   /**

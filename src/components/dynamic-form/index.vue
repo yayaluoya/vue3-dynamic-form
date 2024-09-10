@@ -6,7 +6,7 @@ import { DocumentCopy } from "@element-plus/icons-vue";
 import Right from "./right/index.vue";
 import Item from "./item.vue";
 import { WindowSizeChangeE } from "./tool/web/event/WindowSizeChangeE";
-import { Button } from "./controls";
+import { Button, Grid, Card, LabelPage, Table } from "./controls";
 import { BaseCon } from "./controls/BaseCon.jsx";
 import { ArrayUtils } from "./tool/ArrayUtils";
 
@@ -45,7 +45,7 @@ export default defineComponent({
       },
       {
         label: "容器类型",
-        cons: [],
+        cons: [Grid, Table, LabelPage, Card],
       },
       {
         label: "扩展类型",

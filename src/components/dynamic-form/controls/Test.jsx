@@ -5,7 +5,7 @@ import { BaseCon } from "./BaseCon";
  */
 export class Test extends BaseCon {
   /** 控件类型 */
-  static ConType = "test";
+  static ConType = "Test";
   /** 控件名字 */
   static ConName = "测试";
   /** 单例对象 */
