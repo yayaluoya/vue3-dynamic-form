@@ -2,9 +2,19 @@ import { customAlphabet } from "nanoid";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import { getFormConfig } from "../config/getFormConfig";
 import { FontStyle } from "../com/FontStyle";
+import { ArrayUtils } from "../tool/ArrayUtils";
 
-const alphabet = "0123456789_abcdefghijklmnopqrstuvwxyz_";
+const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 21);
+
+/**
+ * @typedef RenderOp
+ * @property {import("vue").SetupContext} ctx
+ * @property {ReturnType<getFormConfig>} formConfig
+ * @property {BaseCon[]} cons
+ * @property {BaseCon} activateCon
+ * @property {Record<string,any>} formData
+ */
 
 /**
  * 基类控件
@@ -13,14 +23,14 @@ export class BaseCon {
   /** 单例对象 */
   static I;
   /** 控件类型 */
-  static type = "";
+  static ConType = "";
   /** 控件名字 */
-  static name = "";
+  static ConName = "";
 
   /** 控件类型 */
-  type = "";
+  conType = "";
   /** 控件名字 */
-  name = "";
+  conName = "";
   /** 控件实例唯一的key，不可变的 */
   key = "";
   /** 渲染key */
@@ -65,12 +75,12 @@ export class BaseCon {
     size: undefined,
   };
 
-  /** 默认值 */
-  defaultValue = undefined;
+  /** 表单默认值 */
+  formDefaultValue = undefined;
 
   constructor() {
-    this.type = this.constructor.type;
-    this.name = this.constructor.name;
+    this.conType = this.constructor.ConType;
+    this.conName = this.constructor.ConName;
     this.key = BaseCon.getKey();
     this.renderKey = BaseCon.getKey();
     // 属性名默认和key同名
@@ -87,9 +97,10 @@ export class BaseCon {
   /**
    * 初始化配置
    * @param {*} config 配置信息
+   * @param {(config: any[])=>BaseCon[]} toCons
    * @returns
    */
-  initConfig(config) {
+  initConfig(config, toCons) {
     for (let i in config) {
       this[i] = ObjectUtils.clone2(config[i]);
     }
@@ -111,28 +122,49 @@ export class BaseCon {
     return this.childs;
   }
 
+  /**
+   * 删除子元素
+   * @param {BaseCon} con
+   */
+  removeChild(con) {
+    let childs = [...this.childs];
+    ArrayUtils.eliminate(childs, (_) => _.key == con.key);
+    childs.forEach((_) => _.removeChild(con));
+  }
+
   /** 是否必填字段 */
   getRequired() {
     return this.formItemProps.required;
   }
 
+  /** 克隆自身 */
+  clone() {
+    let _ = this;
+    _ = new this.constructor().initConfig(this);
+    return _;
+  }
+
   /**
-   * 获取值ref，如果存在formdata的话就改formdata里面的值，反之则改defaultValue
-   * @template {{get:()=>any,set:(v)=>void}} V
-   * @param {V} value
-   * @param {*} formData
-   * @returns {{value: ReturnType<V['get']>}}
+   * 获取表单值ref，如果存在formdata的话就改formdata里面的值，反之则改formDefaultValue
+   * @template V
+   * @param {RenderOp['formData']} formData
+   * @param {V} value 这个参数只是为了类型推断
+   * @returns {{value: V}}
    */
-  getVRef(value, formData) {
+  getFormValueRef(formData = undefined, value = undefined) {
     return Object.defineProperties(
       {},
       {
         value: {
           get: () => {
-            return formData ? formData[this.formItemProps.prop] : value.get();
+            return formData
+              ? formData[this.formItemProps.prop]
+              : this.formDefaultValue;
           },
           set: (v) => {
-            formData ? (formData[this.formItemProps.prop] = v) : value.set(v);
+            formData
+              ? (formData[this.formItemProps.prop] = v)
+              : (this.formDefaultValue = v);
           },
         },
       }
@@ -147,51 +179,102 @@ export class BaseCon {
   /**
    * formData改变事件
    * @param {*} formData
-   * @param {BaseCon[]} list
+   * @param {BaseCon[]} cons
    */
-  formDataChangeE(formData, list) {}
+  formDataChangeE(formData, cons) {}
 
   /**
    * 渲染拖拽时显示的元素
-   * @param {any} h 渲染函数
-   * @param {{ctx: import("vue").SetupContext,formConfig: ReturnType<getFormConfig>}}
+   * @param {RenderOp} op
    * @returns
    */
-  renderDrag(h, { ctx = undefined } = {}) {
+  renderDrag(op) {
     return this.renderCol(...arguments);
   }
 
   /**
    * 渲染行元素
-   * @param {any} h 渲染函数
-   * @param {{ctx: import("vue").SetupContext,formConfig: ReturnType<getFormConfig>}}
+   * @param {RenderOp} op
    * @returns
    */
-  renderCol(h, { ctx = undefined } = {}) {
+  renderCol({ ctx, activateCon, formData }) {
     return (
       <el-col
-        data-key={this.renderKey}
+        key={this.renderKey}
         span={this.layout.col.span}
         offset={this.layout.col.offset}
         push={this.layout.col.push}
         pull={this.layout.col.pull}
       >
-        {this.renderFormItem(...arguments)}
+        {formData ? (
+          this.renderFormItem(...arguments)
+        ) : (
+          <div
+            class={[
+              "controller",
+              activateCon?.key == this.key ? "on" : "",
+            ].join(" ")}
+            onClick={() => {
+              ctx.emit("activateConF", this);
+            }}
+          >
+            <div class="drag-handler">
+              <el-icon>
+                <Rank />
+              </el-icon>
+              <span>{this.conName}</span>
+            </div>
+            <div class="handler-button">
+              <el-icon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  ctx.emit("activateConF", null);
+                }}
+              >
+                <Back />
+              </el-icon>
+              <el-icon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  ctx.emit("moveF", this, "up");
+                }}
+              >
+                <Top />
+              </el-icon>
+              <el-icon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  ctx.emit("moveF", this, "down");
+                }}
+              >
+                <Bottom />
+              </el-icon>
+              <el-icon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  ctx.emit("removeF", this);
+                }}
+              >
+                <DeleteFilled />
+              </el-icon>
+            </div>
+            <div class="form-item">{this.renderFormItem(...arguments)}</div>
+          </div>
+        )}
       </el-col>
     );
   }
 
   /**
-   * 渲染行元素
-   * @param {any} h 渲染函数
-   * @param {{ctx: import("vue").SetupContext,formConfig: ReturnType<getFormConfig>}}
+   * 渲染表单元素
+   * @param {RenderOp} op
    * @returns
    */
-  renderFormItem(h, { ctx = undefined, formConfig = undefined } = {}) {
+  renderFormItem({ formConfig }) {
     return (
       <el-form-item
         prop={this.formItemProps.prop}
-        label={this.formItemProps.label + this.key}
+        label={this.formItemProps.label}
         label-position={this.formItemProps.labelPosition}
         label-width={
           //没有label时不显示label
@@ -232,37 +315,35 @@ export class BaseCon {
   }
 
   /**
-   * 渲染行元素
-   * @param {any} h 渲染函数
-   * @param {{ctx: import("vue").SetupContext,formConfig: ReturnType<getFormConfig>}}
+   * 渲染
+   * @param {RenderOp} op
    * @returns
    */
-  renderRaw(h, { ctx = undefined } = {}) {
+  renderRaw(op) {
     return <div></div>;
   }
 
   /**
    * 渲染右边编辑栏目
-   * @param {any} h 渲染函数
-   * @param {{ctx: import("vue").SetupContext}}
+   * @param {RenderOp} op
    * @returns
    */
-  renderRight(h, { ctx = undefined } = {}) {
+  renderRight(op) {
+    return this.getRight(...arguments).map((_) => _.vd);
+  }
+
+  /**
+   * 获取右边编辑栏目
+   * @param {RenderOp} op
+   * @returns
+   */
+  getRight(op) {
     return [
       {
         name: "lable",
-        vd: <div>编辑栏目{this.key}</div>,
+        vd: <div>编辑栏目</div>,
       },
     ];
-  }
-
-  /** 获取唯一的key */
-  static getKey() {
-    return `key_${BaseCon.getHash()}`;
-  }
-  /** 获取唯一哈希值 */
-  static getHash() {
-    return nanoid();
   }
 
   /**
@@ -293,10 +374,25 @@ export class BaseCon {
   }
 
   /**
+   * 组件遍历，并返回所有的组件
+   * @param {BaseCon[]} list
+   * @param {(item: BaseCon, i: index)=>void} f
+   * @returns {BaseCon[]}
+   */
+  static consForeach(list, f = undefined) {
+    let cons = [];
+    list.forEach((item, i) => {
+      f?.(item, i);
+      cons.push(item, ...BaseCon.consForeach(item.getChild(), f));
+    });
+    return cons;
+  }
+
+  /**
    * 插入控件
    * @param {BaseCon[]} list
-   * @param {*} key
-   * @param {*} con
+   * @param {string} key
+   * @param {BaseCon} con
    * @param {'up'|'down'} type
    */
   static insertCon(list, key, con, type = "down") {
@@ -324,17 +420,41 @@ export class BaseCon {
   }
 
   /**
-   * 组件遍历，并返回所有的组件
+   * 移动控件
    * @param {BaseCon[]} list
-   * @param {(item: BaseCon, i: index)=>void} f
-   * @returns {BaseCon[]}
+   * @param {BaseCon} con
+   * @param {'up'|'down'} type
    */
-  static consForeach(list, f = undefined) {
-    let cons = [];
-    list.forEach((item, i) => {
-      f?.(item, i);
-      cons.push(item, ...BaseCon.consForeach(item.getChild(), f));
-    });
-    return cons;
+  static moveCon(list, con, type) {
+    let i = list.findIndex((_) => _.key == con.key);
+    if (i >= 0) {
+      switch (type) {
+        case "up":
+          if (i != 0) {
+            list[i] = list[i - 1];
+            list[i - 1] = con;
+          }
+          break;
+        case "down":
+          if (i != list.length - 1) {
+            list[i] = list[i + 1];
+            list[i + 1] = con;
+          }
+          break;
+      }
+    } else {
+      list.forEach((_) => {
+        BaseCon.moveCon(_.getChild(), con, type);
+      });
+    }
+  }
+
+  /** 获取唯一的key */
+  static getKey() {
+    return `key_${BaseCon.getHash()}`;
+  }
+  /** 获取唯一哈希值 */
+  static getHash() {
+    return nanoid();
   }
 }

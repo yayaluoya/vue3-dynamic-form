@@ -6,7 +6,9 @@ import { DocumentCopy } from "@element-plus/icons-vue";
 import Right from "./right/index.vue";
 import Item from "./item.vue";
 import { WindowSizeChangeE } from "./tool/web/event/WindowSizeChangeE";
-import { Button } from "./controls";
+import { Button, Test } from "./controls";
+import { BaseCon } from "./controls/BaseCon.jsx";
+import { ArrayUtils } from "./tool/ArrayUtils";
 
 export default defineComponent({
   components: { Draggable, Item, Right, DocumentCopy },
@@ -36,7 +38,7 @@ export default defineComponent({
       {
         launch: true,
         label: "其它类型",
-        cons: [],
+        cons: [Test],
       },
     ]);
 
@@ -67,9 +69,22 @@ export default defineComponent({
 
     /** 删除控件 */
     function removeF(con) {
+      /** @type {BaseCon[]} */
+      const list = [...props.cons];
+      ArrayUtils.eliminate(list, (_) => _.key == con.key);
+      list.forEach((_) => {
+        _.removeChild(con);
+      });
+      ctx.emit("update:cons", list);
       if (activateCon.value?.key == con.key) {
         activateCon.value = null;
       }
+    }
+
+    /** 移动控件 */
+    function moveF(con, type) {
+      BaseCon.moveCon(props.cons, con, type);
+      ctx.emit("update:cons", [...props.cons]);
     }
 
     /** 克隆组件 */
@@ -105,6 +120,7 @@ export default defineComponent({
       draggableChange,
       activateCon,
       removeF,
+      moveF,
       mouseOn,
     };
   },
@@ -140,12 +156,17 @@ export default defineComponent({
                   <div
                     class="draggable-item"
                     :class="{
-                      on: Con.type === activateCon?.type,
+                      on: Con.ConType === activateCon?.conType,
                     }"
                   >
-                    <span>{{ Con.name }}</span>
+                    <span>{{ Con.ConName }}</span>
                     <div class="draggable-show-item">
-                      <Item drag :formConfig="formConfig" :con="Con.I" />
+                      <Item
+                        drag
+                        :formConfig="formConfig"
+                        :cons="cons"
+                        :con="Con.I"
+                      />
                     </div>
                   </div>
                 </template>
@@ -181,11 +202,13 @@ export default defineComponent({
                 }
               "
               :animation="draggableC.animation"
-              item-key="key"
+              item-key="renderKey"
+              handle=".drag-handler"
             >
               <template #item="{ element: con }">
                 <Item
                   :formConfig="formConfig"
+                  :cons="cons"
                   :con="con"
                   :activateCon="activateCon"
                   @activateConF="
@@ -194,6 +217,7 @@ export default defineComponent({
                     }
                   "
                   @removeF="removeF"
+                  @moveF="moveF"
                 />
               </template>
             </Draggable>
@@ -223,7 +247,7 @@ export default defineComponent({
   }
 
   > .a {
-    width: 120px;
+    width: 260px;
     box-sizing: border-box;
     display: flex;
     margin-right: 10px;
@@ -257,15 +281,18 @@ export default defineComponent({
           > .dynamic-form-draggable {
             width: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
             .draggable-item {
+              width: calc(50% - 4px);
               display: flex;
               flex-direction: row;
               align-items: center;
               box-sizing: border-box;
               padding: 4px;
-              background: #eff2f5;
-              border: 1px dashed #dddddd;
+              background-color: white;
+              border: 1px solid #dddddd;
               border-radius: 4px;
               margin-bottom: 5px;
               cursor: move;
@@ -275,6 +302,7 @@ export default defineComponent({
               &.on,
               &:hover {
                 border-color: #1890ff;
+                background-color: #eff2f5;
                 > span {
                   color: #1890ff;
                 }
@@ -346,7 +374,7 @@ export default defineComponent({
   }
   > .c {
     margin-left: 10px;
-    width: 250px;
+    width: 280px;
     box-sizing: border-box;
     display: flex;
   }

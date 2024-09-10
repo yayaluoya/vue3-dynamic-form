@@ -10,6 +10,7 @@
     "codess": "codess b"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "color": "^4.2.3",
     "element-plus": "^2.8.2",
     "nanoid": "^5.0.7",

@@ -2,12 +2,17 @@
 import { defineComponent, ref } from "vue";
 import DynamicForm from "@/components/dynamic-form/index.vue";
 import { getFormConfig } from "@/components/dynamic-form/config/getFormConfig";
+import { ConT } from "@/components/dynamic-form/ConT";
+import { Button, Test } from "@/components/dynamic-form/controls";
 
 export default defineComponent({
   components: { DynamicForm },
   setup() {
     let cons = ref([]);
     let formConfig = ref(getFormConfig());
+    console.log(
+      ConT.toCons(JSON.parse(ConT.toConfigs([new Button(), new Test()])))
+    );
     return {
       cons,
       formConfig,

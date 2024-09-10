@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { ref, reactive, defineComponent, h } from "vue";
+import { ref, reactive, defineComponent } from "vue";
 
 export default defineComponent({
   components: {},
@@ -21,7 +21,12 @@ export default defineComponent({
     return () => {
       return (
         <div class="right">
-          {props.activateCon?.renderRight(h, { ctx }).map((_) => _.vd)}
+          {props.activateCon?.renderRight({
+            ctx,
+            formConfig: props.formConfig,
+            cons: props.cons,
+            activateCon: props.activateCon,
+          })}
         </div>
       );
     };
