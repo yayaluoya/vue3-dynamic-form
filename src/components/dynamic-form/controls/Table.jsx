@@ -80,8 +80,9 @@ class Cell extends BaseCon {
                 </el-dropdown-item>
                 <el-dropdown-item
                   divided
+                  disabled={!parent.merge("left", row, col, true)}
                   onClick={() => {
-                    parent.merge("left", row, col, (con) => {
+                    parent.merge("left", row, col, false, (con) => {
                       ctx.emit("activateConF", con);
                     });
                   }}
@@ -92,8 +93,9 @@ class Cell extends BaseCon {
                   合并左侧单元格
                 </el-dropdown-item>
                 <el-dropdown-item
+                  disabled={!parent.merge("right", row, col, true)}
                   onClick={() => {
-                    parent.merge("right", row, col, (con) => {
+                    parent.merge("right", row, col, false, (con) => {
                       ctx.emit("activateConF", con);
                     });
                   }}
@@ -104,8 +106,9 @@ class Cell extends BaseCon {
                   合并右侧单元格
                 </el-dropdown-item>
                 <el-dropdown-item
+                  disabled={!parent.merge("row", row, col, true)}
                   onClick={() => {
-                    parent.merge("row", row, col, (con) => {
+                    parent.merge("row", row, col, false, (con) => {
                       ctx.emit("activateConF", con);
                     });
                   }}
@@ -114,8 +117,9 @@ class Cell extends BaseCon {
                 </el-dropdown-item>
                 <el-dropdown-item
                   divided
+                  disabled={!parent.merge("up", row, col, true)}
                   onClick={() => {
-                    parent.merge("up", row, col, (con) => {
+                    parent.merge("up", row, col, false, (con) => {
                       ctx.emit("activateConF", con);
                     });
                   }}
@@ -126,8 +130,9 @@ class Cell extends BaseCon {
                   合并上方单元格
                 </el-dropdown-item>
                 <el-dropdown-item
+                  disabled={!parent.merge("down", row, col, true)}
                   onClick={() => {
-                    parent.merge("down", row, col, (con) => {
+                    parent.merge("down", row, col, false, (con) => {
                       ctx.emit("activateConF", con);
                     });
                   }}
@@ -138,8 +143,9 @@ class Cell extends BaseCon {
                   合并下方单元格
                 </el-dropdown-item>
                 <el-dropdown-item
+                  disabled={!parent.merge("col", row, col, true)}
                   onClick={() => {
-                    parent.merge("col", row, col, (con) => {
+                    parent.merge("col", row, col, false, (con) => {
                       ctx.emit("activateConF", con);
                     });
                   }}
@@ -163,6 +169,7 @@ class Cell extends BaseCon {
                 </el-dropdown-item>
                 <el-dropdown-item
                   divided
+                  disabled={!parent.merge("col", row, col, true)}
                   onClick={() => {
                     parent.delete("col", row, col);
                   }}
@@ -173,6 +180,7 @@ class Cell extends BaseCon {
                   删除整列
                 </el-dropdown-item>
                 <el-dropdown-item
+                  disabled={!parent.merge("row", row, col, true)}
                   onClick={() => {
                     parent.delete("row", row, col);
                   }}
@@ -284,9 +292,10 @@ export class Table extends BaseCon {
    * @param {'left'|'right'|'up'|'down'|'row'|'col'} type
    * @param {number} row
    * @param {number} col
+   * @param {boolean} judge 是否只是判断
    * @param {(con: BaseCon)=>{}} activateConF
    */
-  merge(type, row, col, activateConF) {
+  merge(type, row, col, judge = false, activateConF) {
     let on = this.list[row][col];
     switch (type) {
       case "left":
@@ -299,6 +308,9 @@ export class Table extends BaseCon {
               i < col
             );
           });
+          if (judge) {
+            return !!target;
+          }
           if (target) {
             on.disappear = true;
             target.colspan += on.colspan;
@@ -309,7 +321,11 @@ export class Table extends BaseCon {
       case "right":
         {
           let target = this.list[row][col + on.colspan];
-          if (target && !target.disappear && target.rowspan == on.rowspan) {
+          let is_ = target && !target.disappear && target.rowspan == on.rowspan;
+          if (judge) {
+            return is_;
+          }
+          if (is_) {
             target.disappear = true;
             on.colspan += target.colspan;
           }
@@ -327,6 +343,9 @@ export class Table extends BaseCon {
                 i < row
               );
             });
+          if (judge) {
+            return !!target;
+          }
           if (target) {
             on.disappear = true;
             target.rowspan += on.rowspan;
@@ -337,7 +356,11 @@ export class Table extends BaseCon {
       case "down":
         {
           let target = this.list[row + on.rowspan]?.[col];
-          if (target && !target.disappear && target.colspan == on.colspan) {
+          let is_ = target && !target.disappear && target.colspan == on.colspan;
+          if (judge) {
+            return is_;
+          }
+          if (is_) {
             on.rowspan += target.rowspan;
             target.disappear = true;
           }
@@ -352,6 +375,9 @@ export class Table extends BaseCon {
             list.reduce((a, b) => {
               return a + (b.disappear ? 0 : b.colspan);
             }, 0) == list.length;
+          if (judge) {
+            return is_ && this.list[row][0].colspan != this.list[row].length;
+          }
           if (is_) {
             list.forEach((_, i) => {
               if (i == 0) {
@@ -372,6 +398,9 @@ export class Table extends BaseCon {
             list.reduce((a, b) => {
               return a + (b.disappear ? 0 : b.rowspan);
             }, 0) == list.length;
+          if (judge) {
+            return is_ && this.list[0][col].rowspan != this.list.length;
+          }
           if (is_) {
             list.forEach((_, i) => {
               if (i == 0) {
