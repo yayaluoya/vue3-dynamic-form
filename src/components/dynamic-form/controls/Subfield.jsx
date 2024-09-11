@@ -1,5 +1,6 @@
 import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
+import "../style/subfield.scss";
 
 /**
  * 分栏
@@ -19,11 +20,13 @@ export class Subfield extends BaseCon {
   renderRaw({ ctx, formConfig, cons, activateCon }) {
     return (
       <div
-        style={
-          activateCon?.key == this.key ? "" : `border: 1px dashed #afafaf;`
-        }
+        class={[
+          "controls__ subfield",
+          activateCon?.key == this.key ? "" : "border",
+        ].join(" ")}
       >
         <DraggableCon
+          parent={this}
           cons={this.childs}
           formConfig={formConfig}
           activateCon={activateCon}

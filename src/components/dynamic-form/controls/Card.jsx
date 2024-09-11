@@ -34,6 +34,7 @@ export class Card extends BaseCon {
             default: () => {
               return (
                 <DraggableCon
+                  parent={this}
                   cons={this.childs}
                   formConfig={formConfig}
                   activateCon={activateCon}

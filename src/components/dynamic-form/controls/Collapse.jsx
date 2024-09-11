@@ -46,6 +46,7 @@ export class Collapse extends BaseCon {
             return (
               <el-collapse-item title={_.title} name={i}>
                 <DraggableCon
+                  parent={this}
                   cons={_.childs}
                   formConfig={formConfig}
                   activateCon={activateCon}

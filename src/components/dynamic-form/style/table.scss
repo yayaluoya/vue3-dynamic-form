@@ -1,0 +1,22 @@
+.controls__.table {
+  >table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    tr {}
+
+    td {
+      padding: 5px;
+      border: 1px dashed #afafaf;
+      vertical-align: top;
+    }
+  }
+}
+
+.controls__.cell {
+  &.border {
+    border: 1px dashed #afafaf;
+  }
+}

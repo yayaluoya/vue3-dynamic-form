@@ -10,6 +10,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    parent: {
+      type: Object,
+      default: undefined,
+    },
     cons: {
       type: Array,
       default: () => [],
@@ -35,31 +39,27 @@ export default defineComponent({
   emits: ["activateConF", "removeF", "moveF"],
   setup(props, ctx) {
     return () => {
-      /** @type {ReturnType<getFormConfig>} */
-      let formConfig = props.formConfig;
-      /** @type {BaseCon[]} */
-      let cons = props.cons;
       /** @type {BaseCon} */
       let con = props.con;
       /** @type {boolean} */
       let drag = props.drag;
-      /** @type {BaseCon} */
-      let activateCon = props.activateCon;
       let _ = [];
       if (drag) {
         _ = con.renderDrag({
           ctx,
-          formConfig,
-          cons,
+          formConfig: props.formConfig,
+          parent: props.parent,
+          cons: props.cons,
           activateCon: con,
           formData: props.formData,
         });
       } else {
         _ = con.renderCol({
           ctx,
-          formConfig,
-          cons,
-          activateCon,
+          formConfig: props.formConfig,
+          parent: props.parent,
+          cons: props.cons,
+          activateCon: props.activateCon,
           formData: props.formData,
         });
       }
@@ -81,11 +81,13 @@ export default defineComponent({
     &.on {
       border: 2px solid #1890ff;
       > .drag-handler,
+      > .con-name,
       > .handler-button {
         display: flex !important;
       }
     }
     > .drag-handler,
+    > .con-name,
     > .handler-button {
       padding: 2px 3px;
       display: none;
@@ -115,7 +117,18 @@ export default defineComponent({
         color: #fff;
       }
     }
+    > .con-name {
+      top: 0;
+      left: 0;
+      background: #409eff;
+      > span {
+        font-size: 12px;
+        font-style: normal;
+        color: #fff;
+      }
+    }
     > .handler-button {
+      padding: 3px 4px;
       bottom: 0;
       right: 0;
       cursor: pointer;

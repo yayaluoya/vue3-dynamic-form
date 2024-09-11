@@ -10,6 +10,7 @@ const nanoid = customAlphabet(alphabet, 21);
  * @typedef RenderOp
  * @property {import("vue").SetupContext} ctx
  * @property {ReturnType<getFormConfig>} formConfig
+ * @property {BaseCon} parent
  * @property {BaseCon[]} cons
  * @property {BaseCon} activateCon
  * @property {Record<string,any>} formData
@@ -76,6 +77,9 @@ export class BaseCon {
 
   /** 表单默认值 */
   formDefaultValue = undefined;
+
+  /** 是否可拖拽 */
+  towable = true;
 
   constructor() {
     this.conType = this.constructor.ConType;
@@ -186,7 +190,7 @@ export class BaseCon {
    * @param {RenderOp} op
    * @returns
    */
-  renderCol({ ctx, activateCon, formData }) {
+  renderCol({ ctx, activateCon, formData, parent }) {
     return (
       <el-col
         key={this.renderKey}
@@ -208,17 +212,24 @@ export class BaseCon {
               ctx.emit("activateConF", this);
             }}
           >
-            <div class="drag-handler">
-              <el-icon>
-                <Rank />
-              </el-icon>
-              <span>{this.conName}</span>
-            </div>
+            {this.towable ? (
+              <div class="drag-handler">
+                <el-icon>
+                  <Rank />
+                </el-icon>
+                <span>{this.conName}</span>
+              </div>
+            ) : (
+              <div class="con-name">
+                <span>{this.conName}</span>
+              </div>
+            )}
             <div class="handler-button">
               <el-icon
+                title="选择父组件"
                 onClick={(e) => {
                   e.stopPropagation();
-                  ctx.emit("activateConF", null);
+                  ctx.emit("activateConF", parent);
                 }}
               >
                 <Back />
@@ -240,6 +251,7 @@ export class BaseCon {
   getHandler({ ctx }) {
     return [
       <el-icon
+        title="上移组件"
         onClick={(e) => {
           e.stopPropagation();
           ctx.emit("moveF", this, "up");
@@ -248,6 +260,7 @@ export class BaseCon {
         <Top />
       </el-icon>,
       <el-icon
+        title="下移组件"
         onClick={(e) => {
           e.stopPropagation();
           ctx.emit("moveF", this, "down");
@@ -256,6 +269,7 @@ export class BaseCon {
         <Bottom />
       </el-icon>,
       <el-icon
+        title="删除组件"
         onClick={(e) => {
           e.stopPropagation();
           ctx.emit("removeF", this);

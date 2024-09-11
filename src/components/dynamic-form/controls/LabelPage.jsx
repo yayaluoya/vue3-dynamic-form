@@ -1,5 +1,6 @@
 import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
+import "../style/label-page.scss";
 
 /**
  * 标签页
@@ -41,11 +42,12 @@ export class LabelPage extends BaseCon {
   renderRaw({ ctx, formConfig, cons, activateCon }) {
     return (
       <div
-        style={
+        class={[
+          "controls__ label-page",
           activateCon?.key == this.key || this.tabsProps.type == "border-card"
             ? ""
-            : `border: 1px dashed #afafaf;`
-        }
+            : "border",
+        ].join(" ")}
       >
         <el-tabs
           model-value={this.activeName}
@@ -60,6 +62,7 @@ export class LabelPage extends BaseCon {
             return _.activate ? (
               <el-tab-pane label={_.label} name={i}>
                 <DraggableCon
+                  parent={this}
                   cons={_.childs}
                   formConfig={formConfig}
                   activateCon={activateCon}

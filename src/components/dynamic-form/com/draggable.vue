@@ -13,6 +13,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    parent: {
+      type: Object,
+      default: undefined,
+    },
     cons: {
       type: Array,
       required: true,
@@ -77,6 +81,8 @@ export default defineComponent({
   >
     <template #item="{ element: con }">
       <Item
+        :key="con.key"
+        :parent="parent"
         :data-key="con.key"
         :formConfig="formConfig"
         :cons="cons"
