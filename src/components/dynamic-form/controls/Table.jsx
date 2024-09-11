@@ -198,34 +198,66 @@ class Cell extends BaseCon {
     ];
   }
 
-  renderFormItem() {
-    return this.renderRaw(...arguments);
+  renderCol({ ctx, activateCon, formData, parent }) {
+    return formData ? (
+      this.renderRaw(...arguments)
+    ) : (
+      <div
+        class={[
+          "controller controls__ cell",
+          activateCon?.key == this.key ? "on" : "border",
+        ].join(" ")}
+        onClick={(e) => {
+          e.stopPropagation();
+          ctx.emit("activateConF", this);
+        }}
+      >
+        {this.towable ? (
+          <div class="drag-handler">
+            <el-icon>
+              <Rank />
+            </el-icon>
+            <span>{this.conName}</span>
+          </div>
+        ) : (
+          <div class="con-name">
+            <span>{this.conName}</span>
+          </div>
+        )}
+        <div class="handler-button">
+          <el-icon
+            title="选择父组件"
+            onClick={(e) => {
+              e.stopPropagation();
+              ctx.emit("activateConF", parent);
+            }}
+          >
+            <Back />
+          </el-icon>
+          {this.getHandler(...arguments)}
+        </div>
+        <div class="form-item">{this.renderRaw(...arguments)}</div>
+      </div>
+    );
   }
 
   renderRaw({ ctx, formConfig, cons, activateCon }) {
     return (
-      <div
-        class={[
-          "controls__ cell",
-          activateCon?.key == this.key ? "" : "border",
-        ].join(" ")}
-      >
-        <DraggableCon
-          parent={this}
-          cons={this.childs}
-          formConfig={formConfig}
-          activateCon={activateCon}
-          onUpdate:cons={(_) => {
-            this.childs = _;
-          }}
-          onUpdate:activateCon={(_) => {
-            ctx.emit("activateConF", _);
-          }}
-          style={
-            this.childs.length <= 0 ? "min-height: 50px;" : "min-height: 20px;"
-          }
-        />
-      </div>
+      <DraggableCon
+        parent={this}
+        cons={this.childs}
+        formConfig={formConfig}
+        activateCon={activateCon}
+        onUpdate:cons={(_) => {
+          this.childs = _;
+        }}
+        onUpdate:activateCon={(_) => {
+          ctx.emit("activateConF", _);
+        }}
+        style={
+          this.childs.length <= 0 ? "min-height: 50px;" : "min-height: 20px;"
+        }
+      />
     );
   }
 }

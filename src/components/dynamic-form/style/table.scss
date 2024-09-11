@@ -8,6 +8,7 @@
     tr {}
 
     td {
+      height: 50px;
       padding: 5px;
       border: 1px dashed #afafaf;
       vertical-align: top;
@@ -16,7 +17,13 @@
 }
 
 .controls__.cell {
+  height: 100%;
+
   &.border {
     border: 1px dashed #afafaf;
+  }
+
+  >.form-item {
+    height: 100%;
   }
 }
