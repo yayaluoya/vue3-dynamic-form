@@ -395,8 +395,42 @@ export class Table extends BaseCon {
     let on = this.list[row][col];
     switch (type) {
       case "row":
+        {
+          let endRow = row + on.rowspan;
+          let endCol = col + on.colspan;
+          for (let i = row; i < endRow; i++) {
+            for (let j = col; j < endCol; j++) {
+              let _ = this.list[i][j];
+              if (i == row && j == col) {
+                _.rowspan = 1;
+                _.disappear = false;
+              } else {
+                _.colspan = 1;
+                _.rowspan = 1;
+                _.disappear = i == row;
+              }
+            }
+          }
+        }
         break;
       case "col":
+        {
+          let endRow = row + on.rowspan;
+          let endCol = col + on.colspan;
+          for (let i = row; i < endRow; i++) {
+            for (let j = col; j < endCol; j++) {
+              let _ = this.list[i][j];
+              if (i == row && j == col) {
+                _.colspan = 1;
+                _.disappear = false;
+              } else {
+                _.colspan = 1;
+                _.rowspan = 1;
+                _.disappear = j == col;
+              }
+            }
+          }
+        }
         break;
     }
   }
