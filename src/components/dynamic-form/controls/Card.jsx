@@ -46,7 +46,7 @@ export class Card extends BaseCon {
                   }}
                   style={
                     this.childs.length <= 0
-                      ? "min-height: 50px;"
+                      ? "min-height: 80px;"
                       : "min-height: 20px;"
                   }
                 />

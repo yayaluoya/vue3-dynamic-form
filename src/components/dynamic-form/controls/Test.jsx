@@ -1,4 +1,5 @@
 import { BaseCon } from "./BaseCon";
+import "../style/test.scss";
 
 /**
  * 测试
@@ -12,17 +13,17 @@ export class Test extends BaseCon {
   static I = new Test();
 
   formDefaultValue = {
-    a: 1,
-    b: "字符串",
+    number: 1,
+    str: "字符串",
   };
 
   renderRaw({ formData }) {
     let { value } = this.getFormValueRef(formData, this.formDefaultValue);
     return (
-      <div>
-        <span>a: {value.a}</span>
-        <span>b: {value.b}</span>
-        <el-button>Default</el-button>
+      <div class="controls__ test">
+        测试控件
+        <span>number: {value.number}</span>
+        <span>str: {value.str}</span>
       </div>
     );
   }

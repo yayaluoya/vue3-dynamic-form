@@ -1,5 +1,12 @@
 <script>
-import { ref, reactive, defineComponent, onMounted, onUnmounted } from "vue";
+import {
+  ref,
+  reactive,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  toRef,
+} from "vue";
 import draggableC from "./config/draggableC";
 import { DocumentCopy } from "@element-plus/icons-vue";
 import Right from "./right/index.vue";
@@ -8,9 +15,21 @@ import { WindowSizeChangeE } from "./tool/web/event/WindowSizeChangeE";
 import { Button, Subfield, Card, LabelPage, Table, Collapse } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
+import CodeEditInput from "./com/codeEditInput.vue";
+import { ConT } from "./ConT";
+import { Clipboard } from "./tool/web/Clipboard";
+import { FileT } from "./tool/web/FileT";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
-  components: { Draggable, DraggableCon, Item, Right, DocumentCopy },
+  components: {
+    Draggable,
+    DraggableCon,
+    Item,
+    Right,
+    DocumentCopy,
+    CodeEditInput,
+  },
   props: {
     cons: {
       type: Array,
@@ -48,7 +67,7 @@ export default defineComponent({
       },
       {
         label: "扩展类型",
-        cons: props.extendCons,
+        cons: toRef(props, "extendCons"),
       },
     ]);
     const ConsCollapseActiveNames = ref(Cons.map((_) => _.label));
@@ -57,6 +76,14 @@ export default defineComponent({
     const activateCon = ref(null);
     /** 鼠标是否在控件内 */
     const mouseOn = ref(false);
+
+    /** Json导入导出处理 */
+    const JSONH = reactive({
+      type: "",
+      show: false,
+      title: "",
+      jsonText: "",
+    });
 
     /** 定位到当前操作con */
     function positionToOnCon() {
@@ -88,6 +115,74 @@ export default defineComponent({
       return new Con();
     }
 
+    /** 导入json */
+    function importJSON() {
+      JSONH.type = "import";
+      JSONH.show = true;
+      JSONH.title = "导入JSON";
+      JSONH.jsonText = JSON.stringify(
+        {
+          formConfig: props.formConfig,
+          cons: ConT.toConfigs(props.cons),
+        },
+        undefined,
+        4
+      );
+    }
+    /** 导出json */
+    function exportJSON() {
+      JSONH.type = "export";
+      JSONH.show = true;
+      JSONH.title = "导出JSON";
+      JSONH.jsonText = JSON.stringify(
+        {
+          formConfig: props.formConfig,
+          cons: ConT.toConfigs(props.cons),
+        },
+        undefined,
+        4
+      );
+    }
+
+    function importJSONH() {
+      try {
+        let { formConfig, cons } = JSON.parse(JSONH.jsonText);
+        updateCons(ConT.toCons(cons), props.extendCons);
+        for (let i in formConfig) {
+          props.formConfig[i] = formConfig[i];
+        }
+        JSONH.show = false;
+      } catch (e) {
+        ElMessage({
+          message: e,
+          type: "error",
+        });
+      }
+    }
+    function copy() {
+      Clipboard.set(JSONH.jsonText)
+        .then(() => {
+          ElMessage({
+            message: "已复制到剪切板",
+            type: "success",
+          });
+          JSONH.show = false;
+        })
+        .catch((e) => {
+          ElMessage({
+            message: e,
+            type: "error",
+          });
+        });
+    }
+    function saveToFile() {
+      FileT.download(
+        URL.createObjectURL(new Blob([JSONH.jsonText])),
+        "vue3-dynamic-form.json"
+      );
+      JSONH.show = false;
+    }
+
     function getContentHeight() {
       let rootHeight = rootElRef.value.getBoundingClientRect().height;
       rootElRef.value.style.setProperty("--height", `${rootHeight}px`);
@@ -101,6 +196,7 @@ export default defineComponent({
     });
 
     return {
+      log: console.log,
       rootElRef,
       bScrollbarRef,
       leftTabsActiveNames,
@@ -113,6 +209,12 @@ export default defineComponent({
       cloneComponent,
       positionToOnCon,
       updateCons,
+      JSONH,
+      importJSON,
+      exportJSON,
+      importJSONH,
+      copy,
+      saveToFile,
     };
   },
 });
@@ -176,6 +278,22 @@ export default defineComponent({
             style="margin-right: 10px"
             type="primary"
             link
+            @click="importJSON()"
+          >
+            导入JSON
+          </el-button>
+          <el-button
+            style="margin-right: 10px"
+            type="primary"
+            link
+            @click="exportJSON()"
+          >
+            导出JSON
+          </el-button>
+          <el-button
+            style="margin-right: 10px"
+            type="primary"
+            link
             @click="updateCons([])"
           >
             清空
@@ -219,6 +337,31 @@ export default defineComponent({
     <div class="c">
       <Right :cons="cons" :activateCon="activateCon" :formConfig="formConfig" />
     </div>
+    <el-dialog v-model="JSONH.show" :title="JSONH.title" width="800">
+      <el-scrollbar style="height: 500px" wrap-class="scrollbar-wrapper">
+        <CodeEditInput
+          :value="JSONH.jsonText"
+          @update:value="
+            (v) => {
+              JSONH.jsonText = v;
+            }
+          "
+          :options="{
+            lang: 'json',
+          }"
+        />
+      </el-scrollbar>
+      <template #footer>
+        <template v-if="JSONH.type == 'import'">
+          <el-button type="primary" @click="importJSONH()">导入</el-button>
+        </template>
+        <template v-if="JSONH.type == 'export'">
+          <el-button type="primary" @click="copy()">复制</el-button>
+          <el-button type="primary" @click="saveToFile()">保存为文件</el-button>
+        </template>
+        <el-button @click="JSONH.show = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -317,6 +460,7 @@ export default defineComponent({
     flex-direction: column;
     > .top {
       height: 40px;
+      border-bottom: 1px solid var(--el-border-color-light);
       display: flex;
       flex-direction: row;
       align-items: center;

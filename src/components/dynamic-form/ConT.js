@@ -16,7 +16,7 @@ export class ConT {
   static byConTypeGetCon(conType, Cons_ = []) {
     let C = [...Cons, ...Cons_].find((_) => _.ConType == conType);
     if (!C) {
-      throw `找不到conType${conType}`;
+      throw `找不到conType:${conType}`;
     }
     return new C();
   }
@@ -29,17 +29,18 @@ export class ConT {
    */
   static toCons(configs, Cons_ = []) {
     return configs.map((_) =>
-      ConT.byConTypeGetCon(_.conType, Cons_).initConfig(_, (configs_) =>
-        ConT.toCons(configs_, Cons_)
+      ConT.byConTypeGetCon(_.conType, Cons_).initConfig(
+        _,
+        (configs_, __ = []) => ConT.toCons(configs_, [...Cons_, ...__])
       )
     );
   }
 
   /**
-   * 转成配置
+   * 转成配置对象
    * @param {BaseCon[]} cons 控件列表
    */
   static toConfigs(cons) {
-    return JSON.stringify(cons, undefined, 4);
+    return JSON.parse(JSON.stringify(cons));
   }
 }

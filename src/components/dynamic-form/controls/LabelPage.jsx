@@ -35,6 +35,14 @@ export class LabelPage extends BaseCon {
     tabPosition: "top",
   };
 
+  initConfig(configs, toCons) {
+    super.initConfig(configs, toCons);
+    this.tabs.forEach((_) => {
+      _.childs = toCons(_.childs);
+    });
+    return this;
+  }
+
   renderFormItem() {
     return this.renderRaw(...arguments);
   }
@@ -74,7 +82,7 @@ export class LabelPage extends BaseCon {
                   }}
                   style={
                     _.childs.length <= 0
-                      ? "min-height: 50px;"
+                      ? "min-height: 80px;"
                       : "min-height: 20px;"
                   }
                 />

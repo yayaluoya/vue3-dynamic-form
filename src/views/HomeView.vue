@@ -13,7 +13,7 @@ export default defineComponent({
     let formConfig = ref(getFormConfig());
     console.log(
       "转换",
-      ConT.toCons(JSON.parse(ConT.toConfigs([new Button(), new Test()])))
+      ConT.toCons(ConT.toConfigs([new Button(), new Test()]))
     );
     return {
       cons,
@@ -26,6 +26,21 @@ export default defineComponent({
 
 <template>
   <div class="home">
+    <div class="top">
+      <h1>vue3-dynamic-form</h1>
+      <div>
+        <a
+          href="https://github.com/yayaluoya/vue3-dynamic-form"
+          target="_blank"
+        >
+          <img
+            src="@/assets/apple-touch-icon-144x144-b882e354c005.png"
+            alt=""
+          />
+          Github
+        </a>
+      </div>
+    </div>
     <DynamicForm
       :cons="cons"
       :extendCons="extendCons"
@@ -43,11 +58,42 @@ export default defineComponent({
 <style lang="scss" scoped>
 .home {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
+  > .top {
+    box-sizing: border-box;
+    padding: 0 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--el-border-color-light);
+    > h1 {
+      font-weight: bold;
+    }
+    > div {
+      > a {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 13px;
+        text-decoration: none;
+        margin-right: 10px;
+        color: #606266;
+        > img {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          margin-right: 3px;
+        }
+      }
+    }
+  }
   > .dynamic-form {
-    height: 100vh;
+    flex: 1 1 0;
+    height: 0;
   }
 }
 </style>

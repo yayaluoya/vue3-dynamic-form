@@ -278,6 +278,14 @@ export class Table extends BaseCon {
     [new Cell(), new Cell()],
   ];
 
+  initConfig(configs, toCons) {
+    super.initConfig(configs, toCons);
+    this.list = this.list.map((_) => {
+      return toCons(_, [Cell]);
+    });
+    return this;
+  }
+
   getChild() {
     return this.list.reduce((a, b) => {
       return [...a, ...b];

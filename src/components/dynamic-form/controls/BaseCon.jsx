@@ -88,19 +88,22 @@ export class BaseCon {
     this.renderKey = BaseCon.getKey();
     // 属性名默认和key同名
     this.formItemProps.prop = this.key;
+    this.formItemProps.label = this.conName;
   }
 
   /** 转JSON字符串 */
   toJSON() {
     let d = { ...this };
     delete d.renderKey;
+    delete d.towable;
     return d;
   }
 
   /**
    * 初始化配置
+   * TODO 主要是把一些配置转成class实例
    * @param {*} config 配置信息
-   * @param {(config: any[])=>BaseCon[]} toCons
+   * @param {(config: any[],econs: BaseCon[] = [])=>BaseCon[]} toCons 转换成cons的方法
    * @returns
    */
   initConfig(config, toCons) {
@@ -110,6 +113,7 @@ export class BaseCon {
     this.formItemProps.labelFontStyle = new FontStyle(
       this.formItemProps.labelFontStyle
     );
+    this.childs = toCons(this.childs);
     return this;
   }
 
@@ -301,19 +305,21 @@ export class BaseCon {
         show-message={this.formItemProps.showMessage}
         inline-message={this.formItemProps.inlineMessage}
         size={this.formItemProps.size}
-        scopedSlots={{
+      >
+        {{
           label: (...arg) => {
             return (
               <div style={`display: inline-flex`}>
                 <span
                   style={{
-                    "font-size": this.formItemLabelFontSize.fontSize + "px",
-                    color: this.formItemLabelFontSize.color,
-                    // 'text-align': this.formItemLabelFontSize.textAlign,
-                    "font-weight": this.formItemLabelFontSize.fontWeight,
+                    "font-size":
+                      this.formItemProps.labelFontStyle.fontSize + "px",
+                    color: this.formItemProps.labelFontStyle.color,
+                    // 'text-align': this.formItemProps.labelFontStyle.textAlign,
+                    "font-weight": this.formItemProps.labelFontStyle.fontWeight,
                     "text-decoration":
-                      this.formItemLabelFontSize.textDecoration,
-                    "font-style": this.formItemLabelFontSize.fontStyle,
+                      this.formItemProps.labelFontStyle.textDecoration,
+                    "font-style": this.formItemProps.labelFontStyle.fontStyle,
                   }}
                 >
                   {this.formItemProps.label}
@@ -322,9 +328,10 @@ export class BaseCon {
               </div>
             );
           },
+          default: () => {
+            return this.renderRaw(...arguments);
+          },
         }}
-      >
-        {this.renderRaw(...arguments)}
       </el-form-item>
     );
   }

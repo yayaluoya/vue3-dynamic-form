@@ -28,6 +28,14 @@ export class Collapse extends BaseCon {
     accordion: false,
   };
 
+  initConfig(configs, toCons) {
+    super.initConfig(configs, toCons);
+    this.collapses.forEach((_) => {
+      _.childs = toCons(_.childs);
+    });
+    return this;
+  }
+
   renderFormItem() {
     return this.renderRaw(...arguments);
   }
@@ -58,7 +66,7 @@ export class Collapse extends BaseCon {
                   }}
                   style={
                     _.childs.length <= 0
-                      ? "min-height: 50px;"
+                      ? "min-height: 80px;"
                       : "min-height: 20px;"
                   }
                 />
