@@ -1,6 +1,7 @@
 import DraggableCon from "../com/draggable.vue";
 import "../style/grid.scss";
 import { Layout } from "./Layout";
+import Item from "../com/item.vue";
 
 /**
  * 栅格列
@@ -33,9 +34,7 @@ class GridCol extends Layout {
   }
 
   render({ ctx, formConfig, cons, formData, activateCon, parent }) {
-    return formData ? (
-      this.renderRaw(...arguments)
-    ) : (
+    return (
       <el-col
         class={[
           "controller controls__ grid-col",
@@ -71,23 +70,39 @@ class GridCol extends Layout {
             ]
           : null}
         <div class="form-item">
-          <DraggableCon
-            parent={this}
-            cons={this.childs}
-            formConfig={formConfig}
-            activateCon={activateCon}
-            onUpdate:cons={(_) => {
-              this.childs = _;
-            }}
-            onUpdate:activateCon={(_) => {
-              ctx.emit("activateConF", _);
-            }}
-            style={
-              this.childs.length <= 0
-                ? "min-height: 50px;"
-                : "min-height: 20px;"
-            }
-          />
+          {formData ? (
+            this.childs.map((con) => {
+              return (
+                <Item
+                  key={con.key}
+                  parent={this}
+                  formConfig={formConfig}
+                  formData={formData}
+                  cons={cons}
+                  con={con}
+                  preview
+                />
+              );
+            })
+          ) : (
+            <DraggableCon
+              parent={this}
+              cons={this.childs}
+              formConfig={formConfig}
+              activateCon={activateCon}
+              onUpdate:cons={(_) => {
+                this.childs = _;
+              }}
+              onUpdate:activateCon={(_) => {
+                ctx.emit("activateConF", _);
+              }}
+              style={
+                this.childs.length <= 0
+                  ? "min-height: 50px;"
+                  : "min-height: 20px;"
+              }
+            />
+          )}
         </div>
       </el-col>
     );
@@ -119,6 +134,10 @@ export class Grid extends Layout {
   };
 
   list = [new GridCol().setCol(12), new GridCol().setCol(12)];
+
+  getChild() {
+    return this.list;
+  }
 
   initConfig(configs, toCons) {
     super.initConfig(configs, toCons);

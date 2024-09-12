@@ -13,7 +13,7 @@ const nanoid = customAlphabet(alphabet, 21);
  * @property {BaseCon} parent
  * @property {BaseCon[]} cons
  * @property {BaseCon} activateCon
- * @property {Record<string,any>} formData
+ * @property {Record<string,any>} formData 表单数据，如果有的话则是预览
  */
 
 /**

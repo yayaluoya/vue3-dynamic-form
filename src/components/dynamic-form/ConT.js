@@ -1,5 +1,6 @@
 import { BaseCon } from "./controls/BaseCon";
 import * as conms from "./controls";
+import { ObjectUtils } from "./tool/obj/ObjectUtils";
 
 const Cons = Object.values(conms);
 
@@ -42,5 +43,20 @@ export class ConT {
    */
   static toConfigs(cons) {
     return JSON.parse(JSON.stringify(cons));
+  }
+
+  /**
+   * 获取表单对象
+   * @param {BaseCon[]} cons 控件列表
+   */
+  static getFromData(cons) {
+    let fromData = {};
+    BaseCon.consForeach(cons, (_) => {
+      _.formItemProps.prop &&
+        (fromData[_.formItemProps.prop] = ObjectUtils.clone2(
+          _.formDefaultValue
+        ));
+    });
+    return fromData;
   }
 }

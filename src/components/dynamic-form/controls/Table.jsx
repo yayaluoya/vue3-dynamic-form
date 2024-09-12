@@ -2,6 +2,7 @@ import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
 import "../style/table.scss";
 import { Layout } from "./Layout";
+import Item from "../com/item.vue";
 
 /**
  * 单元格
@@ -19,9 +20,7 @@ class Cell extends Layout {
   disappear = false;
 
   render({ ctx, activateCon, formData, parent }) {
-    return formData ? (
-      this.renderRaw(...arguments)
-    ) : (
+    return (
       <div
         class={[
           "controller controls__ cell",
@@ -236,8 +235,22 @@ class Cell extends Layout {
     ];
   }
 
-  renderRaw({ ctx, formConfig, cons, activateCon }) {
-    return (
+  renderRaw({ ctx, formConfig, cons, activateCon, formData }) {
+    return formData ? (
+      this.childs.map((con) => {
+        return (
+          <Item
+            key={con.key}
+            parent={this}
+            formConfig={formConfig}
+            formData={formData}
+            cons={cons}
+            con={con}
+            preview
+          />
+        );
+      })
+    ) : (
       <DraggableCon
         parent={this}
         cons={this.childs}

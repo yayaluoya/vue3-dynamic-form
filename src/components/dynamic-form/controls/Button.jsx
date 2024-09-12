@@ -11,6 +11,11 @@ export class Button extends BaseCon {
   /** 单例对象 */
   static I = new Button();
 
+  constructor() {
+    super();
+    this.formItemProps.prop = undefined;
+  }
+
   renderRaw() {
     return <el-button>Default</el-button>;
   }

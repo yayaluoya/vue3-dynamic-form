@@ -31,6 +31,11 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    /** 是否在预览时显示 */
+    preview: {
+      type: Boolean,
+      default: false,
+    },
     activateCon: {
       type: Object,
       default: null,
@@ -41,11 +46,17 @@ export default defineComponent({
     return () => {
       /** @type {BaseCon} */
       let con = props.con;
-      /** @type {boolean} */
-      let drag = props.drag;
       let _ = [];
-      if (drag) {
+      if (props.drag) {
         _ = con.renderDrag({
+          ctx,
+          formConfig: props.formConfig,
+          parent: props.parent,
+          cons: props.cons,
+          activateCon: con,
+        });
+      } else if (props.preview) {
+        _ = con.render({
           ctx,
           formConfig: props.formConfig,
           parent: props.parent,
@@ -60,7 +71,6 @@ export default defineComponent({
           parent: props.parent,
           cons: props.cons,
           activateCon: props.activateCon,
-          formData: props.formData,
         });
       }
       return <div class="dynamic-form-item">{_}</div>;

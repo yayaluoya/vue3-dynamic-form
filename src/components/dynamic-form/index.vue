@@ -20,6 +20,8 @@ import { ConT } from "./ConT";
 import { Clipboard } from "./tool/web/Clipboard";
 import { FileT } from "./tool/web/FileT";
 import { ElMessage } from "element-plus";
+import { ObjectUtils } from "./tool/obj/ObjectUtils";
+import Preview from "./preview.vue";
 
 export default defineComponent({
   components: {
@@ -29,6 +31,7 @@ export default defineComponent({
     Right,
     DocumentCopy,
     CodeEditInput,
+    Preview,
   },
   props: {
     cons: {
@@ -49,6 +52,12 @@ export default defineComponent({
     const rootElRef = ref();
     const bScrollbarRef = ref();
     const leftTabsActiveNames = ref("con");
+    const previewOp = reactive({
+      show: false,
+      cons: [],
+      formData: {},
+      formConfig: {},
+    });
     /** 拖拽中 */
     const draggableLoading = ref(false);
     /** 控件列表 */
@@ -113,6 +122,17 @@ export default defineComponent({
     /** 克隆组件 */
     function cloneComponent(Con) {
       return new Con();
+    }
+
+    /** 预览 */
+    function preview() {
+      previewOp.show = true;
+      previewOp.cons = ConT.toCons(
+        ConT.toConfigs(props.cons),
+        props.extendCons
+      );
+      previewOp.formData = ConT.getFromData(previewOp.cons);
+      previewOp.formConfig = ObjectUtils.clone2(props.formConfig);
     }
 
     /** 导入json */
@@ -215,6 +235,8 @@ export default defineComponent({
       importJSONH,
       copy,
       saveToFile,
+      preview,
+      previewOp,
     };
   },
 });
@@ -292,6 +314,22 @@ export default defineComponent({
             style="margin-right: 10px"
             type="primary"
             link
+            @click="updateCons([])"
+          >
+            清空
+          </el-button>
+          <el-button
+            style="margin-right: 10px"
+            type="primary"
+            link
+            @click="preview([])"
+          >
+            预览
+          </el-button>
+          <el-button
+            style="margin-right: 10px"
+            type="primary"
+            link
             @click="importJSON()"
           >
             导入JSON
@@ -303,14 +341,6 @@ export default defineComponent({
             @click="exportJSON()"
           >
             导出JSON
-          </el-button>
-          <el-button
-            style="margin-right: 10px"
-            type="primary"
-            link
-            @click="updateCons([])"
-          >
-            清空
           </el-button>
           <el-icon @click="positionToOnCon()"><Aim /></el-icon>
         </div>
@@ -389,6 +419,13 @@ export default defineComponent({
         </template>
         <el-button @click="JSONH.show = false">关闭</el-button>
       </template>
+    </el-dialog>
+    <el-dialog v-model="previewOp.show" title="表单预览" width="800">
+      <Preview
+        :cons="previewOp.cons"
+        :formConfig="previewOp.formConfig"
+        :formData="previewOp.formData"
+      />
     </el-dialog>
   </div>
 </template>

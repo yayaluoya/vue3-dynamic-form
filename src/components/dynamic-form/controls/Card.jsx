@@ -1,5 +1,6 @@
 import DraggableCon from "../com/draggable.vue";
 import { Layout } from "./Layout";
+import Item from "../com/item.vue";
 
 /**
  * 卡片
@@ -15,7 +16,7 @@ export class Card extends Layout {
   cardName = "name";
   cardFooter = "footer";
 
-  renderRaw({ ctx, formConfig, cons, activateCon }) {
+  renderRaw({ ctx, formConfig, cons, activateCon, formData }) {
     return (
       <div>
         <el-card>
@@ -28,7 +29,21 @@ export class Card extends Layout {
               ) : null;
             },
             default: () => {
-              return (
+              return formData ? (
+                this.childs.map((con) => {
+                  return (
+                    <Item
+                      key={con.key}
+                      parent={this}
+                      formConfig={formConfig}
+                      formData={formData}
+                      cons={cons}
+                      con={con}
+                      preview
+                    />
+                  );
+                })
+              ) : (
                 <DraggableCon
                   parent={this}
                   cons={this.childs}
