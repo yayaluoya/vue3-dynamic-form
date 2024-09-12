@@ -31,7 +31,7 @@ export class LabelPage extends Layout {
   activeName = 0;
   tabsProps = {
     /** @type {'' | 'card' | 'border-card'} 风格类型 */
-    type: "card",
+    type: "border-card",
     /** @type {'top' | 'right' | 'bottom' | 'left'} 选项卡所在位置 */
     tabPosition: "top",
   };
@@ -73,7 +73,7 @@ export class LabelPage extends Layout {
             return _.activate ? (
               <el-tab-pane label={_.label} name={i}>
                 {formData ? (
-                  this.childs.map((con) => {
+                  _.childs.map((con) => {
                     return (
                       <Item
                         key={con.key}

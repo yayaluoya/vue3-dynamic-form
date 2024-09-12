@@ -42,6 +42,7 @@ export class BaseCon {
   formItemProps = {
     /** 最终绑定到formData上的属性名，如果设置为undefined的话表示这个控件不绑定值到formData上 */
     prop: undefined,
+    hideLabel: true,
     label: "控件",
     labelFontStyle: new FontStyle({
       fontSize: 14,
@@ -390,6 +391,19 @@ export class BaseCon {
                   this.formItemProps.prop = v;
                 }}
               />
+            ),
+          },
+          {
+            label: "隐藏标签",
+            editor: (
+              <el-switch
+                model-value={this.formItemProps.hideLabel}
+                onChange={(v) => {
+                  this.formItemProps.hideLabel = v;
+                }}
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+              ></el-switch>
             ),
           },
           {

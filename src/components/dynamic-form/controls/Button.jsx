@@ -16,6 +16,17 @@ export class Button extends BaseCon {
     this.formItemProps.prop = undefined;
   }
 
+  /** 转JSON字符串 */
+  toJSON() {
+    let d = { ...super.toJSON() };
+    delete d.formItemProps;
+    return d;
+  }
+
+  renderFormItem() {
+    return this.renderRaw(...arguments);
+  }
+
   renderRaw() {
     return <el-button>Default</el-button>;
   }

@@ -37,8 +37,10 @@ class GridCol extends Layout {
     return (
       <el-col
         class={[
-          "controller controls__ grid-col",
+          formData ? "" : "controller",
+          "controls__ grid-col",
           activateCon?.key == this.key ? "on" : "border",
+          formData ? "preview" : "",
         ].join(" ")}
         key={this.renderKey}
         span={this.colProps.span}
@@ -151,6 +153,7 @@ export class Grid extends Layout {
         class={[
           "controls__ grid",
           op.activateCon?.key == this.key ? "" : "border",
+          op.formData ? "preview" : "",
         ].join(" ")}
         gutter={this.rowProps.gutter}
         justify={this.rowProps.justify}

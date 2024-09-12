@@ -1,7 +1,6 @@
 .controls__.table {
   >table {
     width: 100%;
-    text-align: center;
     border-collapse: collapse;
     table-layout: fixed;
 
@@ -10,8 +9,16 @@
     td {
       height: 50px;
       padding: 5px;
-      border: 1px dashed #afafaf;
+      border: 1px solid #afafaf;
       vertical-align: top;
+    }
+  }
+
+  &.preview {
+    >table {
+      td {
+        border: 1px solid #e5e5e5;
+      }
     }
   }
 }
@@ -19,7 +26,7 @@
 .controls__.cell {
   height: 100%;
 
-  &.border {
+  &:not(.preview).border {
     border: 1px dashed #afafaf;
   }
 

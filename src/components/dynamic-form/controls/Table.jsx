@@ -25,6 +25,7 @@ class Cell extends Layout {
         class={[
           "controller controls__ cell",
           activateCon?.key == this.key ? "on" : "border",
+          formData ? "preview" : "",
         ].join(" ")}
         onClick={(e) => {
           e.stopPropagation();
@@ -564,7 +565,7 @@ export class Table extends Layout {
 
   renderRaw(op) {
     return (
-      <div class="controls__ table">
+      <div class={["controls__ table", op.formData ? "preview" : ""].join(" ")}>
         <table>
           <tbody>
             {this.list.map((_, row) => {

@@ -15,11 +15,11 @@ export class Collapse extends Layout {
 
   collapses = [
     {
-      title: "Consistency1",
+      title: "Collapse1",
       childs: [],
     },
     {
-      title: "Consistency2",
+      title: "Collapse2",
       childs: [],
     },
   ];
@@ -57,7 +57,7 @@ export class Collapse extends Layout {
             return (
               <el-collapse-item title={_.title} name={i}>
                 {formData ? (
-                  this.childs.map((con) => {
+                  _.childs.map((con) => {
                     return (
                       <Item
                         key={con.key}
