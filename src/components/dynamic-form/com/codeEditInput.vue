@@ -43,7 +43,7 @@ export default defineComponent({
         enableLiveAutocompletion: true,
         tabSize: 2,
         showPrintMargin: false,
-        fontSize: 16,
+        fontSize: 12,
         maxLines: Infinity,
         wrap: false,
         autoScrollEditorIntoView: true,
@@ -94,6 +94,5 @@ export default defineComponent({
   width: 100%;
   border-radius: 4px;
   overflow: hidden;
-  font-size: 14px;
 }
 </style>
