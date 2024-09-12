@@ -227,43 +227,57 @@ export default defineComponent({
         <el-tab-pane label="组件库" name="con">
           <el-scrollbar wrap-class="scrollbar-wrapper">
             <div class="content__">
-              <el-collapse v-model="ConsCollapseActiveNames">
-                <el-collapse-item
-                  v-for="(item, index) in Cons"
-                  :key="index"
-                  :title="item.label"
-                  :name="item.label"
-                >
-                  <Draggable
-                    :class="draggableC.class"
-                    :list="item.cons"
-                    :group="{
-                      name: draggableC.group,
-                      pull: 'clone',
-                      put: false,
-                    }"
-                    :clone="cloneComponent"
-                    :sort="false"
-                    @start="draggableLoading = true"
-                    @end="draggableLoading = false"
-                    item-key="type"
+              <el-form
+                :inline="formConfig.inline"
+                :label-position="formConfig.labelPosition"
+                :label-width="formConfig.labelWidth"
+                :label-suffix="formConfig.labelsuffix"
+                :hide-required-asterisk="formConfig.hideRequiredAsterisk"
+                :require-asterisk-position="formConfig.requireAsteriskPosition"
+                :show-message="formConfig.showMessage"
+                :inline-message="formConfig.inlineMessage"
+                :status-icon="formConfig.statusIcon"
+                :size="formConfig.size"
+                :disabled="formConfig.disabled"
+              >
+                <el-collapse v-model="ConsCollapseActiveNames">
+                  <el-collapse-item
+                    v-for="(item, index) in Cons"
+                    :key="index"
+                    :title="item.label"
+                    :name="item.label"
                   >
-                    <template #item="{ element: Con }">
-                      <div
-                        class="draggable-item"
-                        :class="{
-                          on: Con.ConType === activateCon?.conType,
-                        }"
-                      >
-                        <span>{{ Con.ConName }}</span>
-                        <div class="draggable-show-item">
-                          <Item drag :formConfig="formConfig" :con="Con.I" />
+                    <Draggable
+                      :class="draggableC.class"
+                      :list="item.cons"
+                      :group="{
+                        name: draggableC.group,
+                        pull: 'clone',
+                        put: false,
+                      }"
+                      :clone="cloneComponent"
+                      :sort="false"
+                      @start="draggableLoading = true"
+                      @end="draggableLoading = false"
+                      item-key="type"
+                    >
+                      <template #item="{ element: Con }">
+                        <div
+                          class="draggable-item"
+                          :class="{
+                            on: Con.ConType === activateCon?.conType,
+                          }"
+                        >
+                          <span>{{ Con.ConName }}</span>
+                          <div class="draggable-show-item">
+                            <Item drag :formConfig="formConfig" :con="Con.I" />
+                          </div>
                         </div>
-                      </div>
-                    </template>
-                  </Draggable>
-                </el-collapse-item>
-              </el-collapse>
+                      </template>
+                    </Draggable>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-form>
             </div>
           </el-scrollbar>
         </el-tab-pane>
@@ -314,22 +328,36 @@ export default defineComponent({
         >
         <el-scrollbar wrap-class="scrollbar-wrapper" ref="bScrollbarRef">
           <div class="content__">
-            <DraggableCon
-              class="draggable-con"
-              :cons="cons"
-              :formConfig="formConfig"
-              :activateCon="activateCon"
-              @update:cons="
-                (_) => {
-                  updateCons(_);
-                }
-              "
-              @update:activateCon="
-                (_) => {
-                  activateCon = _;
-                }
-              "
-            />
+            <el-form
+              :inline="formConfig.inline"
+              :label-position="formConfig.labelPosition"
+              :label-width="formConfig.labelWidth"
+              :label-suffix="formConfig.labelsuffix"
+              :hide-required-asterisk="formConfig.hideRequiredAsterisk"
+              :require-asterisk-position="formConfig.requireAsteriskPosition"
+              :show-message="formConfig.showMessage"
+              :inline-message="formConfig.inlineMessage"
+              :status-icon="formConfig.statusIcon"
+              :size="formConfig.size"
+              :disabled="formConfig.disabled"
+            >
+              <DraggableCon
+                class="draggable-con"
+                :cons="cons"
+                :formConfig="formConfig"
+                :activateCon="activateCon"
+                @update:cons="
+                  (_) => {
+                    updateCons(_);
+                  }
+                "
+                @update:activateCon="
+                  (_) => {
+                    activateCon = _;
+                  }
+                "
+              />
+            </el-form>
           </div>
         </el-scrollbar>
       </div>
@@ -516,8 +544,11 @@ export default defineComponent({
           align-items: center;
           justify-content: center;
           padding: 10px;
-          > .draggable-con {
-            min-height: calc(var(--height) - 40px - 20px);
+          > .el-form {
+            width: 100%;
+            .draggable-con {
+              min-height: calc(var(--height) - 40px - 20px);
+            }
           }
         }
       }

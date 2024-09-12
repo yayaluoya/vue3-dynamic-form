@@ -7,8 +7,10 @@ export function getFormConfig() {
     inline: false,
     /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 */
     labelPosition: "top",
+    /** 标签对齐方式 */
+    labelAlign: "left",
     /** 标签的长度，例如 '50px'。 作为 Form 直接子元素的 form-item 会继承该值。 可以使用 auto。 */
-    labelWidth: 100,
+    labelWidth: 120,
     /** 表单域标签的后缀 */
     labelsuffix: ":",
     /** 是否隐藏必填字段标签旁边的红色星号 */

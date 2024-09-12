@@ -351,7 +351,16 @@ export class BaseCon {
    * @returns
    */
   renderRight(op) {
-    return this.getRight(...arguments).map((_) => _.vd);
+    return this.getRight(...arguments).map((_, i) => {
+      return (
+        <el-collapse-item title={_.title} name={_.title}>
+          {_.childs.map((__) => {
+            let { editor, ...props } = __.editor;
+            return <el-form-item>{editor}</el-form-item>;
+          })}
+        </el-collapse-item>
+      );
+    });
   }
 
   /**
@@ -359,11 +368,16 @@ export class BaseCon {
    * @param {RenderOp} op
    * @returns
    */
-  getRight(op) {
+  getRight(op, hasEditor = true) {
     return [
       {
-        name: "lable",
-        vd: <div>编辑栏目</div>,
+        title: "常用属性",
+        childs: [
+          {
+            label: "",
+            editor: hasEditor && <div>编辑</div>,
+          },
+        ],
       },
     ];
   }
