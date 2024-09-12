@@ -4,6 +4,13 @@ import { BaseCon } from "./BaseCon";
  * 布局控件
  */
 export class Layout extends BaseCon {
+  /** 转JSON字符串 */
+  toJSON() {
+    let d = { ...super.toJSON() };
+    delete d.formItemProps;
+    return d;
+  }
+
   renderFormItem() {
     return this.renderRaw(...arguments);
   }
