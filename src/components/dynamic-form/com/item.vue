@@ -80,17 +80,12 @@ export default defineComponent({
     border: 2px solid transparent;
     &.on {
       border: 2px solid #1890ff;
-      > .drag-handler,
-      > .con-name,
-      > .handler-button {
-        display: flex !important;
-      }
     }
     > .drag-handler,
     > .con-name,
     > .handler-button {
       padding: 2px 3px;
-      display: none;
+      display: flex;
       flex-direction: row;
       align-items: center;
       position: absolute;

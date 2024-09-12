@@ -51,21 +51,25 @@ class GridCol extends Layout {
           ctx.emit("activateConF", this);
         }}
       >
-        <div class="con-name">
-          <span>{this.conName}</span>
-        </div>
-        <div class="handler-button">
-          <el-icon
-            title="选择父组件"
-            onClick={(e) => {
-              e.stopPropagation();
-              ctx.emit("activateConF", parent);
-            }}
-          >
-            <Back />
-          </el-icon>
-          {this.getHandler(...arguments)}
-        </div>
+        {activateCon?.key == this.key
+          ? [
+              <div class="con-name">
+                <span>{this.conName}</span>
+              </div>,
+              <div class="handler-button">
+                <el-icon
+                  title="选择父组件"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    ctx.emit("activateConF", parent);
+                  }}
+                >
+                  <Back />
+                </el-icon>
+                {this.getHandler(...arguments)}
+              </div>,
+            ]
+          : null}
         <div class="form-item">
           <DraggableCon
             parent={this}
