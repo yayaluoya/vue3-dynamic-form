@@ -12,7 +12,7 @@ import { DocumentCopy } from "@element-plus/icons-vue";
 import Right from "./right/index.vue";
 import Item from "./com/item.vue";
 import { WindowSizeChangeE } from "./tool/web/event/WindowSizeChangeE";
-import { Button, Subfield, Card, LabelPage, Table, Collapse } from "./controls";
+import { Button, Grid, Card, LabelPage, Table, Collapse } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
 import CodeEditInput from "./com/codeEditInput.vue";
@@ -63,7 +63,7 @@ export default defineComponent({
       },
       {
         label: "容器类型",
-        cons: [Subfield, Table, LabelPage, Card, Collapse],
+        cons: [Grid, Table, LabelPage, Card, Collapse],
       },
       {
         label: "扩展类型",

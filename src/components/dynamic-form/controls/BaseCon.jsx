@@ -37,19 +37,6 @@ export class BaseCon {
   renderKey = "";
   /** @type {BaseCon[]} 子控件 */
   childs = [];
-  /** 布局配置 */
-  layout = {
-    col: {
-      /** 栅格占据的列数 */
-      span: 24,
-      /** 栅格左侧的间隔格数 */
-      offset: 0,
-      /** 栅格向右移动格数 */
-      push: 0,
-      /** 栅格向左移动格数 */
-      pull: 0,
-    },
-  };
 
   /** 表单属性 */
   formItemProps = {
@@ -188,7 +175,7 @@ export class BaseCon {
    * @returns
    */
   renderDrag(op) {
-    return this.renderCol(...arguments);
+    return this.render(...arguments);
   }
 
   /**
@@ -196,56 +183,46 @@ export class BaseCon {
    * @param {RenderOp} op
    * @returns
    */
-  renderCol({ ctx, activateCon, formData, parent }) {
-    return (
-      <el-col
+  render({ ctx, activateCon, formData, parent }) {
+    return formData ? (
+      this.renderFormItem(...arguments)
+    ) : (
+      <div
         key={this.renderKey}
-        span={this.layout.col.span}
-        offset={this.layout.col.offset}
-        push={this.layout.col.push}
-        pull={this.layout.col.pull}
+        class={["controller", activateCon?.key == this.key ? "on" : ""].join(
+          " "
+        )}
+        onClick={(e) => {
+          e.stopPropagation();
+          ctx.emit("activateConF", this);
+        }}
       >
-        {formData ? (
-          this.renderFormItem(...arguments)
+        {this.towable ? (
+          <div class="drag-handler">
+            <el-icon>
+              <Rank />
+            </el-icon>
+            <span>{this.conName}</span>
+          </div>
         ) : (
-          <div
-            class={[
-              "controller",
-              activateCon?.key == this.key ? "on" : "",
-            ].join(" ")}
-            onClick={(e) => {
-              e.stopPropagation();
-              ctx.emit("activateConF", this);
-            }}
-          >
-            {this.towable ? (
-              <div class="drag-handler">
-                <el-icon>
-                  <Rank />
-                </el-icon>
-                <span>{this.conName}</span>
-              </div>
-            ) : (
-              <div class="con-name">
-                <span>{this.conName}</span>
-              </div>
-            )}
-            <div class="handler-button">
-              <el-icon
-                title="选择父组件"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  ctx.emit("activateConF", parent);
-                }}
-              >
-                <Back />
-              </el-icon>
-              {this.getHandler(...arguments)}
-            </div>
-            <div class="form-item">{this.renderFormItem(...arguments)}</div>
+          <div class="con-name">
+            <span>{this.conName}</span>
           </div>
         )}
-      </el-col>
+        <div class="handler-button">
+          <el-icon
+            title="选择父组件"
+            onClick={(e) => {
+              e.stopPropagation();
+              ctx.emit("activateConF", parent);
+            }}
+          >
+            <Back />
+          </el-icon>
+          {this.getHandler(...arguments)}
+        </div>
+        <div class="form-item">{this.renderFormItem(...arguments)}</div>
+      </div>
     );
   }
 
@@ -395,23 +372,7 @@ export class BaseCon {
     return [
       {
         title: "常用属性",
-        childs: hasEditor && [
-          {
-            label: "空间栅格",
-            editor: (
-              <el-slider
-                min={0}
-                max={24}
-                step={1}
-                model-value={this.layout.col.span}
-                onInput={(v) => {
-                  this.layout.col.span = v;
-                }}
-                show-stops
-              ></el-slider>
-            ),
-          },
-        ],
+        childs: hasEditor && [],
       },
       {
         title: "表单属性",

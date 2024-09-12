@@ -1,11 +1,11 @@
-import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
 import "../style/label-page.scss";
+import { Layout } from "./Layout";
 
 /**
  * 标签页
  */
-export class LabelPage extends BaseCon {
+export class LabelPage extends Layout {
   /** 控件类型 */
   static ConType = "LabelPage";
   /** 控件名字 */
@@ -41,10 +41,6 @@ export class LabelPage extends BaseCon {
       _.childs = toCons(_.childs);
     });
     return this;
-  }
-
-  renderFormItem() {
-    return this.renderRaw(...arguments);
   }
 
   renderRaw({ ctx, formConfig, cons, activateCon }) {

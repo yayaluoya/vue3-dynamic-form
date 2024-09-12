@@ -54,7 +54,7 @@ export default defineComponent({
           formData: props.formData,
         });
       } else {
-        _ = con.renderCol({
+        _ = con.render({
           ctx,
           formConfig: props.formConfig,
           parent: props.parent,

@@ -1,10 +1,10 @@
-import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
+import { Layout } from "./Layout";
 
 /**
  * 折叠面板
  */
-export class Collapse extends BaseCon {
+export class Collapse extends Layout {
   /** 控件类型 */
   static ConType = "Collapse";
   /** 控件名字 */
@@ -34,10 +34,6 @@ export class Collapse extends BaseCon {
       _.childs = toCons(_.childs);
     });
     return this;
-  }
-
-  renderFormItem() {
-    return this.renderRaw(...arguments);
   }
 
   renderRaw({ ctx, formConfig, cons, activateCon }) {

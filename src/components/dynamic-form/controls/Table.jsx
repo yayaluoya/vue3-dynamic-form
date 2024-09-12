@@ -1,11 +1,12 @@
 import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
 import "../style/table.scss";
+import { Layout } from "./Layout";
 
 /**
  * 单元格
  */
-class Cell extends BaseCon {
+class Cell extends Layout {
   /** 控件类型 */
   static ConType = "Cell";
   /** 控件名字 */
@@ -17,9 +18,42 @@ class Cell extends BaseCon {
   /** 消失 */
   disappear = false;
 
+  render({ ctx, activateCon, formData, parent }) {
+    return formData ? (
+      this.renderRaw(...arguments)
+    ) : (
+      <div
+        class={[
+          "controller controls__ cell",
+          activateCon?.key == this.key ? "on" : "border",
+        ].join(" ")}
+        onClick={(e) => {
+          e.stopPropagation();
+          ctx.emit("activateConF", this);
+        }}
+      >
+        <div class="con-name">
+          <span>{this.conName}</span>
+        </div>
+        <div class="handler-button">
+          <el-icon
+            title="选择父组件"
+            onClick={(e) => {
+              e.stopPropagation();
+              ctx.emit("activateConF", parent);
+            }}
+          >
+            <Back />
+          </el-icon>
+          {this.getHandler(...arguments)}
+        </div>
+        <div class="form-item">{this.renderRaw(...arguments)}</div>
+      </div>
+    );
+  }
+
   /**
-   *
-   * @param {{parent: Table}} _
+   * @param {{parent: Table}} op
    * @param {number} row
    * @param {number} col
    * @returns
@@ -198,49 +232,6 @@ class Cell extends BaseCon {
     ];
   }
 
-  renderCol({ ctx, activateCon, formData, parent }) {
-    return formData ? (
-      this.renderRaw(...arguments)
-    ) : (
-      <div
-        class={[
-          "controller controls__ cell",
-          activateCon?.key == this.key ? "on" : "border",
-        ].join(" ")}
-        onClick={(e) => {
-          e.stopPropagation();
-          ctx.emit("activateConF", this);
-        }}
-      >
-        {this.towable ? (
-          <div class="drag-handler">
-            <el-icon>
-              <Rank />
-            </el-icon>
-            <span>{this.conName}</span>
-          </div>
-        ) : (
-          <div class="con-name">
-            <span>{this.conName}</span>
-          </div>
-        )}
-        <div class="handler-button">
-          <el-icon
-            title="选择父组件"
-            onClick={(e) => {
-              e.stopPropagation();
-              ctx.emit("activateConF", parent);
-            }}
-          >
-            <Back />
-          </el-icon>
-          {this.getHandler(...arguments)}
-        </div>
-        <div class="form-item">{this.renderRaw(...arguments)}</div>
-      </div>
-    );
-  }
-
   renderRaw({ ctx, formConfig, cons, activateCon }) {
     return (
       <DraggableCon
@@ -265,7 +256,7 @@ class Cell extends BaseCon {
 /**
  * 表格
  */
-export class Table extends BaseCon {
+export class Table extends Layout {
   /** 控件类型 */
   static ConType = "Table";
   /** 控件名字 */
@@ -554,10 +545,6 @@ export class Table extends BaseCon {
     return _;
   }
 
-  renderFormItem() {
-    return this.renderRaw(...arguments);
-  }
-
   renderRaw(op) {
     return (
       <div class="controls__ table">
@@ -569,7 +556,7 @@ export class Table extends BaseCon {
                   {_.map((__, col) => {
                     return __.disappear ? null : (
                       <td key={col} colspan={__.colspan} rowspan={__.rowspan}>
-                        {__.renderCol(
+                        {__.render(
                           {
                             ...op,
                             parent: this,

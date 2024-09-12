@@ -1,10 +1,10 @@
-import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
+import { Layout } from "./Layout";
 
 /**
  * 卡片
  */
-export class Card extends BaseCon {
+export class Card extends Layout {
   /** 控件类型 */
   static ConType = "Card";
   /** 控件名字 */
@@ -14,10 +14,6 @@ export class Card extends BaseCon {
 
   cardName = "name";
   cardFooter = "footer";
-
-  renderFormItem() {
-    return this.renderRaw(...arguments);
-  }
 
   renderRaw({ ctx, formConfig, cons, activateCon }) {
     return (
