@@ -61,8 +61,10 @@ export class BaseCon {
     }),
     /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 默认会继承 Form的label-position */
     labelPosition: undefined,
+    /** 标签对齐方式 */
+    labelAlign: undefined,
     /** 标签宽度，例如 '50px'。 可以使用 auto。 */
-    labelWidth: undefined,
+    labelWidth: 0,
     required: false,
     rules: undefined,
     /** 表单域验证错误时的提示信息。设置该值会导致表单验证状态变为 error，并显示该错误信息。 */
@@ -297,7 +299,10 @@ export class BaseCon {
         label-position={this.formItemProps.labelPosition}
         label-width={
           //没有label时不显示label
-          this.formItemProps.label ? this.formItemProps.labelWidth : "0px"
+          this.formItemProps.label
+            ? this.formItemProps.labelWidth &&
+              this.formItemProps.labelWidth + "px"
+            : "0px"
         }
         required={this.formItemProps.required}
         rules={this.formItemProps.rules}
@@ -309,7 +314,21 @@ export class BaseCon {
         {{
           label: (...arg) => {
             return (
-              <div style={`display: inline-flex`}>
+              <div
+                style={`
+                display: inline-flex;
+                flex-direction: row;
+                ${
+                  (this.formItemProps.labelPosition ||
+                    formConfig.labelPosition) == "top"
+                    ? ""
+                    : "width: 100%;"
+                }
+                justify-content: ${
+                  this.formItemProps.labelAlign || formConfig.labelAlign
+                };
+              `}
+              >
                 <span
                   style={{
                     "font-size":
@@ -353,10 +372,14 @@ export class BaseCon {
   renderRight(op) {
     return this.getRight(...arguments).map((_, i) => {
       return (
-        <el-collapse-item title={_.title} name={_.title}>
-          {_.childs.map((__) => {
-            let { editor, ...props } = __.editor;
-            return <el-form-item>{editor}</el-form-item>;
+        <el-collapse-item key={i} title={_.title} name={_.title}>
+          {_.childs.map((__, j) => {
+            let { editor, ...props } = __;
+            return (
+              <el-form-item key={j} label={props.label}>
+                {editor}
+              </el-form-item>
+            );
           })}
         </el-collapse-item>
       );
@@ -372,10 +395,160 @@ export class BaseCon {
     return [
       {
         title: "常用属性",
-        childs: [
+        childs: hasEditor && [
           {
-            label: "",
-            editor: hasEditor && <div>编辑</div>,
+            label: "空间栅格",
+            editor: (
+              <el-slider
+                min={0}
+                max={24}
+                step={1}
+                model-value={this.layout.col.span}
+                onInput={(v) => {
+                  this.layout.col.span = v;
+                }}
+                show-stops
+              ></el-slider>
+            ),
+          },
+        ],
+      },
+      {
+        title: "表单属性",
+        childs: hasEditor && [
+          {
+            label: "表单字段名",
+            editor: (
+              <el-input
+                model-value={this.formItemProps.prop}
+                onInput={(v) => {
+                  this.formItemProps.prop = v;
+                }}
+              />
+            ),
+          },
+          {
+            label: "标签名",
+            editor: (
+              <el-input
+                model-value={this.formItemProps.label}
+                onInput={(v) => {
+                  this.formItemProps.label = v;
+                }}
+              />
+            ),
+          },
+
+          {
+            label: "标签位置",
+            editor: (
+              <div style="display: flex;align-items: center;">
+                <el-radio-group
+                  size="small"
+                  model-value={this.formItemProps.labelPosition}
+                  onChange={(v) => {
+                    this.formItemProps.labelPosition = v;
+                  }}
+                >
+                  <el-radio-button label="left" value="left" />
+                  <el-radio-button label="top" value="top" />
+                </el-radio-group>
+                {this.formItemProps.labelPosition ? (
+                  <el-icon
+                    style="margin-left: 2px;cursor: pointer;"
+                    onClick={() => {
+                      this.formItemProps.labelPosition = undefined;
+                    }}
+                  >
+                    <Close />
+                  </el-icon>
+                ) : null}
+              </div>
+            ),
+          },
+          {
+            label: "字段标签对齐",
+            editor: (
+              <div style="display: flex;align-items: center;">
+                <el-radio-group
+                  size="small"
+                  model-value={this.formItemProps.labelAlign}
+                  onChange={(v) => {
+                    this.formItemProps.labelAlign = v;
+                  }}
+                >
+                  <el-radio-button label="left" value="left" />
+                  <el-radio-button label="center" value="center" />
+                  <el-radio-button label="right" value="right" />
+                </el-radio-group>
+                {this.formItemProps.labelAlign ? (
+                  <el-icon
+                    style="margin-left: 2px;cursor: pointer;"
+                    onClick={() => {
+                      this.formItemProps.labelAlign = undefined;
+                    }}
+                  >
+                    <Close />
+                  </el-icon>
+                ) : null}
+              </div>
+            ),
+          },
+          {
+            label: "标签宽度",
+            editor: (
+              <div style="display: flex;align-items: center;">
+                <el-input-number
+                  size="small"
+                  model-value={this.formItemProps.labelWidth}
+                  onChange={(v) => {
+                    this.formItemProps.labelWidth = v;
+                  }}
+                />
+                {this.formItemProps.labelWidth ? (
+                  <el-icon
+                    style="margin-left: 2px;cursor: pointer;"
+                    onClick={() => {
+                      this.formItemProps.labelWidth = 0;
+                    }}
+                  >
+                    <Close />
+                  </el-icon>
+                ) : null}
+              </div>
+            ),
+          },
+          ...this.formItemProps.labelFontStyle.render(),
+          {
+            label: "组件大小",
+            editor: (
+              <el-select
+                model-value={this.formItemProps.size}
+                size="small"
+                onChange={(v) => {
+                  this.formItemProps.size = v;
+                }}
+                placeholder="请选择"
+                clearable
+              >
+                <el-option label="large" value="large" />
+                <el-option label="default" value="default" />
+                <el-option label="small" value="small" />
+              </el-select>
+            ),
+          },
+          {
+            label: "必填",
+            editor: (
+              <el-switch
+                model-value={this.formItemProps.required}
+                onChange={(v) => {
+                  this.formItemProps.required = v;
+                }}
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+              ></el-switch>
+            ),
           },
         ],
       },

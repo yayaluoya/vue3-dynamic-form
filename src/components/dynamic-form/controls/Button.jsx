@@ -14,4 +14,10 @@ export class Button extends BaseCon {
   renderRaw() {
     return <el-button>Default</el-button>;
   }
+
+  getRight(op, hasEditor = true) {
+    let _ = super.getRight(...arguments).filter((_) => _.title != "表单属性");
+    hasEditor && _.find((_) => _.title == "常用属性").childs.push(...[]);
+    return _;
+  }
 }

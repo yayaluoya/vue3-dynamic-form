@@ -121,6 +121,27 @@ export default defineComponent({
                           }}
                         />
                       </el-form-item>
+                      <el-form-item label="必填星号位置">
+                        <el-radio-group
+                          size="small"
+                          model-value={formConfig.requireAsteriskPosition}
+                          onChange={(v) => {
+                            formConfig.requireAsteriskPosition = v;
+                          }}
+                        >
+                          <el-radio-button label="left" value="left" />
+                          <el-radio-button label="right" value="right" />
+                        </el-radio-group>
+                      </el-form-item>
+                      <el-form-item label="隐藏必填星号">
+                        <el-switch
+                          size="small"
+                          model-value={formConfig.hideRequiredAsterisk}
+                          onChange={(v) => {
+                            formConfig.hideRequiredAsterisk = v;
+                          }}
+                        ></el-switch>
+                      </el-form-item>
                     </el-collapse-item>
                   </el-collapse>
                 ) : null}
