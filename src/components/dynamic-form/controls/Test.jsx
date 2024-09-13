@@ -1,5 +1,14 @@
 import { BaseCon } from "./BaseCon";
 import "../style/test.scss";
+import { FormItemRules } from "../com/FormItemRules";
+
+class FormItemRules_ extends FormItemRules {
+  rules = [];
+
+  reder() {
+    return [];
+  }
+}
 
 /**
  * 测试
@@ -16,6 +25,13 @@ export class Test extends BaseCon {
     number: 1,
     str: "字符串",
   };
+
+  /**
+   * @param {Test} config
+   */
+  init(config) {
+    this.formItemProps.rules = new FormItemRules_(config?.formItemProps.rules);
+  }
 
   renderRaw({ formData }) {
     let { value } = this.getFormValueRef(formData, this.formDefaultValue);

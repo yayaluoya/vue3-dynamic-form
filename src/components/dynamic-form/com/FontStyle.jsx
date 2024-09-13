@@ -1,4 +1,5 @@
 import { predefineColors } from "../config/predefineColors";
+import { ObjectUtils } from "../tool/obj/ObjectUtils";
 
 /**
  * 字体样式
@@ -15,7 +16,7 @@ export class FontStyle {
    */
   constructor(op = {}) {
     for (let i in op) {
-      this[i] = op[i];
+      this[i] = ObjectUtils.clone2(op[i]);
     }
   }
 

@@ -2,6 +2,7 @@ import { customAlphabet } from "nanoid";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import { getFormConfig } from "../config/getFormConfig";
 import { FontStyle } from "../com/FontStyle";
+import { FormItemRules } from "../com/FormItemRules";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 21);
@@ -53,7 +54,7 @@ export class BaseCon {
     labelAlign: undefined,
     /** 标签宽度，例如 '50px'。 可以使用 auto。 */
     labelWidth: 0,
-    rules: undefined,
+    rules: new FormItemRules(),
     /** 是否显示校验错误信息 */
     showMessage: true,
     /** 用于控制该表单域下组件的默认尺寸 */
@@ -77,6 +78,8 @@ export class BaseCon {
     // 属性名默认和key同名
     this.formItemProps.prop = this.key;
     this.formItemProps.label = this.conName;
+    //
+    this.init();
   }
 
   /** 转JSON字符串 */
@@ -101,9 +104,19 @@ export class BaseCon {
     this.formItemProps.labelFontStyle = new FontStyle(
       this.formItemProps.labelFontStyle
     );
+    this.formItemProps.rules = new FormItemRules(this.formItemProps.rules);
     this.childs = toCons(this.childs);
+    //
+    this.init(config);
     return this;
   }
+
+  /**
+   * 初始化
+   * 因为有两种方式初始化，一种是new，一种是initConfig 所以这里统一一下
+   * @param {*} config initConfig 调用时回传的参数
+   */
+  init(config) {}
 
   /** 更新渲染key */
   upadteRenderKey() {
@@ -291,7 +304,7 @@ export class BaseCon {
               this.formItemProps.labelWidth + "px"
             : "0px"
         }
-        rules={this.formItemProps.rules}
+        rules={this.formItemProps.rules.rules}
         show-message={this.formItemProps.showMessage}
         size={this.formItemProps.size}
       >
@@ -540,6 +553,7 @@ export class BaseCon {
               ></el-switch>
             ),
           },
+          ...this.formItemProps.rules.reder(),
         ],
       },
     ];

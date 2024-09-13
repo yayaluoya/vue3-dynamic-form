@@ -1,0 +1,63 @@
+.formItem-rules {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  >.draggable {
+    width: 100%;
+
+    .i {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: start;
+      justify-content: space-between;
+      margin-bottom: 2px;
+      background-color: #f3f3f3;
+      padding: 5px;
+
+      >div:nth-child(1) {
+        flex: 1 1 0;
+        width: 0;
+        display: flex;
+        flex-direction: column;
+
+        >div {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: 3px;
+
+          >span {
+            width: 80px;
+            color: var(--el-text-color-regular);
+          }
+
+          >*:nth-child(2) {
+            flex: 1 1 0;
+          }
+        }
+      }
+
+      >div:nth-child(2) {
+
+
+        >* {
+          margin-left: 5px;
+        }
+
+        >.drag-handler {
+          cursor: move;
+        }
+
+        >.remove {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  >.el-button {
+    margin-top: 10px;
+  }
+}
