@@ -1,6 +1,10 @@
 import DraggableCon from "../com/draggable.vue";
 import { Layout } from "./Layout";
 import Item from "../com/item.vue";
+import Draggable from "vuedraggable";
+import draggableC from "../config/draggableC";
+import { BaseCon } from "./BaseCon";
+import "../style/collapse.scss";
 
 /**
  * 折叠面板
@@ -15,11 +19,8 @@ export class Collapse extends Layout {
 
   collapses = [
     {
+      key: BaseCon.getHash(),
       title: "Collapse1",
-      childs: [],
-    },
-    {
-      title: "Collapse2",
       childs: [],
     },
   ];
@@ -55,7 +56,7 @@ export class Collapse extends Layout {
         >
           {this.collapses.map((_, i) => {
             return (
-              <el-collapse-item title={_.title} name={i}>
+              <el-collapse-item key={_.key} title={_.title} name={i}>
                 {formData ? (
                   _.childs.map((con) => {
                     return (
@@ -95,5 +96,90 @@ export class Collapse extends Layout {
         </el-collapse>
       </div>
     );
+  }
+
+  getRight(op, hasEditor = true) {
+    let _ = super.getRight(...arguments);
+    hasEditor &&
+      _.find((_) => _.title == "常用属性").childs.unshift(
+        ...[
+          {
+            label: "手风琴模式",
+            editor: (
+              <el-switch
+                model-value={this.collapseProps.accordion}
+                onChange={(v) => {
+                  this.collapseProps.accordion = v;
+                }}
+              ></el-switch>
+            ),
+          },
+          {
+            label: "选项设置：",
+          },
+          {
+            editor: (
+              <div class="controls__ collapse-right">
+                <Draggable
+                  class="draggable"
+                  modelValue={this.collapses}
+                  onUpdate:modelValue={(_) => {
+                    this.collapses = [..._];
+                  }}
+                  animation={draggableC.animation}
+                  handle=".drag-handler"
+                  item-key="key"
+                >
+                  {{
+                    item: ({ element: _ }) => {
+                      return (
+                        <div class="i">
+                          <el-input
+                            model-value={_.title}
+                            onInput={(v) => {
+                              _.title = v;
+                            }}
+                          />
+                          <el-icon class="drag-handler">
+                            <Rank />
+                          </el-icon>
+                          <el-icon
+                            class="remove"
+                            onClick={() => {
+                              let i = this.collapses.findIndex(
+                                (__) => _.key == __.key
+                              );
+                              if (i >= 0) {
+                                this.collapses.splice(i, 1);
+                              }
+                            }}
+                          >
+                            <CircleClose />
+                          </el-icon>
+                        </div>
+                      );
+                    },
+                  }}
+                </Draggable>
+                <el-button
+                  plain
+                  size="small"
+                  type="primary"
+                  onClick={() => {
+                    this.collapses.push({
+                      key: BaseCon.getHash(),
+                      title: "Collapse" + (this.collapses.length + 1),
+                      childs: [],
+                    });
+                  }}
+                >
+                  增加选项
+                </el-button>
+              </div>
+            ),
+          },
+        ]
+      );
+    return _;
   }
 }

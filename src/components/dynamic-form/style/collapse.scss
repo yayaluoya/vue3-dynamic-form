@@ -1,0 +1,34 @@
+.controls__.collapse-right {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  >.draggable {
+    width: 100%;
+
+    .i {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+
+      >.el-icon {
+        margin-left: 3px;
+      }
+
+      >.drag-handler {
+        cursor: move;
+      }
+
+      >.remove {
+        cursor: pointer;
+      }
+    }
+  }
+
+  >.el-button {
+    margin-top: 5px;
+  }
+}

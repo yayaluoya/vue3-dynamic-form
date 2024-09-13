@@ -24,12 +24,6 @@ export class LabelPage extends Layout {
       activate: true,
       childs: [],
     },
-    {
-      key: BaseCon.getHash(),
-      label: "tab2",
-      activate: true,
-      childs: [],
-    },
   ];
   activeName = 0;
   tabsProps = {
@@ -74,7 +68,12 @@ export class LabelPage extends Layout {
         >
           {this.tabs.map((_, i) => {
             return (
-              <el-tab-pane label={_.label} name={i} disabled={!_.activate}>
+              <el-tab-pane
+                key={_.key}
+                label={_.label}
+                name={i}
+                disabled={!_.activate}
+              >
                 {formData ? (
                   _.activate ? (
                     _.childs.map((con) => {
@@ -156,11 +155,6 @@ export class LabelPage extends Layout {
               </el-radio-group>
             ),
           },
-        ]
-      );
-    hasEditor &&
-      _.find((_) => _.title == "常用属性").childs.push(
-        ...[
           {
             label: "选项卡设置：",
           },
