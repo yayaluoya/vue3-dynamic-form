@@ -372,10 +372,12 @@ export class BaseCon {
         <el-collapse-item key={i} title={_.title} name={_.title}>
           {_.childs.map((__, j) => {
             let { editor, ...props } = __;
-            return (
+            return props.label ? (
               <el-form-item key={j} label={props.label}>
                 {editor}
               </el-form-item>
+            ) : (
+              editor
             );
           })}
         </el-collapse-item>

@@ -2,6 +2,7 @@ import DraggableCon from "../com/draggable.vue";
 import "../style/grid.scss";
 import { Layout } from "./Layout";
 import Item from "../com/item.vue";
+import { BaseCon } from "./BaseCon";
 
 /**
  * 栅格列
@@ -118,8 +119,103 @@ class GridCol extends Layout {
     );
   }
 
-  getHandler({ parent, ctx }, row, col) {
-    return [];
+  /**
+   *
+   * @param {{parent: Grid}} _
+   * @returns
+   */
+  getHandler({ parent }) {
+    return [
+      <el-icon
+        title="上移组件"
+        onClick={(e) => {
+          e.stopPropagation();
+          parent.moveChild(this, "up");
+        }}
+      >
+        <Top />
+      </el-icon>,
+      <el-icon
+        title="下移组件"
+        onClick={(e) => {
+          e.stopPropagation();
+          parent.moveChild(this, "down");
+        }}
+      >
+        <Bottom />
+      </el-icon>,
+      <el-icon
+        title="删除组件"
+        onClick={(e) => {
+          e.stopPropagation();
+          parent.removeChild(this);
+        }}
+      >
+        <DeleteFilled />
+      </el-icon>,
+    ];
+  }
+
+  getRight(op, hasEditor = true) {
+    let _ = super.getRight(...arguments);
+    hasEditor &&
+      _.find((_) => _.title == "常用属性").childs.unshift(
+        ...[
+          {
+            label: "占据列数量",
+            editor: (
+              <el-input-number
+                model-value={this.colProps.span}
+                min={1}
+                max={24}
+                onChange={(_) => {
+                  this.colProps.span = _;
+                }}
+              />
+            ),
+          },
+          {
+            label: "栅格左侧间隔",
+            editor: (
+              <el-input-number
+                model-value={this.colProps.offset}
+                min={0}
+                max={24}
+                onChange={(_) => {
+                  this.colProps.offset = _;
+                }}
+              />
+            ),
+          },
+          {
+            label: "右移格数",
+            editor: (
+              <el-input-number
+                model-value={this.colProps.push}
+                min={0}
+                max={24}
+                onChange={(_) => {
+                  this.colProps.push = _;
+                }}
+              />
+            ),
+          },
+          {
+            label: "左移格数",
+            editor: (
+              <el-input-number
+                model-value={this.colProps.pull}
+                min={0}
+                max={24}
+                onChange={(_) => {
+                  this.colProps.pull = _;
+                }}
+              />
+            ),
+          },
+        ]
+      );
+    return _;
   }
 }
 
@@ -140,7 +236,7 @@ export class Grid extends Layout {
     /** flex 布局下的水平排列方式 */
     justify: "start",
     /** flex 布局下的垂直排列方式 */
-    align: undefined,
+    align: "top",
   };
 
   list = [new GridCol().setCol(12), new GridCol().setCol(12)];
@@ -153,6 +249,23 @@ export class Grid extends Layout {
     super.initConfig(configs, toCons);
     this.list = toCons(this.list, [GridCol]);
     return this;
+  }
+
+  /**
+   * @param {GridCol} con
+   * @param {'up'|'down'} type
+   */
+  moveChild(con, type) {
+    BaseCon.moveCon(this.list, con, type);
+  }
+  /**
+   * @param {GridCol} con
+   */
+  removeChild(con) {
+    let i = this.list.findIndex((_) => _.key == con.key);
+    if (i >= 0) {
+      this.list.splice(i, 1);
+    }
   }
 
   renderRaw(op) {
@@ -175,5 +288,110 @@ export class Grid extends Layout {
         })}
       </el-row>
     );
+  }
+
+  getRight(op, hasEditor = true) {
+    let _ = super.getRight(...arguments);
+    hasEditor &&
+      _.find((_) => _.title == "常用属性").childs.unshift(
+        ...[
+          {
+            label: "栅格间隔",
+            editor: (
+              <el-input-number
+                model-value={this.rowProps.gutter}
+                min={0}
+                onChange={(_) => {
+                  this.rowProps.gutter = _;
+                }}
+              />
+            ),
+          },
+          {
+            label: "水平排列方式",
+            editor: (
+              <el-radio-group
+                size="small"
+                model-value={this.rowProps.justify}
+                onChange={(v) => {
+                  this.rowProps.justify = v;
+                }}
+              >
+                <el-radio-button label="start" value="start" />
+                <el-radio-button label="end" value="end" />
+                <el-radio-button label="center" value="center" />
+                <el-radio-button label="space-around" value="space-around" />
+                <el-radio-button label="space-between" value="space-between" />
+                <el-radio-button label="space-evenly" value="space-evenly" />
+              </el-radio-group>
+            ),
+          },
+          {
+            label: "垂直排列方式",
+            editor: (
+              <el-radio-group
+                size="small"
+                model-value={this.rowProps.align}
+                onChange={(v) => {
+                  this.rowProps.align = v;
+                }}
+              >
+                <el-radio-button label="top" value="top" />
+                <el-radio-button label="middle" value="middle" />
+                <el-radio-button label="bottom" value="bottom" />
+              </el-radio-group>
+            ),
+          },
+        ]
+      );
+    hasEditor &&
+      _.find((_) => _.title == "常用属性").childs.push(
+        ...[
+          {
+            label: "当前栅格列：",
+          },
+          {
+            editor: (
+              <div class="controls__ grid-right">
+                {this.list.map((_, i) => {
+                  return (
+                    <div class="i">
+                      <span>栅格{i + 1}</span>
+                      <div>
+                        <el-input-number
+                          model-value={_.colProps.span}
+                          min={1}
+                          max={24}
+                          onChange={(__) => {
+                            _.colProps.span = __;
+                          }}
+                        />
+                        <el-icon
+                          onClick={() => {
+                            this.list.splice(i, 1);
+                          }}
+                        >
+                          <CircleClose />
+                        </el-icon>
+                      </div>
+                    </div>
+                  );
+                })}
+                <el-button
+                  plain
+                  size="small"
+                  type="primary"
+                  onClick={() => {
+                    this.list.push(new GridCol().setCol(12));
+                  }}
+                >
+                  增加栅格
+                </el-button>
+              </div>
+            ),
+          },
+        ]
+      );
+    return _;
   }
 }
