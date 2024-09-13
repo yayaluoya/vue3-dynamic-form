@@ -37,7 +37,7 @@ if (
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const prod = mode === "production";
-  let base = prod ? aliYunOptions.url + "/" : "/";
+  let base = prod ? aliYunOptions.url + "/vue3-dynamic-form" : "/";
   let outDir = "dist";
   return {
     base,
