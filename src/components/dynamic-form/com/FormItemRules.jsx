@@ -12,7 +12,7 @@ export class FormItemRules {
     {
       key: 1,
       required: false,
-      type: "any",
+      type: undefined,
       message: "",
     },
   ];
@@ -78,17 +78,15 @@ export class FormItemRules {
                             <el-option label="any" value="any" />
                           </el-select>
                         </div>
-                        {_.type == "any" ? (
-                          <div>
-                            <span>必填</span>
-                            <el-switch
-                              model-value={_.required}
-                              onChange={(v) => {
-                                _.required = v;
-                              }}
-                            ></el-switch>
-                          </div>
-                        ) : null}
+                        <div>
+                          <span>必填</span>
+                          <el-switch
+                            model-value={_.required}
+                            onChange={(v) => {
+                              _.required = v;
+                            }}
+                          ></el-switch>
+                        </div>
                         <div>
                           <span>错误提示</span>
                           <el-input
@@ -128,7 +126,7 @@ export class FormItemRules {
               type="primary"
               onClick={() => {
                 this.rules.push({
-                  key: Math.max(...this.rules.map((_) => _.key)) + 1,
+                  key: Math.max(...this.rules.map((_) => _.key), 1) + 1,
                   required: false,
                   message: "",
                 });

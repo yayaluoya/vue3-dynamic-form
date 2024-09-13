@@ -114,7 +114,7 @@ export class BaseCon {
   /**
    * 初始化
    * 因为有两种方式初始化，一种是new，一种是initConfig 所以这里统一一下
-   * @param {*} config initConfig 调用时回传的参数
+   * @param {BaseCon} config initConfig 调用时回传的参数
    */
   init(config) {}
 
@@ -370,7 +370,7 @@ export class BaseCon {
     return this.getRight(...arguments).map((_, i) => {
       return (
         <el-collapse-item key={i} title={_.title} name={_.title}>
-          {_.childs.map((__, j) => {
+          {_.childs.filter(Boolean).map((__, j) => {
             let { editor, ...props } = __;
             return props.label ? (
               <el-form-item key={j} label={props.label}>
