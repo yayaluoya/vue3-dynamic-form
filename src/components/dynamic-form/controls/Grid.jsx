@@ -34,6 +34,9 @@ class GridCol extends Layout {
   }
 
   render({ ctx, formConfig, cons, formData, activateCon, parent }) {
+    if (formData && this.hide) {
+      return null;
+    }
     return (
       <el-col
         class={[
@@ -56,6 +59,11 @@ class GridCol extends Layout {
           ? [
               <div class="con-name">
                 <span>{this.conName}</span>
+                {this.hide ? (
+                  <el-icon style="margin-left: 2px">
+                    <Hide />
+                  </el-icon>
+                ) : null}
               </div>,
               <div class="handler-button">
                 <el-icon

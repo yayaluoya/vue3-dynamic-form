@@ -1,3 +1,4 @@
+import { predefineColors } from "../config/predefineColors";
 import { BaseCon } from "./BaseCon";
 
 /**
@@ -10,6 +11,18 @@ export class Button extends BaseCon {
   static ConName = "按钮";
   /** 单例对象 */
   static I = new Button();
+
+  props = {
+    size: "",
+    type: "",
+    align: "left",
+    text: false,
+    disabled: false,
+    plain: false,
+    circle: false,
+    color: "",
+  };
+  buttonText = "按钮";
 
   constructor() {
     super();
@@ -28,12 +41,149 @@ export class Button extends BaseCon {
   }
 
   renderRaw() {
-    return <el-button>Default</el-button>;
+    return (
+      <div style={`text-align: ${this.props.align}`}>
+        <el-button
+          size={this.props.size}
+          type={this.props.type}
+          text={this.props.text}
+          disabled={this.props.disabled}
+          plain={this.props.plain}
+          circle={this.props.circle}
+          color={this.props.color}
+        >
+          {this.buttonText}
+        </el-button>
+      </div>
+    );
   }
 
   getRight(op, hasEditor = true) {
     let _ = super.getRight(...arguments).filter((_) => _.title != "表单属性");
-    hasEditor && _.find((_) => _.title == "常用属性").childs.push(...[]);
+    hasEditor &&
+      _.find((_) => _.title == "常用属性").childs.unshift(
+        ...[
+          {
+            label: "文字",
+            editor: (
+              <el-input
+                model-value={this.buttonText}
+                onInput={(v) => {
+                  this.buttonText = v;
+                }}
+              />
+            ),
+          },
+          {
+            label: "类型",
+            editor: (
+              <el-radio-group
+                size="small"
+                model-value={this.props.type}
+                onChange={(v) => {
+                  this.props.type = v;
+                }}
+              >
+                <el-radio-button label="default" value="" />
+                <el-radio-button label="primary" value="primary" />
+                <el-radio-button label="success" value="success" />
+                <el-radio-button label="warning" value="warning" />
+                <el-radio-button label="danger" value="danger" />
+                <el-radio-button label="info" value="info" />
+              </el-radio-group>
+            ),
+          },
+          {
+            label: "文字按钮",
+            editor: (
+              <el-switch
+                model-value={this.props.text}
+                onChange={(v) => {
+                  this.props.text = v;
+                }}
+              ></el-switch>
+            ),
+          },
+          {
+            label: "朴素按钮",
+            editor: (
+              <el-switch
+                model-value={this.props.plain}
+                onChange={(v) => {
+                  this.props.plain = v;
+                }}
+              ></el-switch>
+            ),
+          },
+          {
+            label: "圆形按钮",
+            editor: (
+              <el-switch
+                model-value={this.props.circle}
+                onChange={(v) => {
+                  this.props.circle = v;
+                }}
+              ></el-switch>
+            ),
+          },
+          {
+            label: "颜色",
+            editor: (
+              <el-color-picker
+                model-value={this.props.color}
+                onChange={(v) => {
+                  this.props.color = v;
+                }}
+                predefine={predefineColors}
+                size="small"
+              />
+            ),
+          },
+          {
+            label: "大小",
+            editor: (
+              <el-radio-group
+                size="small"
+                model-value={this.props.size}
+                onChange={(v) => {
+                  this.props.size = v;
+                }}
+              >
+                <el-radio-button label="large" value="large" />
+                <el-radio-button label="default" value="default" />
+                <el-radio-button label="small" value="small" />
+              </el-radio-group>
+            ),
+          },
+          {
+            label: "对齐方式",
+            editor: (
+              <el-radio-group
+                size="small"
+                model-value={this.props.align}
+                onChange={(v) => {
+                  this.props.align = v;
+                }}
+              >
+                <el-radio-button label="left" value="left" />
+                <el-radio-button label="center" value="center" />
+                <el-radio-button label="right" value="right" />
+              </el-radio-group>
+            ),
+          },
+          {
+            label: "是否禁用",
+            editor: (
+              <el-switch
+                model-value={this.props.disabled}
+                onChange={(v) => {
+                  this.props.disabled = v;
+                }}
+              ></el-switch>
+            ),
+          },
+        ]
+      );
     return _;
   }
 }

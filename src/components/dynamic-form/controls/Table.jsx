@@ -20,6 +20,9 @@ class Cell extends Layout {
   disappear = false;
 
   render({ ctx, activateCon, formData, parent }) {
+    if (formData && this.hide) {
+      return null;
+    }
     return (
       <div
         class={[
@@ -36,6 +39,11 @@ class Cell extends Layout {
           ? [
               <div class="con-name">
                 <span>{this.conName}</span>
+                {this.hide ? (
+                  <el-icon style="margin-left: 2px">
+                    <Hide />
+                  </el-icon>
+                ) : null}
               </div>,
               <div class="handler-button">
                 <el-icon

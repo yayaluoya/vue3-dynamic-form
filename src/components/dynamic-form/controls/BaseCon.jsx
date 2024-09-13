@@ -71,6 +71,9 @@ export class BaseCon {
   /** 是否可拖拽 */
   towable = true;
 
+  /** 是否隐藏 */
+  hide = false;
+
   constructor() {
     this.conType = this.constructor.ConType;
     this.conName = this.constructor.ConName;
@@ -186,7 +189,9 @@ export class BaseCon {
    */
   render({ ctx, activateCon, formData, parent }) {
     return formData ? (
-      this.renderFormItem(...arguments)
+      this.hide ? null : (
+        this.renderFormItem(...arguments)
+      )
     ) : (
       <div
         key={this.renderKey}
@@ -206,10 +211,20 @@ export class BaseCon {
                     <Rank />
                   </el-icon>
                   <span>{this.conName}</span>
+                  {this.hide ? (
+                    <el-icon style="margin-left: 2px">
+                      <Hide />
+                    </el-icon>
+                  ) : null}
                 </div>
               ) : (
                 <div class="con-name">
                   <span>{this.conName}</span>
+                  {this.hide ? (
+                    <el-icon style="margin-left: 2px">
+                      <Hide />
+                    </el-icon>
+                  ) : null}
                 </div>
               ),
               <div class="handler-button">
@@ -377,7 +392,19 @@ export class BaseCon {
     return [
       {
         title: "常用属性",
-        childs: hasEditor && [],
+        childs: hasEditor && [
+          {
+            label: "是否隐藏",
+            editor: (
+              <el-switch
+                model-value={this.hide}
+                onChange={(v) => {
+                  this.hide = v;
+                }}
+              ></el-switch>
+            ),
+          },
+        ],
       },
       {
         title: "表单属性",
@@ -401,8 +428,6 @@ export class BaseCon {
                 onChange={(v) => {
                   this.formItemProps.hideLabel = v;
                 }}
-                active-color="#13ce66"
-                inactive-color="#ff4949"
               ></el-switch>
             ),
           },
@@ -417,7 +442,6 @@ export class BaseCon {
               />
             ),
           },
-
           {
             label: "标签位置",
             editor: (
@@ -524,8 +548,6 @@ export class BaseCon {
                 onChange={(v) => {
                   this.formItemProps.required = v;
                 }}
-                active-color="#13ce66"
-                inactive-color="#ff4949"
               ></el-switch>
             ),
           },
@@ -639,7 +661,7 @@ export class BaseCon {
 
   /** 获取唯一的key */
   static getKey() {
-    return `key_${BaseCon.getHash()}`;
+    return BaseCon.getHash();
   }
   /** 获取唯一哈希值 */
   static getHash() {
