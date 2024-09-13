@@ -22,8 +22,25 @@ export class Test extends BaseCon {
     return (
       <div class="controls__ test">
         测试控件
-        <span>number: {value.number}</span>
-        <span>str: {value.str}</span>
+        <span>
+          number:{" "}
+          <el-input-number
+            size="small"
+            model-value={value.number}
+            onChange={(v) => {
+              value.number = v;
+            }}
+          />
+        </span>
+        <span>
+          str:{" "}
+          <el-input
+            model-value={value.str}
+            onInput={(v) => {
+              value.str = v;
+            }}
+          />
+        </span>
       </div>
     );
   }

@@ -53,14 +53,9 @@ export class BaseCon {
     labelAlign: undefined,
     /** 标签宽度，例如 '50px'。 可以使用 auto。 */
     labelWidth: 0,
-    required: false,
     rules: undefined,
-    /** 表单域验证错误时的提示信息。设置该值会导致表单验证状态变为 error，并显示该错误信息。 */
-    error: "",
     /** 是否显示校验错误信息 */
     showMessage: true,
-    /** 是否在行内显示校验信息 */
-    inlineMessage: "",
     /** 用于控制该表单域下组件的默认尺寸 */
     size: undefined,
   };
@@ -120,11 +115,6 @@ export class BaseCon {
   /** 获取子控件列表 */
   getChild() {
     return this.childs;
-  }
-
-  /** 是否必填字段 */
-  getRequired() {
-    return this.formItemProps.required;
   }
 
   /** 克隆自身 */
@@ -301,11 +291,8 @@ export class BaseCon {
               this.formItemProps.labelWidth + "px"
             : "0px"
         }
-        required={this.formItemProps.required}
         rules={this.formItemProps.rules}
-        error={this.formItemProps.error}
         show-message={this.formItemProps.showMessage}
-        inline-message={this.formItemProps.inlineMessage}
         size={this.formItemProps.size}
       >
         {{
@@ -543,12 +530,12 @@ export class BaseCon {
             ),
           },
           {
-            label: "必填",
+            label: "显示校验错误信息",
             editor: (
               <el-switch
-                model-value={this.formItemProps.required}
+                model-value={this.formItemProps.showMessage}
                 onChange={(v) => {
-                  this.formItemProps.required = v;
+                  this.formItemProps.showMessage = v;
                 }}
               ></el-switch>
             ),

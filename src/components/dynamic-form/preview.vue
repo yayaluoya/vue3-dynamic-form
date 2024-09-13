@@ -1,5 +1,5 @@
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import Item from "./com/item.vue";
 
 export default defineComponent({
@@ -20,7 +20,18 @@ export default defineComponent({
   },
   emits: [],
   setup(props, ctx) {
-    return {};
+    const formEl = ref();
+
+    /** 验证表单 */
+    function validate() {
+      return formEl.value.validate(...arguments);
+    }
+
+    /** 清理某个字段的表单验证信息。 */
+    function clearValidate() {
+      return formEl.value.clearValidate(...arguments);
+    }
+    return { formEl, validate, clearValidate };
   },
 });
 </script>
@@ -28,6 +39,8 @@ export default defineComponent({
 <template>
   <div class="dynamic-form-preview">
     <el-form
+      ref="formEl"
+      :model="formData"
       :inline="formConfig.inline"
       :label-position="formConfig.labelPosition"
       :label-width="formConfig.labelWidth"

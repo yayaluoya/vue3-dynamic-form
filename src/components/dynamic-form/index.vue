@@ -6,6 +6,7 @@ import {
   onMounted,
   onUnmounted,
   toRef,
+  nextTick,
 } from "vue";
 import draggableC from "./config/draggableC";
 import { DocumentCopy } from "@element-plus/icons-vue";
@@ -52,6 +53,7 @@ export default defineComponent({
     const rootElRef = ref();
     const bScrollbarRef = ref();
     const leftTabsActiveNames = ref("con");
+    const previewEl = ref();
     const previewOp = reactive({
       show: false,
       cons: [],
@@ -133,6 +135,9 @@ export default defineComponent({
       );
       previewOp.formData = ConT.getFromData(previewOp.cons);
       previewOp.formConfig = ObjectUtils.clone2(props.formConfig);
+      nextTick(() => {
+        previewEl.value.clearValidate();
+      });
     }
 
     /** 导入json */
@@ -198,9 +203,18 @@ export default defineComponent({
     function saveToFile() {
       FileT.download(
         URL.createObjectURL(new Blob([JSONH.jsonText])),
-        "vue3-dynamic-form.json"
+        `vue3-dynamic-form-${JSONH.type}.json`
       );
       JSONH.show = false;
+    }
+
+    function getFromData() {
+      previewEl.value.validate().then(() => {
+        JSONH.type = "getFromData";
+        JSONH.show = true;
+        JSONH.title = "表单数据";
+        JSONH.jsonText = JSON.stringify(previewOp.formData, undefined, 4);
+      });
     }
 
     function getContentHeight() {
@@ -237,6 +251,8 @@ export default defineComponent({
       saveToFile,
       preview,
       previewOp,
+      getFromData,
+      previewEl,
     };
   },
 });
@@ -413,19 +429,27 @@ export default defineComponent({
         <template v-if="JSONH.type == 'import'">
           <el-button type="primary" @click="importJSONH()">导入</el-button>
         </template>
-        <template v-if="JSONH.type == 'export'">
+        <template v-if="JSONH.type == 'export' || JSONH.type == 'getFromData'">
           <el-button type="primary" @click="copy()">复制</el-button>
           <el-button type="primary" @click="saveToFile()">保存为文件</el-button>
         </template>
         <el-button @click="JSONH.show = false">关闭</el-button>
       </template>
     </el-dialog>
-    <el-dialog v-model="previewOp.show" title="表单预览" width="800">
-      <Preview
-        :cons="previewOp.cons"
-        :formConfig="previewOp.formConfig"
-        :formData="previewOp.formData"
-      />
+    <el-dialog v-model="previewOp.show" title="表单预览" width="900">
+      <el-scrollbar style="height: 500px" wrap-class="scrollbar-wrapper">
+        <Preview
+          ref="previewEl"
+          :cons="previewOp.cons"
+          :formConfig="previewOp.formConfig"
+          :formData="previewOp.formData"
+        />
+      </el-scrollbar>
+      <template #footer>
+        <el-button type="primary" @click="getFromData()"
+          >获取表单数据</el-button
+        >
+      </template>
     </el-dialog>
   </div>
 </template>
