@@ -13,6 +13,8 @@ export class Layout extends BaseCon {
   toJSON() {
     let d = { ...super.toJSON() };
     delete d.formItemProps;
+    delete d.formItemRules;
+    delete d.formItemLabelFontStyle;
     return d;
   }
 

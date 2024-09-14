@@ -52,7 +52,7 @@ export class ConT {
   static getFromData(cons) {
     let fromData = {};
     BaseCon.consForeach(cons, (_) => {
-      _.formItemProps.prop &&
+      _.formItemProps?.prop &&
         (fromData[_.formItemProps.prop] = ObjectUtils.clone2(
           _.formDefaultValue
         ));

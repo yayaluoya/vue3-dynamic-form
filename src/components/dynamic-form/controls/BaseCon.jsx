@@ -6,7 +6,7 @@ import { FormItemRules } from "../com/FormItemRules";
 import "../style/controls.scss";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
-const nanoid = customAlphabet(alphabet, 21);
+const nanoid = customAlphabet(alphabet, 15);
 
 /**
  * @typedef RenderOp
@@ -77,10 +77,12 @@ export class BaseCon {
   constructor() {
     this.conType = this.constructor.ConType;
     this.conName = this.constructor.ConName;
-    this.key = BaseCon.getKey();
-    this.renderKey = BaseCon.getKey();
+    let key = BaseCon.getKey();
+    this.key = "key-" + key;
+    this.renderKey = this.key;
     // 属性名默认和key同名
-    this.formItemProps.prop = this.key;
+    this.formItemProps.prop =
+      this.conType.toLocaleLowerCase() + "-" + key.slice(0, 7);
     this.formItemProps.label = this.conName;
     //
     this.init();
