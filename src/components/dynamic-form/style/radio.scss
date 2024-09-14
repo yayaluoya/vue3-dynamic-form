@@ -1,0 +1,79 @@
+.controls__.radio {
+  >.el-radio-group {
+    &.row {}
+
+    &.col {
+      flex-direction: column;
+      align-items: start;
+
+      >.el-radio {
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
+
+
+.controls__.radio-right {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  >.draggable {
+    width: 100%;
+
+    .i {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+
+      &:not(.activate) {
+        >div:nth-child(1) {
+          >span {
+            color: gray;
+          }
+        }
+      }
+
+      >div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      >div:nth-child(1) {
+        >span {
+          margin-right: 2px;
+        }
+
+        >.el-switch {
+          margin-right: 5px;
+        }
+      }
+
+      >div:nth-child(2) {
+        flex: 1 1 0;
+        width: 0;
+
+        >* {
+          margin-left: 5px;
+        }
+
+        >.drag-handler {
+          cursor: move;
+        }
+
+        >.remove {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  >.el-button {
+    margin-top: 5px;
+  }
+}
