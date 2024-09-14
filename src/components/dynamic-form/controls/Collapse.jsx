@@ -1,15 +1,15 @@
 import DraggableCon from "../com/draggable.vue";
-import { Layout } from "./Layout";
 import Item from "../com/item.vue";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
 import { BaseCon } from "./BaseCon";
 import "../style/collapse.scss";
+import { NonForm } from "./NonForm";
 
 /**
  * 折叠面板
  */
-export class Collapse extends Layout {
+export class Collapse extends NonForm {
   /** 控件类型 */
   static ConType = "Collapse";
   /** 控件名字 */

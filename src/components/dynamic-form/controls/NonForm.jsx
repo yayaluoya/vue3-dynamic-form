@@ -1,9 +1,9 @@
 import { BaseCon } from "./BaseCon";
 
 /**
- * 布局控件
+ * 非表单控件基类
  */
-export class Layout extends BaseCon {
+export class NonForm extends BaseCon {
   constructor() {
     super();
     this.formItemProps.prop = undefined;

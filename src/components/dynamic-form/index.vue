@@ -25,6 +25,7 @@ import {
   Radio,
   Checkbox,
   Select,
+  Divider,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -87,6 +88,10 @@ export default defineComponent({
       {
         label: "容器类型",
         cons: [Grid, Table, LabelPage, Card, Collapse],
+      },
+      {
+        label: "其他类型",
+        cons: [Divider],
       },
       {
         label: "扩展类型",

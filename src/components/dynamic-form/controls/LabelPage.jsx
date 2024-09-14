@@ -1,15 +1,15 @@
 import DraggableCon from "../com/draggable.vue";
 import "../style/label-page.scss";
-import { Layout } from "./Layout";
 import Item from "../com/item.vue";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
 import { BaseCon } from "./BaseCon";
+import { NonForm } from "./NonForm";
 
 /**
  * 标签页
  */
-export class LabelPage extends Layout {
+export class LabelPage extends NonForm {
   /** 控件类型 */
   static ConType = "LabelPage";
   /** 控件名字 */

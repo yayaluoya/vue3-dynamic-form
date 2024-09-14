@@ -1,13 +1,13 @@
 import DraggableCon from "../com/draggable.vue";
 import "../style/grid.scss";
-import { Layout } from "./Layout";
 import Item from "../com/item.vue";
 import { BaseCon } from "./BaseCon";
+import { NonForm } from "./NonForm";
 
 /**
  * 栅格列
  */
-class GridCol extends Layout {
+class GridCol extends NonForm {
   /** 控件类型 */
   static ConType = "GridCol";
   /** 控件名字 */
@@ -226,7 +226,7 @@ class GridCol extends Layout {
 /**
  * 栅格
  */
-export class Grid extends Layout {
+export class Grid extends NonForm {
   /** 控件类型 */
   static ConType = "Grid";
   /** 控件名字 */

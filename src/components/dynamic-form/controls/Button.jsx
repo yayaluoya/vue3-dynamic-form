@@ -1,11 +1,11 @@
 import { predefineColors } from "../config/predefineColors";
-import { BaseCon } from "./BaseCon";
 import "../style/button.scss";
+import { NonForm } from "./NonForm";
 
 /**
  * 按钮
  */
-export class Button extends BaseCon {
+export class Button extends NonForm {
   /** 控件类型 */
   static ConType = "Button";
   /** 控件名字 */
@@ -28,24 +28,6 @@ export class Button extends BaseCon {
     },
   };
   buttonText = "按钮";
-
-  constructor() {
-    super();
-    this.formItemProps.prop = undefined;
-  }
-
-  /** 转JSON字符串 */
-  toJSON() {
-    let d = { ...super.toJSON() };
-    delete d.formItemProps;
-    delete d.formItemRules;
-    delete d.formItemLabelFontStyle;
-    return d;
-  }
-
-  renderFormItem() {
-    return this.renderRaw(...arguments);
-  }
 
   renderRaw() {
     return (

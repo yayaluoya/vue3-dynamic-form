@@ -1,12 +1,12 @@
 import DraggableCon from "../com/draggable.vue";
-import { Layout } from "./Layout";
 import Item from "../com/item.vue";
 import "../style/card.scss";
+import { NonForm } from "./NonForm";
 
 /**
  * 卡片
  */
-export class Card extends Layout {
+export class Card extends NonForm {
   /** 控件类型 */
   static ConType = "Card";
   /** 控件名字 */

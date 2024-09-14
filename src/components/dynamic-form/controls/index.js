@@ -2,6 +2,7 @@ export { Checkbox } from "./Checkbox";
 export { Button } from "./Button";
 export { Card } from "./Card";
 export { Collapse } from "./Collapse";
+export { Divider } from "./Divider";
 export { Grid } from "./Grid";
 export { Input } from "./Input";
 export { InputNumber } from "./InputNumber";

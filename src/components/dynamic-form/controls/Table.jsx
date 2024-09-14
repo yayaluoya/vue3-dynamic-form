@@ -1,14 +1,14 @@
 import { BaseCon } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
 import "../style/table.scss";
-import { Layout } from "./Layout";
 import Item from "../com/item.vue";
 import { predefineColors } from "../config/predefineColors";
+import { NonForm } from "./NonForm";
 
 /**
  * 单元格
  */
-class Cell extends Layout {
+class Cell extends NonForm {
   /** 控件类型 */
   static ConType = "Cell";
   /** 控件名字 */
@@ -321,7 +321,7 @@ class Cell extends Layout {
 /**
  * 表格
  */
-export class Table extends Layout {
+export class Table extends NonForm {
   /** 控件类型 */
   static ConType = "Table";
   /** 控件名字 */

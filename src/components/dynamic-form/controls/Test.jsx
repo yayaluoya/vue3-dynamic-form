@@ -36,7 +36,7 @@ export class Test extends BaseCon {
     return (
       <div class="controls__ test">
         测试控件
-        <span>
+        <div style={`display: flex;`}>
           number:{" "}
           <el-input-number
             size="small"
@@ -45,8 +45,8 @@ export class Test extends BaseCon {
               value.number = v;
             }}
           />
-        </span>
-        <span>
+        </div>
+        <div style={`display: flex;`}>
           str:{" "}
           <el-input
             model-value={value.str}
@@ -54,7 +54,7 @@ export class Test extends BaseCon {
               value.str = v;
             }}
           />
-        </span>
+        </div>
       </div>
     );
   }

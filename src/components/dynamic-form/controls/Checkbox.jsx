@@ -31,7 +31,7 @@ export class Checkbox extends BaseCon {
 
   props = {
     border: false,
-    size: "default",
+    size: "",
     button: false,
     arrange: "row",
   };
