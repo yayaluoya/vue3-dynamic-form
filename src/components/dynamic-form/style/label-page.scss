@@ -1,4 +1,6 @@
 .controls__.label-page {
+  margin-bottom: 5px;
+
   &.border {
     border: 1px dashed #afafaf;
   }
@@ -55,7 +57,8 @@
         >.drag-handler {
           cursor: move;
         }
-        >.remove{
+
+        >.remove {
           cursor: pointer;
         }
       }

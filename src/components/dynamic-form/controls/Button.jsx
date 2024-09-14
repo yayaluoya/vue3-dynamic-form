@@ -1,5 +1,6 @@
 import { predefineColors } from "../config/predefineColors";
 import { BaseCon } from "./BaseCon";
+import "../style/button.scss";
 
 /**
  * 按钮
@@ -48,7 +49,12 @@ export class Button extends BaseCon {
 
   renderRaw() {
     return (
-      <div style={`text-align: ${this.props.align}`}>
+      <div
+        class="controls__ button"
+        style={`
+          text-align: ${this.props.align};
+        `}
+      >
         <el-button
           size={this.props.size}
           type={this.props.type}

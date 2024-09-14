@@ -1,6 +1,7 @@
 import DraggableCon from "../com/draggable.vue";
 import { Layout } from "./Layout";
 import Item from "../com/item.vue";
+import "../style/card.scss";
 
 /**
  * 卡片
@@ -79,7 +80,7 @@ export class Card extends Layout {
       delete _.footer;
     }
     return (
-      <div>
+      <div class="controls__ card">
         <el-card shadow={this.props.shadow}>{_}</el-card>
       </div>
     );

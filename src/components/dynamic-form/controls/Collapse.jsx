@@ -46,7 +46,7 @@ export class Collapse extends Layout {
 
   renderRaw({ ctx, formConfig, cons, activateCon, formData }) {
     return (
-      <div>
+      <div class="controls__ collapse">
         <el-collapse
           model-value={this.activeNames}
           onChange={(_) => {
