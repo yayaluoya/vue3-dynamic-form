@@ -7,8 +7,8 @@ import draggableC from "../config/draggableC";
  * 表单验证规则
  */
 export class FormItemRules {
-  /** @type {import('element-plus').FormItemRule[]} */
-  rules = [
+  /** @type {import('element-plus').FormItemRule[]} 校验规则列表 */
+  list = [
     {
       key: 1,
       required: false,
@@ -29,16 +29,16 @@ export class FormItemRules {
   reder() {
     return [
       {
-        label: "校验规则设置：",
+        label: "校验规则：",
       },
       {
         editor: (
           <div class="formItem-rules">
             <Draggable
               class="draggable"
-              modelValue={this.rules}
+              modelValue={this.list}
               onUpdate:modelValue={(_) => {
-                this.rules = [..._];
+                this.list = [..._];
               }}
               animation={draggableC.animation}
               handle=".drag-handler"
@@ -81,6 +81,7 @@ export class FormItemRules {
                         <div>
                           <span>必填</span>
                           <el-switch
+                            size="small"
                             model-value={_.required}
                             onChange={(v) => {
                               _.required = v;
@@ -90,6 +91,7 @@ export class FormItemRules {
                         <div>
                           <span>错误提示</span>
                           <el-input
+                            size="small"
                             model-value={_.message}
                             onInput={(v) => {
                               _.message = v;
@@ -104,11 +106,11 @@ export class FormItemRules {
                         <el-icon
                           class="remove"
                           onClick={() => {
-                            let i = this.rules.findIndex(
+                            let i = this.list.findIndex(
                               (__) => _.key == __.key
                             );
                             if (i >= 0) {
-                              this.rules.splice(i, 1);
+                              this.list.splice(i, 1);
                             }
                           }}
                         >
@@ -125,8 +127,8 @@ export class FormItemRules {
               size="small"
               type="primary"
               onClick={() => {
-                this.rules.push({
-                  key: Math.max(...this.rules.map((_) => _.key), 1) + 1,
+                this.list.push({
+                  key: Math.max(...this.list.map((_) => _.key), 1) + 1,
                   required: false,
                   message: "",
                 });

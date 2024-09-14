@@ -80,7 +80,7 @@ class GridCol extends Layout {
               </div>,
             ]
           : null}
-        <div class="form-item">
+        <div class="content">
           {formData ? (
             this.childs.map((con) => {
               return (
@@ -165,6 +165,7 @@ class GridCol extends Layout {
             label: "占据列数量",
             editor: (
               <el-input-number
+                size="small"
                 model-value={this.colProps.span}
                 min={1}
                 max={24}
@@ -178,6 +179,7 @@ class GridCol extends Layout {
             label: "栅格左侧间隔",
             editor: (
               <el-input-number
+                size="small"
                 model-value={this.colProps.offset}
                 min={0}
                 max={24}
@@ -191,6 +193,7 @@ class GridCol extends Layout {
             label: "右移格数",
             editor: (
               <el-input-number
+                size="small"
                 model-value={this.colProps.push}
                 min={0}
                 max={24}
@@ -204,6 +207,7 @@ class GridCol extends Layout {
             label: "左移格数",
             editor: (
               <el-input-number
+                size="small"
                 model-value={this.colProps.pull}
                 min={0}
                 max={24}
@@ -299,6 +303,7 @@ export class Grid extends Layout {
             label: "栅格间隔",
             editor: (
               <el-input-number
+                size="small"
                 model-value={this.rowProps.gutter}
                 min={0}
                 onChange={(_) => {
@@ -359,6 +364,7 @@ export class Grid extends Layout {
                       <span>栅格{i + 1}</span>
                       <div>
                         <el-input-number
+                          size="small"
                           model-value={_.colProps.span}
                           min={1}
                           max={24}

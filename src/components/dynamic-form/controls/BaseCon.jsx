@@ -3,6 +3,7 @@ import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import { getFormConfig } from "../config/getFormConfig";
 import { FontStyle } from "../com/FontStyle";
 import { FormItemRules } from "../com/FormItemRules";
+import "../style/controls.scss";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 21);
@@ -43,23 +44,26 @@ export class BaseCon {
   formItemProps = {
     /** 最终绑定到formData上的属性名，如果设置为undefined的话表示这个控件不绑定值到formData上 */
     prop: undefined,
-    hideLabel: true,
+    /** 隐藏label */
+    hideLabel: false,
     label: "控件",
-    labelFontStyle: new FontStyle({
-      fontSize: 14,
-    }),
     /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 默认会继承 Form的label-position */
     labelPosition: undefined,
     /** 标签对齐方式 */
     labelAlign: undefined,
     /** 标签宽度，例如 '50px'。 可以使用 auto。 */
     labelWidth: 0,
-    rules: new FormItemRules(),
     /** 是否显示校验错误信息 */
     showMessage: true,
     /** 用于控制该表单域下组件的默认尺寸 */
     size: undefined,
   };
+  /** 表单项标签字体样式 */
+  formItemLabelFontStyle = new FontStyle({
+    fontSize: 14,
+  });
+  /** 表单项数据验证规则 */
+  formItemRules = new FormItemRules();
 
   /** 表单默认值 */
   formDefaultValue = undefined;
@@ -101,10 +105,8 @@ export class BaseCon {
     for (let i in config) {
       this[i] = ObjectUtils.clone2(config[i]);
     }
-    this.formItemProps.labelFontStyle = new FontStyle(
-      this.formItemProps.labelFontStyle
-    );
-    this.formItemProps.rules = new FormItemRules(this.formItemProps.rules);
+    this.formItemLabelFontStyle = new FontStyle(this.formItemLabelFontStyle);
+    this.formItemRules = new FormItemRules(this.formItemRules);
     this.childs = toCons(this.childs);
     //
     this.init(config);
@@ -244,7 +246,7 @@ export class BaseCon {
               </div>,
             ]
           : null}
-        <div class="form-item">{this.renderFormItem(...arguments)}</div>
+        <div class="content">{this.renderFormItem(...arguments)}</div>
       </div>
     );
   }
@@ -294,22 +296,24 @@ export class BaseCon {
   renderFormItem({ formConfig }) {
     return (
       <el-form-item
+        class={[""].join(" ")}
         prop={this.formItemProps.prop}
-        label={this.formItemProps.label}
         label-position={this.formItemProps.labelPosition}
         label-width={
-          //没有label时不显示label
-          this.formItemProps.label
+          !this.formItemProps.hideLabel && this.formItemProps.label
             ? this.formItemProps.labelWidth &&
               this.formItemProps.labelWidth + "px"
             : "0px"
         }
-        rules={this.formItemProps.rules.rules}
+        rules={this.formItemRules.list}
         show-message={this.formItemProps.showMessage}
         size={this.formItemProps.size}
       >
         {{
           label: (...arg) => {
+            if (this.formItemProps.hideLabel) {
+              return [];
+            }
             return (
               <div
                 style={`
@@ -328,14 +332,13 @@ export class BaseCon {
               >
                 <span
                   style={{
-                    "font-size":
-                      this.formItemProps.labelFontStyle.fontSize + "px",
-                    color: this.formItemProps.labelFontStyle.color,
-                    // 'text-align': this.formItemProps.labelFontStyle.textAlign,
-                    "font-weight": this.formItemProps.labelFontStyle.fontWeight,
+                    "font-size": this.formItemLabelFontStyle.fontSize + "px",
+                    color: this.formItemLabelFontStyle.color,
+                    // 'text-align': this.formItemLabelFontStyle.textAlign,
+                    "font-weight": this.formItemLabelFontStyle.fontWeight,
                     "text-decoration":
-                      this.formItemProps.labelFontStyle.textDecoration,
-                    "font-style": this.formItemProps.labelFontStyle.fontStyle,
+                      this.formItemLabelFontStyle.textDecoration,
+                    "font-style": this.formItemLabelFontStyle.fontStyle,
                   }}
                 >
                   {this.formItemProps.label}
@@ -399,6 +402,7 @@ export class BaseCon {
             label: "是否隐藏",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.hide}
                 onChange={(v) => {
                   this.hide = v;
@@ -415,6 +419,7 @@ export class BaseCon {
             label: "表单字段名",
             editor: (
               <el-input
+                size="small"
                 model-value={this.formItemProps.prop}
                 onInput={(v) => {
                   this.formItemProps.prop = v;
@@ -426,6 +431,7 @@ export class BaseCon {
             label: "隐藏标签",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.formItemProps.hideLabel}
                 onChange={(v) => {
                   this.formItemProps.hideLabel = v;
@@ -437,6 +443,7 @@ export class BaseCon {
             label: "标签名",
             editor: (
               <el-input
+                size="small"
                 model-value={this.formItemProps.label}
                 onInput={(v) => {
                   this.formItemProps.label = v;
@@ -523,7 +530,7 @@ export class BaseCon {
               </div>
             ),
           },
-          ...this.formItemProps.labelFontStyle.render(),
+          ...this.formItemLabelFontStyle.render(),
           {
             label: "组件大小",
             editor: (
@@ -546,6 +553,7 @@ export class BaseCon {
             label: "显示校验错误信息",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.formItemProps.showMessage}
                 onChange={(v) => {
                   this.formItemProps.showMessage = v;
@@ -553,7 +561,7 @@ export class BaseCon {
               ></el-switch>
             ),
           },
-          ...this.formItemProps.rules.reder(),
+          ...this.formItemRules.reder(),
         ],
       },
     ];

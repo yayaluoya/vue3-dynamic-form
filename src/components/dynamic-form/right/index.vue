@@ -144,6 +144,7 @@ export default defineComponent({
                       </el-form-item>
                       <el-form-item label="显示校验错误信息">
                         <el-switch
+                          size="small"
                           model-value={formConfig.showMessage}
                           onChange={(v) => {
                             formConfig.showMessage = v;
@@ -152,6 +153,7 @@ export default defineComponent({
                       </el-form-item>
                       <el-form-item label="行内显示校验信息">
                         <el-switch
+                          size="small"
                           model-value={formConfig.inlineMessage}
                           onChange={(v) => {
                             formConfig.inlineMessage = v;

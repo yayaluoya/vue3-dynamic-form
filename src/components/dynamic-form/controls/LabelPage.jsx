@@ -187,6 +187,7 @@ export class LabelPage extends Layout {
                           </div>
                           <div>
                             <el-input
+                              size="small"
                               model-value={_.label}
                               onInput={(v) => {
                                 _.label = v;

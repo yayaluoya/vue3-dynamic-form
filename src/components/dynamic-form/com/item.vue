@@ -73,76 +73,8 @@ export default defineComponent({
           activateCon: props.activateCon,
         });
       }
-      return <div class="dynamic-form-item">{_}</div>;
+      return _;
     };
   },
 });
 </script>
-
-<template>
-  <div></div>
-</template>
-
-<style lang="scss">
-.dynamic-form-item {
-  .controller {
-    position: relative;
-    border: 2px solid transparent;
-    &.on {
-      border: 2px solid #1890ff;
-    }
-    > .drag-handler,
-    > .con-name,
-    > .handler-button {
-      padding: 2px 3px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      position: absolute;
-      z-index: 2;
-      > .el-icon {
-        color: white;
-        margin-right: 4px;
-      }
-      > *:nth-last-child(1) {
-        margin-right: 0;
-      }
-    }
-    > .drag-handler {
-      top: 0;
-      left: 0;
-      background: rgba(64, 158, 255, 0.6);
-      cursor: move;
-      &:hover {
-        background: #409eff;
-      }
-      > span {
-        font-size: 12px;
-        font-style: normal;
-        color: #fff;
-      }
-    }
-    > .con-name {
-      top: 0;
-      left: 0;
-      background: #409eff;
-      > span {
-        font-size: 12px;
-        font-style: normal;
-        color: #fff;
-      }
-    }
-    > .handler-button {
-      padding: 3px 4px;
-      bottom: 0;
-      right: 0;
-      cursor: pointer;
-      background: #409eff;
-    }
-    > .form-item {
-      position: relative;
-      z-index: 1;
-    }
-  }
-}
-</style>

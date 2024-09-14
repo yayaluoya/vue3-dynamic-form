@@ -19,6 +19,7 @@ export class Input extends BaseCon {
     placeholder: "",
     clearable: false,
     size: "default",
+    rows: 2,
   };
 
   formDefaultValue = "";
@@ -75,19 +76,35 @@ export class Input extends BaseCon {
               ></el-switch>
             ),
           },
-          this.props.type == "textarea"
-            ? {
-                label: "显示统计字数",
-                editor: (
-                  <el-switch
-                    model-value={this.props.showWordLimit}
-                    onChange={(v) => {
-                      this.props.showWordLimit = v;
-                    }}
-                  ></el-switch>
-                ),
-              }
-            : null,
+          ...(this.props.type == "textarea"
+            ? [
+                {
+                  label: "行数",
+                  editor: (
+                    <el-input-number
+                      size="small"
+                      model-value={this.props.rows}
+                      min={0}
+                      onChange={(_) => {
+                        this.props.rows = _;
+                      }}
+                    />
+                  ),
+                },
+                {
+                  label: "显示统计字数",
+                  editor: (
+                    <el-switch
+                      size="small"
+                      model-value={this.props.showWordLimit}
+                      onChange={(v) => {
+                        this.props.showWordLimit = v;
+                      }}
+                    ></el-switch>
+                  ),
+                },
+              ]
+            : []),
           {
             label: "大小",
             editor: (

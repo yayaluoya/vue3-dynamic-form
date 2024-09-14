@@ -94,6 +94,7 @@ export class Card extends Layout {
             label: "标题",
             editor: (
               <el-input
+                size="small"
                 clearable
                 model-value={this.cardName}
                 onInput={(v) => {
@@ -106,6 +107,7 @@ export class Card extends Layout {
             label: "页脚",
             editor: (
               <el-input
+                size="small"
                 clearable
                 model-value={this.cardFooter}
                 onInput={(v) => {

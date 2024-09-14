@@ -6,13 +6,13 @@ export function getFormConfig() {
     /** 行内表单模式 */
     inline: false,
     /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 */
-    labelPosition: "top",
+    labelPosition: "left",
     /** 标签对齐方式 */
-    labelAlign: "left",
+    labelAlign: "right",
     /** 标签的长度，例如 '50px'。 作为 Form 直接子元素的 form-item 会继承该值。 可以使用 auto。 */
     labelWidth: 80,
     /** 表单域标签的后缀 */
-    labelsuffix: ":",
+    labelsuffix: "",
     /** 是否隐藏必填字段标签旁边的红色星号 */
     hideRequiredAsterisk: false,
     /** 星号的位置。 */

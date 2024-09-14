@@ -569,8 +569,6 @@ export default defineComponent({
         flex-direction: row;
         align-items: center;
       }
-      > div:nth-child(1) {
-      }
       > div:nth-child(2) {
         > .el-icon {
           cursor: pointer;

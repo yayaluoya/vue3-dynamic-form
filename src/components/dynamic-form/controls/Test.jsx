@@ -3,7 +3,7 @@ import "../style/test.scss";
 import { FormItemRules } from "../com/FormItemRules";
 
 class FormItemRules_ extends FormItemRules {
-  rules = [];
+  list = [];
 
   reder() {
     return [];
@@ -30,7 +30,7 @@ export class Test extends BaseCon {
    * @param {Test} config
    */
   init(config) {
-    this.formItemProps.rules = new FormItemRules_(config?.formItemProps.rules);
+    this.formItemRules = new FormItemRules_(config?.formItemRules);
   }
 
   renderRaw({ formData }) {

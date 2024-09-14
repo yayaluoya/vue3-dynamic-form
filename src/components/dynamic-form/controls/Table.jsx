@@ -59,7 +59,7 @@ class Cell extends Layout {
               </div>,
             ]
           : null}
-        <div class="form-item">{this.renderRaw(...arguments)}</div>
+        <div class="content">{this.renderRaw(...arguments)}</div>
       </div>
     );
   }

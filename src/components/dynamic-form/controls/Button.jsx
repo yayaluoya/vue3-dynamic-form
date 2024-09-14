@@ -21,6 +21,10 @@ export class Button extends BaseCon {
     plain: false,
     circle: false,
     color: "",
+    margin: {
+      left: 0,
+      right: 0,
+    },
   };
   buttonText = "按钮";
 
@@ -51,6 +55,10 @@ export class Button extends BaseCon {
           plain={this.props.plain}
           circle={this.props.circle}
           color={this.props.color}
+          style={`
+            margin-left: ${this.props.margin.left}px;
+            margin-right: ${this.props.margin.right}px;
+            `}
         >
           {this.buttonText}
         </el-button>
@@ -67,6 +75,7 @@ export class Button extends BaseCon {
             label: "文字",
             editor: (
               <el-input
+                size="small"
                 model-value={this.buttonText}
                 onInput={(v) => {
                   this.buttonText = v;
@@ -97,6 +106,7 @@ export class Button extends BaseCon {
             label: "文字按钮",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.props.text}
                 onChange={(v) => {
                   this.props.text = v;
@@ -108,6 +118,7 @@ export class Button extends BaseCon {
             label: "朴素按钮",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.props.plain}
                 onChange={(v) => {
                   this.props.plain = v;
@@ -119,6 +130,7 @@ export class Button extends BaseCon {
             label: "圆形按钮",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.props.circle}
                 onChange={(v) => {
                   this.props.circle = v;
@@ -172,9 +184,34 @@ export class Button extends BaseCon {
             ),
           },
           {
+            label: "左间隔",
+            editor: (
+              <el-input-number
+                size="small"
+                model-value={this.props.margin.left}
+                onChange={(_) => {
+                  this.props.margin.left = _;
+                }}
+              />
+            ),
+          },
+          {
+            label: "右间隔",
+            editor: (
+              <el-input-number
+                size="small"
+                model-value={this.props.margin.right}
+                onChange={(_) => {
+                  this.props.margin.right = _;
+                }}
+              />
+            ),
+          },
+          {
             label: "是否禁用",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.props.disabled}
                 onChange={(v) => {
                   this.props.disabled = v;

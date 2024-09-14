@@ -107,6 +107,7 @@ export class Collapse extends Layout {
             label: "手风琴模式",
             editor: (
               <el-switch
+                size="small"
                 model-value={this.collapseProps.accordion}
                 onChange={(v) => {
                   this.collapseProps.accordion = v;
@@ -135,6 +136,7 @@ export class Collapse extends Layout {
                       return (
                         <div class="i">
                           <el-input
+                            size="small"
                             model-value={_.title}
                             onInput={(v) => {
                               _.title = v;
