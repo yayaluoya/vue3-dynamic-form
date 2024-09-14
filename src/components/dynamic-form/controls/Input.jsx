@@ -65,6 +65,18 @@ export class Input extends BaseCon {
               </el-select>
             ),
           },
+          {
+            label: "占位字符串",
+            editor: (
+              <el-input
+                size="small"
+                model-value={this.props.placeholder}
+                onInput={(v) => {
+                  this.props.placeholder = v;
+                }}
+              />
+            ),
+          },
           ...(this.props.type != "textarea"
             ? [
                 {

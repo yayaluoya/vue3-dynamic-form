@@ -8,14 +8,7 @@ import draggableC from "../config/draggableC";
  */
 export class FormItemRules {
   /** @type {import('element-plus').FormItemRule[]} 校验规则列表 */
-  list = [
-    {
-      key: 1,
-      required: false,
-      type: undefined,
-      message: "",
-    },
-  ];
+  list = [];
 
   /**
    * @param {FormItemRules} op
@@ -34,6 +27,9 @@ export class FormItemRules {
       {
         editor: (
           <div class="formItem-rules">
+            {this.list <= 0 ? (
+              <span style={"color: gray"}>无校验规则</span>
+            ) : null}
             <Draggable
               class="draggable"
               modelValue={this.list}

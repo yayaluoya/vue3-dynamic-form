@@ -21,6 +21,7 @@ import {
   Table,
   Collapse,
   Input,
+  InputNumber,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -74,7 +75,7 @@ export default defineComponent({
     const Cons = reactive([
       {
         label: "基础类型",
-        cons: [Input, Button],
+        cons: [Input, InputNumber, Button],
       },
       {
         label: "高级类型",

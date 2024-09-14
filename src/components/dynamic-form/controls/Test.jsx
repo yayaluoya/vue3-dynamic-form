@@ -3,8 +3,6 @@ import "../style/test.scss";
 import { FormItemRules } from "../com/FormItemRules";
 
 class FormItemRules_ extends FormItemRules {
-  list = [];
-
   reder() {
     return [];
   }
