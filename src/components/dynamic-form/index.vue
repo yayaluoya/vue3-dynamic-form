@@ -23,6 +23,7 @@ import {
   Input,
   InputNumber,
   Radio,
+  Checkbox,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -76,7 +77,7 @@ export default defineComponent({
     const Cons = reactive([
       {
         label: "基础类型",
-        cons: [Input, InputNumber, Radio, Button],
+        cons: [Input, InputNumber, Radio, Checkbox, Button],
       },
       {
         label: "高级类型",
