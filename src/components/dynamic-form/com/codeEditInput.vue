@@ -44,7 +44,7 @@ export default defineComponent({
         tabSize: 2,
         showPrintMargin: false,
         fontSize: 12,
-        maxLines: Infinity,
+        maxLines: 40,
         wrap: false,
         autoScrollEditorIntoView: true,
       },

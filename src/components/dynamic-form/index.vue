@@ -429,19 +429,17 @@ export default defineComponent({
       <Right :cons="cons" :activateCon="activateCon" :formConfig="formConfig" />
     </div>
     <el-dialog v-model="JSONH.show" :title="JSONH.title" width="800" draggable>
-      <el-scrollbar style="height: 500px" wrap-class="scrollbar-wrapper">
-        <CodeEditInput
-          :value="JSONH.jsonText"
-          @update:value="
-            (v) => {
-              JSONH.jsonText = v;
-            }
-          "
-          :options="{
-            lang: 'json',
-          }"
-        />
-      </el-scrollbar>
+      <CodeEditInput
+        :value="JSONH.jsonText"
+        @update:value="
+          (v) => {
+            JSONH.jsonText = v;
+          }
+        "
+        :options="{
+          lang: 'json',
+        }"
+      />
       <template #footer>
         <template v-if="JSONH.type == 'import'">
           <el-button type="primary" @click="importJSONH()">导入</el-button>
