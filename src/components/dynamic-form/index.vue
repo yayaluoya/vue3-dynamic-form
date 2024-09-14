@@ -27,6 +27,7 @@ import {
   Select,
   Divider,
   Alert,
+  ColorPicker,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -79,8 +80,8 @@ export default defineComponent({
     /** 控件列表 */
     const Cons = reactive([
       {
-        label: "基础类型",
-        cons: [Input, InputNumber, Radio, Checkbox, Select, Button],
+        label: "表单类型",
+        cons: [Input, InputNumber, Radio, Checkbox, Select, ColorPicker],
       },
       {
         label: "高级类型",
@@ -92,7 +93,7 @@ export default defineComponent({
       },
       {
         label: "其他类型",
-        cons: [Divider, Alert],
+        cons: [Divider, Alert, Button],
       },
       {
         label: "扩展类型",

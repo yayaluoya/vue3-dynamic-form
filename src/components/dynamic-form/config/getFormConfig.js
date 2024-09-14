@@ -10,7 +10,7 @@ export function getFormConfig() {
     /** 标签对齐方式 */
     labelAlign: "right",
     /** 标签的长度，例如 '50px'。 作为 Form 直接子元素的 form-item 会继承该值。 可以使用 auto。 */
-    labelWidth: 80,
+    labelWidth: 100,
     /** 表单域标签的后缀 */
     labelsuffix: "",
     /** 是否隐藏必填字段标签旁边的红色星号 */
