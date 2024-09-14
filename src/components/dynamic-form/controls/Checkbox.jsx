@@ -53,6 +53,7 @@ export class Checkbox extends BaseCon {
             if (this.props.button) {
               return (
                 <el-checkbox-button
+                  key={_.key}
                   value={_.value}
                   size={this.props.size}
                   disabled={!_.activate}
@@ -64,6 +65,7 @@ export class Checkbox extends BaseCon {
             }
             return (
               <el-checkbox
+                key={_.key}
                 value={_.value}
                 size={this.props.size}
                 disabled={!_.activate}

@@ -1,18 +1,18 @@
 import { BaseCon } from "./BaseCon";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
-import "../style/radio.scss";
+import "../style/select.scss";
 
 /**
- * 单选框
+ * 选择器
  */
-export class Radio extends BaseCon {
+export class Select extends BaseCon {
   /** 控件类型 */
-  static ConType = "Radio";
+  static ConType = "Select";
   /** 控件名字 */
-  static ConName = "单选框";
+  static ConName = "选择器";
   /** 单例对象 */
-  static I = new Radio();
+  static I = new Select();
 
   list = [
     {
@@ -30,10 +30,9 @@ export class Radio extends BaseCon {
   ];
 
   props = {
-    border: false,
+    clearable: false,
     size: "default",
-    button: false,
-    arrange: "row",
+    placeholder: "",
   };
 
   formDefaultValue = "";
@@ -41,41 +40,28 @@ export class Radio extends BaseCon {
   renderRaw({ formData }) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return (
-      <div class="controls__ radio">
-        <el-radio-group
+      <div class="controls__ select">
+        <el-select
           model-value={ref.value}
           onChange={(v) => {
             ref.value = v;
           }}
-          class={this.props.arrange}
+          clearable={this.props.clearable}
+          size={this.props.size}
+          placeholder={this.props.placeholder}
         >
           {this.list.map((_) => {
-            if (this.props.button) {
-              return (
-                <el-radio-button
-                  key={_.key}
-                  value={_.value}
-                  size={this.props.size}
-                  disabled={!_.activate}
-                  border={this.props.border}
-                >
-                  {_.name}
-                </el-radio-button>
-              );
-            }
             return (
-              <el-radio
+              <el-option
                 key={_.key}
                 value={_.value}
+                label={_.name}
                 size={this.props.size}
                 disabled={!_.activate}
-                border={this.props.border}
-              >
-                {_.name}
-              </el-radio>
+              ></el-option>
             );
           })}
-        </el-radio-group>
+        </el-select>
       </div>
     );
   }
@@ -102,55 +88,26 @@ export class Radio extends BaseCon {
             ),
           },
           {
-            label: "排列方式",
-            editor: (
-              <el-radio-group
-                size="small"
-                model-value={this.props.arrange}
-                onChange={(v) => {
-                  this.props.arrange = v;
-                }}
-              >
-                <el-radio-button label="水平" value="row" />
-                <el-radio-button label="竖直" value="col" />
-              </el-radio-group>
-            ),
-          },
-          {
-            label: "显示边框",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.props.border}
-                onChange={(v) => {
-                  this.props.border = v;
-                }}
-              ></el-switch>
-            ),
-          },
-          {
-            label: "按钮样式",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.props.button}
-                onChange={(v) => {
-                  this.props.button = v;
-                }}
-              ></el-switch>
-            ),
-          },
-          {
-            label: "默认值",
+            label: "占位字符串",
             editor: (
               <el-input
                 size="small"
-                model-value={this.formDefaultValue}
+                model-value={this.props.placeholder}
                 onInput={(v) => {
-                  this.formDefaultValue = v;
+                  this.props.placeholder = v;
                 }}
-                clearable
               />
+            ),
+          },
+          {
+            label: "可清除",
+            editor: (
+              <el-switch
+                model-value={this.props.clearable}
+                onChange={(v) => {
+                  this.props.clearable = v;
+                }}
+              ></el-switch>
             ),
           },
           {
@@ -158,7 +115,7 @@ export class Radio extends BaseCon {
           },
           {
             editor: (
-              <div class="controls__ radio-right">
+              <div class="controls__ select-right">
                 <Draggable
                   class="draggable"
                   modelValue={this.list}
