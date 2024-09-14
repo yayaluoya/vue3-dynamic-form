@@ -65,17 +65,21 @@ export class Input extends BaseCon {
               </el-select>
             ),
           },
-          {
-            label: "可清除",
-            editor: (
-              <el-switch
-                model-value={this.props.clearable}
-                onChange={(v) => {
-                  this.props.clearable = v;
-                }}
-              ></el-switch>
-            ),
-          },
+          ...(this.props.type != "textarea"
+            ? [
+                {
+                  label: "可清除",
+                  editor: (
+                    <el-switch
+                      model-value={this.props.clearable}
+                      onChange={(v) => {
+                        this.props.clearable = v;
+                      }}
+                    ></el-switch>
+                  ),
+                },
+              ]
+            : []),
           ...(this.props.type == "textarea"
             ? [
                 {

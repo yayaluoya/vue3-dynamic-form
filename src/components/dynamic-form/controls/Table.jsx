@@ -3,6 +3,7 @@ import DraggableCon from "../com/draggable.vue";
 import "../style/table.scss";
 import { Layout } from "./Layout";
 import Item from "../com/item.vue";
+import { predefineColors } from "../config/predefineColors";
 
 /**
  * 单元格
@@ -18,6 +19,9 @@ class Cell extends Layout {
   rowspan = 1;
   /** 消失 */
   disappear = false;
+
+  borderColor = "";
+  borderWidth = 0;
 
   render({ ctx, activateCon, formData, parent }) {
     if (formData && this.hide) {
@@ -277,6 +281,41 @@ class Cell extends Layout {
       />
     );
   }
+
+  getRight(op, hasEditor = true) {
+    let _ = super.getRight(...arguments);
+    hasEditor &&
+      _.find((_) => _.title == "常用属性").childs.unshift(
+        ...[
+          {
+            label: "边框宽度",
+            editor: (
+              <el-input-number
+                size="small"
+                model-value={this.borderWidth}
+                onChange={(_) => {
+                  this.borderWidth = _;
+                }}
+              />
+            ),
+          },
+          {
+            label: "边框颜色",
+            editor: (
+              <el-color-picker
+                model-value={this.borderColor}
+                onChange={(v) => {
+                  this.borderColor = v;
+                }}
+                predefine={predefineColors}
+                size="small"
+              />
+            ),
+          },
+        ]
+      );
+    return _;
+  }
 }
 
 /**
@@ -294,6 +333,9 @@ export class Table extends Layout {
     [new Cell(), new Cell()],
     [new Cell(), new Cell()],
   ];
+
+  borderColor = "#afafaf";
+  borderWidth = 1;
 
   initConfig(configs, toCons) {
     super.initConfig(configs, toCons);
@@ -581,7 +623,15 @@ export class Table extends Layout {
                 <tr key={row}>
                   {_.map((__, col) => {
                     return __.disappear ? null : (
-                      <td key={col} colspan={__.colspan} rowspan={__.rowspan}>
+                      <td
+                        style={`
+                        border-color: ${__.borderColor || this.borderColor};
+                        border-width: ${__.borderWidth || this.borderWidth}px;
+                        `}
+                        key={col}
+                        colspan={__.colspan}
+                        rowspan={__.rowspan}
+                      >
                         {__.render(
                           {
                             ...op,
@@ -600,5 +650,40 @@ export class Table extends Layout {
         </table>
       </div>
     );
+  }
+
+  getRight(op, hasEditor = true) {
+    let _ = super.getRight(...arguments);
+    hasEditor &&
+      _.find((_) => _.title == "常用属性").childs.unshift(
+        ...[
+          {
+            label: "边框宽度",
+            editor: (
+              <el-input-number
+                size="small"
+                model-value={this.borderWidth}
+                onChange={(_) => {
+                  this.borderWidth = _;
+                }}
+              />
+            ),
+          },
+          {
+            label: "边框颜色",
+            editor: (
+              <el-color-picker
+                model-value={this.borderColor}
+                onChange={(v) => {
+                  this.borderColor = v;
+                }}
+                predefine={predefineColors}
+                size="small"
+              />
+            ),
+          },
+        ]
+      );
+    return _;
   }
 }

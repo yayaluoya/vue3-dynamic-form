@@ -370,7 +370,7 @@ export class BaseCon {
    * @returns
    */
   renderRight(op) {
-    return this.getRight(...arguments).map((_, i) => {
+    return this.getRight(...arguments)?.map((_, i) => {
       return (
         <el-collapse-item key={i} title={_.title} name={_.title}>
           {_.childs.filter(Boolean).map((__, j) => {
