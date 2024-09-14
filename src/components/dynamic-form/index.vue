@@ -439,7 +439,11 @@ export default defineComponent({
         </template>
         <template v-if="JSONH.type == 'export' || JSONH.type == 'getFromData'">
           <el-button type="primary" @click="copy()">复制</el-button>
-          <el-button type="primary" @click="saveToFile()">保存为文件</el-button>
+          <el-button type="primary" @click="saveToFile()"
+            >保存为文件 ({{
+              (JSONH.jsonText.length / 1024).toFixed(2)
+            }}kb)</el-button
+          >
         </template>
         <el-button @click="JSONH.show = false">关闭</el-button>
       </template>
