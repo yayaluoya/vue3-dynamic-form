@@ -419,7 +419,7 @@ export default defineComponent({
     <div class="c">
       <Right :cons="cons" :activateCon="activateCon" :formConfig="formConfig" />
     </div>
-    <el-dialog v-model="JSONH.show" :title="JSONH.title" width="800">
+    <el-dialog v-model="JSONH.show" :title="JSONH.title" width="800" draggable>
       <el-scrollbar style="height: 500px" wrap-class="scrollbar-wrapper">
         <CodeEditInput
           :value="JSONH.jsonText"
@@ -448,7 +448,7 @@ export default defineComponent({
         <el-button @click="JSONH.show = false">关闭</el-button>
       </template>
     </el-dialog>
-    <el-dialog v-model="previewOp.show" title="表单预览" width="900">
+    <el-dialog v-model="previewOp.show" title="表单预览" width="900" draggable>
       <el-scrollbar style="height: 500px" wrap-class="scrollbar-wrapper">
         <Preview
           ref="previewEl"
