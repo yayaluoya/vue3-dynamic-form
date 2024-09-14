@@ -168,7 +168,7 @@ export default defineComponent({
           cons: ConT.toConfigs(props.cons),
         },
         undefined,
-        4
+        2
       );
     }
     /** 导出json */
@@ -182,7 +182,7 @@ export default defineComponent({
           cons: ConT.toConfigs(props.cons),
         },
         undefined,
-        4
+        2
       );
     }
 
@@ -230,7 +230,7 @@ export default defineComponent({
         JSONH.type = "getFromData";
         JSONH.show = true;
         JSONH.title = "表单数据";
-        JSONH.jsonText = JSON.stringify(previewOp.formData, undefined, 4);
+        JSONH.jsonText = JSON.stringify(previewOp.formData, undefined, 2);
       });
     }
 
