@@ -26,6 +26,7 @@ import {
   Checkbox,
   Select,
   Divider,
+  Alert,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -91,7 +92,7 @@ export default defineComponent({
       },
       {
         label: "其他类型",
-        cons: [Divider],
+        cons: [Divider, Alert],
       },
       {
         label: "扩展类型",

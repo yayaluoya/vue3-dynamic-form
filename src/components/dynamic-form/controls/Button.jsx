@@ -57,7 +57,7 @@ export class Button extends NonForm {
   }
 
   getRight(op, hasEditor = true) {
-    let _ = super.getRight(...arguments).filter((_) => _.title != "表单属性");
+    let _ = super.getRight(...arguments);
     hasEditor &&
       _.find((_) => _.title == "常用属性").childs.unshift(
         ...[
