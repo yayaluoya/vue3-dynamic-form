@@ -31,7 +31,6 @@ export class Radio extends BaseCon {
 
   props = {
     border: false,
-    size: "default",
     button: false,
     arrange: "row",
   };
@@ -55,7 +54,6 @@ export class Radio extends BaseCon {
                 <el-radio-button
                   key={_.key}
                   value={_.value}
-                  size={this.props.size}
                   disabled={!_.activate}
                   border={this.props.border}
                 >
@@ -67,7 +65,6 @@ export class Radio extends BaseCon {
               <el-radio
                 key={_.key}
                 value={_.value}
-                size={this.props.size}
                 disabled={!_.activate}
                 border={this.props.border}
               >
@@ -85,22 +82,6 @@ export class Radio extends BaseCon {
     hasEditor &&
       _.find((_) => _.title == "常用属性").childs.unshift(
         ...[
-          {
-            label: "大小",
-            editor: (
-              <el-radio-group
-                size="small"
-                model-value={this.props.size}
-                onChange={(v) => {
-                  this.props.size = v;
-                }}
-              >
-                <el-radio-button label="large" value="large" />
-                <el-radio-button label="default" value="default" />
-                <el-radio-button label="small" value="small" />
-              </el-radio-group>
-            ),
-          },
           {
             label: "排列方式",
             editor: (

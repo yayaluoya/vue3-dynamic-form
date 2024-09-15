@@ -69,18 +69,19 @@ export class Alert extends NonForm {
           {
             label: "类型",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.props.type}
+                size="small"
                 onChange={(v) => {
                   this.props.type = v;
                 }}
+                placeholder="请选择"
               >
-                <el-radio-button label="success" value="success" />
-                <el-radio-button label="warning" value="warning" />
-                <el-radio-button label="info" value="info" />
-                <el-radio-button label="error" value="error" />
-              </el-radio-group>
+                <el-option label="success" value="success" />
+                <el-option label="warning" value="warning" />
+                <el-option label="info" value="info" />
+                <el-option label="error" value="error" />
+              </el-select>
             ),
           },
           {
@@ -122,16 +123,17 @@ export class Alert extends NonForm {
           {
             label: "主题样式",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.props.effect}
+                size="small"
                 onChange={(v) => {
                   this.props.effect = v;
                 }}
+                placeholder="请选择"
               >
-                <el-radio-button label="light" value="light" />
-                <el-radio-button label="dark" value="dark" />
-              </el-radio-group>
+                <el-option label="light" value="light" />
+                <el-option label="dark" value="dark" />
+              </el-select>
             ),
           },
         ]

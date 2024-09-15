@@ -120,17 +120,18 @@ export class Card extends NonForm {
           {
             label: "阴影显示时机",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.props.shadow}
+                size="small"
                 onChange={(v) => {
                   this.props.shadow = v;
                 }}
+                placeholder="请选择"
               >
-                <el-radio-button label="always" value="always" />
-                <el-radio-button label="never" value="never" />
-                <el-radio-button label="hover" value="hover" />
-              </el-radio-group>
+                <el-option label="always" value="always" />
+                <el-option label="never" value="never" />
+                <el-option label="hover" value="hover" />
+              </el-select>
             ),
           },
         ]

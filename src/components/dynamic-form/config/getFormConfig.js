@@ -24,7 +24,7 @@ export function getFormConfig() {
     /** 是否在输入框中显示校验结果反馈图标 */
     statusIcon: false,
     /** 用于控制该表单内组件的尺寸 */
-    size: "",
+    size: "default",
     /** 是否禁用该表单内的所有组件。 如果设置为 true, 它将覆盖内部组件的 disabled 属性 */
     disabled: false,
   };

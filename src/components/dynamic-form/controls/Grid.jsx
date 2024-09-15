@@ -315,36 +315,38 @@ export class Grid extends NonForm {
           {
             label: "水平排列方式",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.rowProps.justify}
+                size="small"
                 onChange={(v) => {
                   this.rowProps.justify = v;
                 }}
+                placeholder="请选择"
               >
-                <el-radio-button label="start" value="start" />
-                <el-radio-button label="end" value="end" />
-                <el-radio-button label="center" value="center" />
-                <el-radio-button label="space-around" value="space-around" />
-                <el-radio-button label="space-between" value="space-between" />
-                <el-radio-button label="space-evenly" value="space-evenly" />
-              </el-radio-group>
+                <el-option label="start" value="start" />
+                <el-option label="end" value="end" />
+                <el-option label="center" value="center" />
+                <el-option label="space-around" value="space-around" />
+                <el-option label="space-between" value="space-between" />
+                <el-option label="space-evenly" value="space-evenly" />
+              </el-select>
             ),
           },
           {
             label: "垂直排列方式",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.rowProps.align}
+                size="small"
                 onChange={(v) => {
                   this.rowProps.align = v;
                 }}
+                placeholder="请选择"
               >
-                <el-radio-button label="top" value="top" />
-                <el-radio-button label="middle" value="middle" />
-                <el-radio-button label="bottom" value="bottom" />
-              </el-radio-group>
+                <el-option label="top" value="top" />
+                <el-option label="middle" value="middle" />
+                <el-option label="bottom" value="bottom" />
+              </el-select>
             ),
           },
         ]

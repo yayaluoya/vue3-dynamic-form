@@ -4,6 +4,7 @@ import { getFormConfig } from "../config/getFormConfig";
 import { FontStyle } from "../com/FontStyle";
 import { FormItemRules } from "../com/FormItemRules";
 import "../style/controls.scss";
+import { ArrayUtils } from "../tool/ArrayUtils";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 15);
@@ -48,15 +49,15 @@ export class BaseCon {
     hideLabel: false,
     label: "控件",
     /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 默认会继承 Form的label-position */
-    labelPosition: undefined,
+    labelPosition: [],
     /** 标签对齐方式 */
-    labelAlign: undefined,
+    labelAlign: [],
     /** 标签宽度，例如 '50px'。 可以使用 auto。 */
     labelWidth: 0,
     /** 是否显示校验错误信息 */
     showMessage: true,
     /** 用于控制该表单域下组件的默认尺寸 */
-    size: undefined,
+    size: "",
   };
   /** 表单项标签字体样式 */
   formItemLabelFontStyle = new FontStyle({
@@ -122,7 +123,10 @@ export class BaseCon {
    */
   init(config) {}
 
-  /** 更新渲染key */
+  /**
+   * 更新渲染key
+   * TODO 强制更新组件时调用此方法
+   */
   upadteRenderKey() {
     this.renderKey = BaseCon.getKey();
     //
@@ -139,6 +143,14 @@ export class BaseCon {
     let _ = this;
     _ = new this.constructor().initConfig(this);
     return _;
+  }
+
+  /**
+   * 设置组件隐藏
+   * @param {boolean} b
+   */
+  setHide(b = true) {
+    this.hide = b;
   }
 
   /**
@@ -300,7 +312,7 @@ export class BaseCon {
       <el-form-item
         class={[""].join(" ")}
         prop={this.formItemProps.prop}
-        label-position={this.formItemProps.labelPosition}
+        label-position={this.formItemProps.labelPosition[0]}
         label-width={
           !this.formItemProps.hideLabel && this.formItemProps.label
             ? this.formItemProps.labelWidth &&
@@ -322,13 +334,13 @@ export class BaseCon {
                 display: inline-flex;
                 flex-direction: row;
                 ${
-                  (this.formItemProps.labelPosition ||
+                  (this.formItemProps.labelPosition[0] ||
                     formConfig.labelPosition) == "top"
                     ? ""
                     : "width: 100%;"
                 }
                 justify-content: ${
-                  this.formItemProps.labelAlign || formConfig.labelAlign
+                  this.formItemProps.labelAlign[0] || formConfig.labelAlign
                 };
               `}
               >
@@ -456,80 +468,50 @@ export class BaseCon {
           {
             label: "标签位置",
             editor: (
-              <div style="display: flex;align-items: center;">
-                <el-radio-group
-                  size="small"
-                  model-value={this.formItemProps.labelPosition}
-                  onChange={(v) => {
-                    this.formItemProps.labelPosition = v;
-                  }}
-                >
-                  <el-radio-button label="left" value="left" />
-                  <el-radio-button label="top" value="top" />
-                </el-radio-group>
-                {this.formItemProps.labelPosition ? (
-                  <el-icon
-                    style="margin-left: 2px;cursor: pointer;"
-                    onClick={() => {
-                      this.formItemProps.labelPosition = undefined;
-                    }}
-                  >
-                    <Close />
-                  </el-icon>
-                ) : null}
-              </div>
+              <el-checkbox-group
+                size="small"
+                model-value={this.formItemProps.labelPosition}
+                onChange={(v) => {
+                  this.formItemProps.labelPosition = ArrayUtils.eliminate(
+                    v,
+                    (_) => this.formItemProps.labelPosition.includes(_)
+                  );
+                }}
+              >
+                <el-checkbox-button label="left" value="left" />
+                <el-checkbox-button label="top" value="top" />
+              </el-checkbox-group>
             ),
           },
           {
             label: "字段标签对齐",
             editor: (
-              <div style="display: flex;align-items: center;">
-                <el-radio-group
-                  size="small"
-                  model-value={this.formItemProps.labelAlign}
-                  onChange={(v) => {
-                    this.formItemProps.labelAlign = v;
-                  }}
-                >
-                  <el-radio-button label="left" value="left" />
-                  <el-radio-button label="center" value="center" />
-                  <el-radio-button label="right" value="right" />
-                </el-radio-group>
-                {this.formItemProps.labelAlign ? (
-                  <el-icon
-                    style="margin-left: 2px;cursor: pointer;"
-                    onClick={() => {
-                      this.formItemProps.labelAlign = undefined;
-                    }}
-                  >
-                    <Close />
-                  </el-icon>
-                ) : null}
-              </div>
+              <el-checkbox-group
+                size="small"
+                model-value={this.formItemProps.labelAlign}
+                onChange={(v) => {
+                  this.formItemProps.labelAlign = ArrayUtils.eliminate(v, (_) =>
+                    this.formItemProps.labelAlign.includes(_)
+                  );
+                }}
+              >
+                <el-checkbox-button label="left" value="left" />
+                <el-checkbox-button label="center" value="center" />
+                <el-checkbox-button label="right" value="right" />
+              </el-checkbox-group>
             ),
           },
           {
             label: "标签宽度",
             editor: (
-              <div style="display: flex;align-items: center;">
-                <el-input-number
-                  size="small"
-                  model-value={this.formItemProps.labelWidth}
-                  onChange={(v) => {
-                    this.formItemProps.labelWidth = v;
-                  }}
-                />
-                {this.formItemProps.labelWidth ? (
-                  <el-icon
-                    style="margin-left: 2px;cursor: pointer;"
-                    onClick={() => {
-                      this.formItemProps.labelWidth = 0;
-                    }}
-                  >
-                    <Close />
-                  </el-icon>
-                ) : null}
-              </div>
+              <el-input-number
+                size="small"
+                min={0}
+                model-value={this.formItemProps.labelWidth}
+                onChange={(v) => {
+                  this.formItemProps.labelWidth = v;
+                }}
+              />
             ),
           },
           ...this.formItemLabelFontStyle.render(),

@@ -18,7 +18,6 @@ export class Input extends BaseCon {
     showWordLimit: false,
     placeholder: "",
     clearable: false,
-    size: "default",
     rows: 2,
   };
 
@@ -38,7 +37,6 @@ export class Input extends BaseCon {
         show-word-limit={this.props.showWordLimit}
         placeholder={this.props.placeholder}
         clearable={this.props.clearable}
-        size={this.props.size}
       />
     );
   }
@@ -121,22 +119,6 @@ export class Input extends BaseCon {
                 },
               ]
             : []),
-          {
-            label: "大小",
-            editor: (
-              <el-radio-group
-                size="small"
-                model-value={this.props.size}
-                onChange={(v) => {
-                  this.props.size = v;
-                }}
-              >
-                <el-radio-button label="large" value="large" />
-                <el-radio-button label="default" value="default" />
-                <el-radio-button label="small" value="small" />
-              </el-radio-group>
-            ),
-          },
         ]
       );
     return _;

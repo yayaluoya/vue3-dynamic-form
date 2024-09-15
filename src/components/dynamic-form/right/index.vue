@@ -121,6 +121,16 @@ export default defineComponent({
                           }}
                         />
                       </el-form-item>
+                      <el-form-item label="标签后缀">
+                        <el-input
+                          size="small"
+                          model-value={formConfig.labelsuffix}
+                          onInput={(v) => {
+                            formConfig.labelsuffix = v;
+                          }}
+                          clearable
+                        />
+                      </el-form-item>
                       <el-form-item label="必填星号位置">
                         <el-radio-group
                           size="small"

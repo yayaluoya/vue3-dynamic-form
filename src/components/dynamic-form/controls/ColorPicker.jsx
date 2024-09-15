@@ -12,7 +12,6 @@ export class ColorPicker extends BaseCon {
   static I = new ColorPicker();
 
   props = {
-    size: "",
     showAlpha: false,
     predefine: [],
   };
@@ -27,7 +26,6 @@ export class ColorPicker extends BaseCon {
         onChange={(v) => {
           ref.value = v;
         }}
-        size={this.props.size}
         show-alpha={this.props.showAlpha}
         predefine={this.props.predefine}
       />
@@ -40,23 +38,7 @@ export class ColorPicker extends BaseCon {
       _.find((_) => _.title == "常用属性").childs.unshift(
         ...[
           {
-            label: "大小",
-            editor: (
-              <el-select
-                model-value={this.props.size}
-                onChange={(v) => {
-                  this.props.size = v;
-                }}
-                size="small"
-                clearable
-              >
-                <el-option label="large" value="large" />
-                <el-option label="small" value="small" />
-              </el-select>
-            ),
-          },
-          {
-            label: "透明度选择",
+            label: "选择透明度",
             editor: (
               <el-switch
                 model-value={this.props.showAlpha}

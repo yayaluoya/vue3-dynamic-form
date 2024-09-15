@@ -20,7 +20,6 @@ export class InputNumber extends BaseCon {
     step: 1,
     controls: true,
     controlsPosition: "",
-    size: "default",
   };
 
   formDefaultValue = 0;
@@ -39,7 +38,6 @@ export class InputNumber extends BaseCon {
         step={this.props.step}
         controls={this.props.controls}
         controls-position={this.props.controlsPosition}
-        size={this.props.size}
       />
     );
   }
@@ -145,22 +143,6 @@ export class InputNumber extends BaseCon {
               >
                 <el-radio-button label="default" value="" />
                 <el-radio-button label="right" value="right" />
-              </el-radio-group>
-            ),
-          },
-          {
-            label: "大小",
-            editor: (
-              <el-radio-group
-                size="small"
-                model-value={this.props.size}
-                onChange={(v) => {
-                  this.props.size = v;
-                }}
-              >
-                <el-radio-button label="large" value="large" />
-                <el-radio-button label="default" value="default" />
-                <el-radio-button label="small" value="small" />
               </el-radio-group>
             ),
           },

@@ -45,27 +45,28 @@ export class Divider extends NonForm {
                   this.props.direction = v;
                 }}
               >
-                <el-radio-button label="horizontal" value="horizontal" />
-                <el-radio-button label="vertical" value="vertical" />
+                <el-radio-button label="水平" value="horizontal" />
+                <el-radio-button label="垂直" value="vertical" />
               </el-radio-group>
             ),
           },
           {
             label: "样式",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.props.borderStyle}
+                size="small"
                 onChange={(v) => {
                   this.props.borderStyle = v;
                 }}
+                placeholder="请选择"
               >
-                <el-radio-button label="none" value="none" />
-                <el-radio-button label="solid" value="solid" />
-                <el-radio-button label="dashed" value="dashed" />
-                <el-radio-button label="dotted" value="dotted" />
-                <el-radio-button label="inset" value="inset" />
-              </el-radio-group>
+                <el-option label="none" value="none" />
+                <el-option label="solid" value="solid" />
+                <el-option label="dashed" value="dashed" />
+                <el-option label="dotted" value="dotted" />
+                <el-option label="inset" value="inset" />
+              </el-select>
             ),
           },
           {

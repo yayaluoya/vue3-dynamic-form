@@ -125,17 +125,18 @@ export class LabelPage extends NonForm {
           {
             label: "风格类型",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.tabsProps.type}
+                size="small"
                 onChange={(v) => {
                   this.tabsProps.type = v;
                 }}
+                placeholder="请选择"
+                clearable
               >
-                <el-radio-button label="default" value="" />
-                <el-radio-button label="card" value="card" />
-                <el-radio-button label="border-card" value="border-card" />
-              </el-radio-group>
+                <el-option label="card" value="card" />
+                <el-option label="border-card" value="border-card" />
+              </el-select>
             ),
           },
           {
@@ -149,9 +150,9 @@ export class LabelPage extends NonForm {
                 }}
               >
                 <el-radio-button label="top" value="top" />
-                <el-radio-button label="right" value="right" />
                 <el-radio-button label="bottom" value="bottom" />
                 <el-radio-button label="left" value="left" />
+                <el-radio-button label="right" value="right" />
               </el-radio-group>
             ),
           },

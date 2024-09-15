@@ -31,7 +31,6 @@ export class Select extends BaseCon {
 
   props = {
     clearable: false,
-    size: "default",
     placeholder: "",
   };
 
@@ -47,7 +46,6 @@ export class Select extends BaseCon {
             ref.value = v;
           }}
           clearable={this.props.clearable}
-          size={this.props.size}
           placeholder={this.props.placeholder}
         >
           {this.list.map((_) => {
@@ -56,7 +54,6 @@ export class Select extends BaseCon {
                 key={_.key}
                 value={_.value}
                 label={_.name}
-                size={this.props.size}
                 disabled={!_.activate}
               ></el-option>
             );
@@ -71,22 +68,6 @@ export class Select extends BaseCon {
     hasEditor &&
       _.find((_) => _.title == "常用属性").childs.unshift(
         ...[
-          {
-            label: "大小",
-            editor: (
-              <el-radio-group
-                size="small"
-                model-value={this.props.size}
-                onChange={(v) => {
-                  this.props.size = v;
-                }}
-              >
-                <el-radio-button label="large" value="large" />
-                <el-radio-button label="default" value="default" />
-                <el-radio-button label="small" value="small" />
-              </el-radio-group>
-            ),
-          },
           {
             label: "占位字符串",
             editor: (

@@ -76,20 +76,21 @@ export class Button extends NonForm {
           {
             label: "类型",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.props.type}
+                size="small"
                 onChange={(v) => {
                   this.props.type = v;
                 }}
+                placeholder="请选择"
+                clearable
               >
-                <el-radio-button label="default" value="" />
-                <el-radio-button label="primary" value="primary" />
-                <el-radio-button label="success" value="success" />
-                <el-radio-button label="warning" value="warning" />
-                <el-radio-button label="danger" value="danger" />
-                <el-radio-button label="info" value="info" />
-              </el-radio-group>
+                <el-option label="primary" value="primary" />
+                <el-option label="success" value="success" />
+                <el-option label="warning" value="warning" />
+                <el-option label="danger" value="danger" />
+                <el-option label="info" value="info" />
+              </el-select>
             ),
           },
           {
@@ -144,17 +145,19 @@ export class Button extends NonForm {
           {
             label: "大小",
             editor: (
-              <el-radio-group
-                size="small"
+              <el-select
                 model-value={this.props.size}
+                size="small"
                 onChange={(v) => {
                   this.props.size = v;
                 }}
+                placeholder="请选择"
+                clearable
               >
-                <el-radio-button label="large" value="large" />
-                <el-radio-button label="default" value="default" />
-                <el-radio-button label="small" value="small" />
-              </el-radio-group>
+                <el-option label="large" value="large" />
+                <el-option label="default" value="default" />
+                <el-option label="small" value="small" />
+              </el-select>
             ),
           },
           {
@@ -178,6 +181,7 @@ export class Button extends NonForm {
             editor: (
               <el-input-number
                 size="small"
+                step={5}
                 model-value={this.props.margin.left}
                 onChange={(_) => {
                   this.props.margin.left = _;
@@ -190,6 +194,7 @@ export class Button extends NonForm {
             editor: (
               <el-input-number
                 size="small"
+                step={5}
                 model-value={this.props.margin.right}
                 onChange={(_) => {
                   this.props.margin.right = _;
@@ -202,6 +207,7 @@ export class Button extends NonForm {
             editor: (
               <el-switch
                 size="small"
+                step={5}
                 model-value={this.props.disabled}
                 onChange={(v) => {
                   this.props.disabled = v;
