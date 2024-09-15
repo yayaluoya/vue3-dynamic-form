@@ -2,8 +2,7 @@
 import { defineComponent, ref } from "vue";
 import DynamicForm from "@/components/dynamic-form/index.vue";
 import { getFormConfig } from "@/components/dynamic-form/config/getFormConfig";
-import { ConT } from "@/components/dynamic-form/ConT";
-import { Button, Test } from "@/components/dynamic-form/controls";
+import { Test } from "@/components/dynamic-form/controls";
 
 export default defineComponent({
   components: { DynamicForm },
@@ -11,10 +10,6 @@ export default defineComponent({
     let cons = ref([]);
     let extendCons = ref([Test]);
     let formConfig = ref(getFormConfig());
-    console.log(
-      "转换",
-      ConT.toCons(ConT.toConfigs([new Button(), new Test()]))
-    );
     return {
       cons,
       formConfig,
