@@ -39,7 +39,7 @@ import { Clipboard } from "./tool/web/Clipboard";
 import { FileT } from "./tool/web/FileT";
 import { ElMessage } from "element-plus";
 import { ObjectUtils } from "./tool/obj/ObjectUtils";
-import Preview from "./preview.vue";
+import Render from "./render.vue";
 
 export default defineComponent({
   components: {
@@ -49,7 +49,7 @@ export default defineComponent({
     Right,
     DocumentCopy,
     CodeEditInput,
-    Preview,
+    Render,
   },
   props: {
     cons: {
@@ -70,8 +70,8 @@ export default defineComponent({
     const rootElRef = ref();
     const bScrollbarRef = ref();
     const leftTabsActiveNames = ref("con");
-    const previewEl = ref();
-    const previewOp = reactive({
+    const renderEl = ref();
+    const renderOp = reactive({
       show: false,
       cons: [],
       formData: {},
@@ -158,15 +158,12 @@ export default defineComponent({
 
     /** 预览 */
     function preview() {
-      previewOp.show = true;
-      previewOp.cons = ConT.toCons(
-        ConT.toConfigs(props.cons),
-        props.extendCons
-      );
-      previewOp.formData = ConT.getFromData(previewOp.cons);
-      previewOp.formConfig = ObjectUtils.clone2(props.formConfig);
+      renderOp.show = true;
+      renderOp.cons = ConT.toCons(ConT.toConfigs(props.cons), props.extendCons);
+      renderOp.formData = ConT.getFromData(renderOp.cons);
+      renderOp.formConfig = ObjectUtils.clone2(props.formConfig);
       nextTick(() => {
-        previewEl.value.clearValidate();
+        renderEl.value.clearValidate();
       });
     }
 
@@ -240,11 +237,11 @@ export default defineComponent({
     }
 
     function getFromData() {
-      previewEl.value.validate().then(() => {
+      renderEl.value.validate().then(() => {
         JSONH.type = "getFromData";
         JSONH.show = true;
         JSONH.title = "表单数据";
-        JSONH.jsonText = JSON.stringify(previewOp.formData, undefined, 2);
+        JSONH.jsonText = JSON.stringify(renderOp.formData, undefined, 2);
       });
     }
 
@@ -281,9 +278,9 @@ export default defineComponent({
       copy,
       saveToFile,
       preview,
-      previewOp,
+      renderOp,
       getFromData,
-      previewEl,
+      renderEl,
     };
   },
 });
@@ -469,13 +466,13 @@ export default defineComponent({
         <el-button @click="JSONH.show = false">关闭</el-button>
       </template>
     </el-dialog>
-    <el-dialog v-model="previewOp.show" title="表单预览" width="900" draggable>
+    <el-dialog v-model="renderOp.show" title="表单预览" width="900" draggable>
       <el-scrollbar style="height: 700px" wrap-class="scrollbar-wrapper">
-        <Preview
-          ref="previewEl"
-          :cons="previewOp.cons"
-          :formConfig="previewOp.formConfig"
-          :formData="previewOp.formData"
+        <Render
+          ref="renderEl"
+          :cons="renderOp.cons"
+          :formConfig="renderOp.formConfig"
+          :formData="renderOp.formData"
         />
       </el-scrollbar>
       <template #footer>

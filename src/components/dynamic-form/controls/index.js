@@ -1,7 +1,8 @@
 export { Alert } from "./Alert";
-export { Checkbox } from "./Checkbox";
+export { BaseCon } from "./BaseCon";
 export { Button } from "./Button";
 export { Card } from "./Card";
+export { Checkbox } from "./Checkbox";
 export { Collapse } from "./Collapse";
 export { ColorPicker } from "./ColorPicker";
 export { Divider } from "./Divider";
@@ -9,6 +10,7 @@ export { Grid } from "./Grid";
 export { Input } from "./Input";
 export { InputNumber } from "./InputNumber";
 export { LabelPage } from "./LabelPage";
+export { NonForm } from "./NonForm";
 export { Radio } from "./Radio";
 export { Rate } from "./Rate";
 export { Select } from "./Select";
