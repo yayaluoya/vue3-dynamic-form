@@ -1,5 +1,5 @@
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
-import "../style/formItem.scss";
+import "../style/form-item.scss";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
 import { FontStyleCon } from "./FontStyleCon";
@@ -45,6 +45,7 @@ export class FormItemCon {
     return [
       {
         label: "表单字段名",
+        labelPosition: "top",
         editor: (
           <el-input
             size="small"
@@ -116,6 +117,7 @@ export class FormItemCon {
       },
       {
         label: "字段标签对齐",
+        labelPosition: "top",
         editor: (
           <el-checkbox-group
             size="small"
@@ -159,14 +161,10 @@ export class FormItemCon {
         ),
       },
       {
-        label: "校验规则：",
-      },
-      {
+        label: "校验规则",
+        labelPosition: "top",
         editor: (
           <div class="form-item-rules">
-            {this.rules <= 0 ? (
-              <span style={"color: gray"}>无校验规则</span>
-            ) : null}
             <Draggable
               class="draggable"
               modelValue={this.rules}

@@ -99,7 +99,7 @@ export default defineComponent({
                           <el-radio-button label="top" value="top" />
                         </el-radio-group>
                       </el-form-item>
-                      <el-form-item label="字段标签对齐">
+                      <el-form-item label="字段标签对齐" label-position="top">
                         <el-radio-group
                           size="small"
                           model-value={formConfig.labelAlign}

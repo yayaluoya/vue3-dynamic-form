@@ -370,7 +370,11 @@ export class BaseCon {
           {_.childs.filter(Boolean).map((__, j) => {
             let { editor, ...props } = __;
             return props.label ? (
-              <el-form-item key={j} label={props.label}>
+              <el-form-item
+                key={j}
+                label={props.label}
+                label-position={props.labelPosition}
+              >
                 {editor}
               </el-form-item>
             ) : (

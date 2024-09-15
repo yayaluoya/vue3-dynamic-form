@@ -92,9 +92,8 @@ export class Select extends BaseCon {
             ),
           },
           {
-            label: "选项设置：",
-          },
-          {
+            label: "选项设置",
+            labelPosition: "top",
             editor: (
               <div class="controls__ select-right">
                 <Draggable

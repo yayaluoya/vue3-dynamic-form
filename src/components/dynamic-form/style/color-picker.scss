@@ -1,0 +1,16 @@
+.controls__.color-picker {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  >.list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  >.el-button {
+    margin-top: 5px;
+  }
+}
