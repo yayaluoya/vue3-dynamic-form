@@ -1,13 +1,15 @@
 {
   "name": "vue3-editable-form",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "lib-build": "vite build --config vite-lib.config.js",
     "preview": "vite preview",
-    "codess": "codess b"
+    "codess": "codess b",
+    "npm-publish": "npm publish"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -27,5 +29,9 @@
     "codess": "^1.1.5",
     "sass-embedded": "^1.78.0",
     "vite": "^5.3.1"
-  }
+  },
+  "files": [
+    "dist-lib",
+    "package.json"
+  ]
 }
