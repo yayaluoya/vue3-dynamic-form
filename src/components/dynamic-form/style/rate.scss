@@ -1,0 +1,22 @@
+.controls__.rate {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  >.list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    >.i {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      >span {
+        margin-right: 5px;
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ export { Input } from "./Input";
 export { InputNumber } from "./InputNumber";
 export { LabelPage } from "./LabelPage";
 export { Radio } from "./Radio";
+export { Rate } from "./Rate";
 export { Select } from "./Select";
 export { Table } from "./Table";
 export { Test } from "./Test";

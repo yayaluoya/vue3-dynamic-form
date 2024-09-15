@@ -63,6 +63,7 @@ export class ColorPicker extends BaseCon {
                     return (
                       <div className="i">
                         <el-color-picker
+                          size="small"
                           model-value={_}
                           onChange={(v) => {
                             this.props.predefine[i] = v;
