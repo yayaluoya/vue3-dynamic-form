@@ -204,6 +204,7 @@ class Cell extends NonForm {
                 </el-dropdown-item>
                 <el-dropdown-item
                   divided
+                  disabled={this.rowspan == 1}
                   onClick={() => {
                     parent.revocationMerge("row", row, col);
                   }}
@@ -211,6 +212,7 @@ class Cell extends NonForm {
                   撤销行合并
                 </el-dropdown-item>
                 <el-dropdown-item
+                  disabled={this.colspan == 1}
                   onClick={() => {
                     parent.revocationMerge("col", row, col);
                   }}
