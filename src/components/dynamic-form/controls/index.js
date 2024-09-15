@@ -12,5 +12,6 @@ export { LabelPage } from "./LabelPage";
 export { Radio } from "./Radio";
 export { Rate } from "./Rate";
 export { Select } from "./Select";
+export { Slider } from "./Slider";
 export { Table } from "./Table";
 export { Test } from "./Test";
