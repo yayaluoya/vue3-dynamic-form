@@ -1,8 +1,8 @@
 import { BaseCon } from "./BaseCon";
 import "../style/test.scss";
-import { FormItemRules } from "../com/FormItemRules";
+import { FormItemCon } from "../com/FormItemCon";
 
-class FormItemRules_ extends FormItemRules {
+class FormItemCon_ extends FormItemCon {
   reder() {
     return [];
   }
@@ -28,7 +28,7 @@ export class Test extends BaseCon {
    * @param {Test} config
    */
   init(config) {
-    this.formItemRules = new FormItemRules_(config?.formItemRules);
+    this.formItem = new FormItemCon_(config?.formItem || this.formItem);
   }
 
   renderRaw({ formData }) {

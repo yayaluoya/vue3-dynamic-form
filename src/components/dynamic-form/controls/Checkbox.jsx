@@ -80,7 +80,7 @@ export class Checkbox extends BaseCon {
   getRight(op, hasEditor = true) {
     let _ = super.getRight(...arguments);
     hasEditor &&
-      _.find((_) => _.title == "常用属性").childs.unshift(
+      _.find((_) => _.key == "com").childs.unshift(
         ...[
           {
             label: "排列方式",

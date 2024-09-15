@@ -1,10 +1,8 @@
 import { customAlphabet } from "nanoid";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import { getFormConfig } from "../config/getFormConfig";
-import { FontStyle } from "../com/FontStyle";
-import { FormItemRules } from "../com/FormItemRules";
 import "../style/controls.scss";
-import { ArrayUtils } from "../tool/ArrayUtils";
+import { FormItemCon } from "../com/FormItemCon";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 15);
@@ -41,30 +39,8 @@ export class BaseCon {
   /** @type {BaseCon[]} 子控件 */
   childs = [];
 
-  /** 表单属性 */
-  formItemProps = {
-    /** 最终绑定到formData上的属性名，如果设置为undefined的话表示这个控件不绑定值到formData上 */
-    prop: undefined,
-    /** 隐藏label */
-    hideLabel: false,
-    label: "控件",
-    /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 默认会继承 Form的label-position */
-    labelPosition: [],
-    /** 标签对齐方式 */
-    labelAlign: [],
-    /** 标签宽度，例如 '50px'。 可以使用 auto。 */
-    labelWidth: 0,
-    /** 是否显示校验错误信息 */
-    showMessage: true,
-    /** 用于控制该表单域下组件的默认尺寸 */
-    size: "",
-  };
-  /** 表单项标签字体样式 */
-  formItemLabelFontStyle = new FontStyle({
-    fontSize: 14,
-  });
-  /** 表单项数据验证规则 */
-  formItemRules = new FormItemRules();
+  /** 表单项组件 */
+  formItem = new FormItemCon();
 
   /** 表单默认值 */
   formDefaultValue = undefined;
@@ -82,16 +58,22 @@ export class BaseCon {
     this.key = "key-" + key;
     this.renderKey = this.key;
     // 属性名默认和key同名
-    this.formItemProps.prop =
+    this.formItem.prop =
       this.conType.toLocaleLowerCase() + "-" + key.slice(0, 7);
-    this.formItemProps.label = this.conName;
+    this.formItem.label = this.conName;
     //
     this.init();
+  }
+
+  /** 获取表单属性名 */
+  getFormProp() {
+    return this.formItem?.prop;
   }
 
   /** 转JSON字符串 */
   toJSON() {
     let d = { ...this };
+    delete d.conName;
     delete d.renderKey;
     delete d.towable;
     return d;
@@ -108,8 +90,7 @@ export class BaseCon {
     for (let i in config) {
       this[i] = ObjectUtils.clone2(config[i]);
     }
-    this.formItemLabelFontStyle = new FontStyle(this.formItemLabelFontStyle);
-    this.formItemRules = new FormItemRules(this.formItemRules);
+    this.formItem = new FormItemCon(this.formItem);
     this.childs = toCons(this.childs);
     //
     this.init(config);
@@ -167,12 +148,12 @@ export class BaseCon {
         value: {
           get: () => {
             return formData
-              ? formData[this.formItemProps.prop]
+              ? formData[this.formItem.prop]
               : this.formDefaultValue;
           },
           set: (v) => {
             formData
-              ? (formData[this.formItemProps.prop] = v)
+              ? (formData[this.formItem.prop] = v)
               : (this.formDefaultValue = v);
           },
         },
@@ -311,21 +292,20 @@ export class BaseCon {
     return (
       <el-form-item
         class={[""].join(" ")}
-        prop={this.formItemProps.prop}
-        label-position={this.formItemProps.labelPosition[0]}
+        prop={this.formItem.prop}
+        label-position={this.formItem.labelPosition[0]}
         label-width={
-          !this.formItemProps.hideLabel && this.formItemProps.label
-            ? this.formItemProps.labelWidth &&
-              this.formItemProps.labelWidth + "px"
+          !this.formItem.hideLabel && this.formItem.label
+            ? this.formItem.labelWidth && this.formItem.labelWidth + "px"
             : "0px"
         }
-        rules={this.formItemRules.list}
-        show-message={this.formItemProps.showMessage}
-        size={this.formItemProps.size}
+        rules={this.formItem.rules}
+        show-message={this.formItem.showMessage}
+        size={this.formItem.size}
       >
         {{
           label: (...arg) => {
-            if (this.formItemProps.hideLabel) {
+            if (this.formItem.hideLabel) {
               return [];
             }
             return (
@@ -334,28 +314,28 @@ export class BaseCon {
                 display: inline-flex;
                 flex-direction: row;
                 ${
-                  (this.formItemProps.labelPosition[0] ||
+                  (this.formItem.labelPosition[0] ||
                     formConfig.labelPosition) == "top"
                     ? ""
                     : "width: 100%;"
                 }
                 justify-content: ${
-                  this.formItemProps.labelAlign[0] || formConfig.labelAlign
+                  this.formItem.labelAlign[0] || formConfig.labelAlign
                 };
               `}
               >
                 <span
                   style={{
-                    "font-size": this.formItemLabelFontStyle.fontSize + "px",
-                    color: this.formItemLabelFontStyle.color,
-                    // 'text-align': this.formItemLabelFontStyle.textAlign,
-                    "font-weight": this.formItemLabelFontStyle.fontWeight,
+                    "font-size": this.formItem.LabelFontStyle.fontSize + "px",
+                    color: this.formItem.LabelFontStyle.color,
+                    // 'text-align': this.formItem.LabelFontStyle.textAlign,
+                    "font-weight": this.formItem.LabelFontStyle.fontWeight,
                     "text-decoration":
-                      this.formItemLabelFontStyle.textDecoration,
-                    "font-style": this.formItemLabelFontStyle.fontStyle,
+                      this.formItem.LabelFontStyle.textDecoration,
+                    "font-style": this.formItem.LabelFontStyle.fontStyle,
                   }}
                 >
-                  {this.formItemProps.label}
+                  {this.formItem.label}
                   {formConfig.labelsuffix}
                 </span>
               </div>
@@ -410,6 +390,7 @@ export class BaseCon {
   getRight(op, hasEditor = true) {
     return [
       {
+        key: "com",
         title: "常用属性",
         childs: hasEditor && [
           {
@@ -427,126 +408,9 @@ export class BaseCon {
         ],
       },
       {
+        key: "form",
         title: "表单属性",
-        childs: hasEditor && [
-          {
-            label: "表单字段名",
-            editor: (
-              <el-input
-                size="small"
-                model-value={this.formItemProps.prop}
-                onInput={(v) => {
-                  this.formItemProps.prop = v;
-                }}
-              />
-            ),
-          },
-          {
-            label: "隐藏标签",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.formItemProps.hideLabel}
-                onChange={(v) => {
-                  this.formItemProps.hideLabel = v;
-                }}
-              ></el-switch>
-            ),
-          },
-          {
-            label: "标签名",
-            editor: (
-              <el-input
-                size="small"
-                model-value={this.formItemProps.label}
-                onInput={(v) => {
-                  this.formItemProps.label = v;
-                }}
-              />
-            ),
-          },
-          {
-            label: "标签位置",
-            editor: (
-              <el-checkbox-group
-                size="small"
-                model-value={this.formItemProps.labelPosition}
-                onChange={(v) => {
-                  this.formItemProps.labelPosition = ArrayUtils.eliminate(
-                    v,
-                    (_) => this.formItemProps.labelPosition.includes(_)
-                  );
-                }}
-              >
-                <el-checkbox-button label="left" value="left" />
-                <el-checkbox-button label="top" value="top" />
-              </el-checkbox-group>
-            ),
-          },
-          {
-            label: "字段标签对齐",
-            editor: (
-              <el-checkbox-group
-                size="small"
-                model-value={this.formItemProps.labelAlign}
-                onChange={(v) => {
-                  this.formItemProps.labelAlign = ArrayUtils.eliminate(v, (_) =>
-                    this.formItemProps.labelAlign.includes(_)
-                  );
-                }}
-              >
-                <el-checkbox-button label="left" value="left" />
-                <el-checkbox-button label="center" value="center" />
-                <el-checkbox-button label="right" value="right" />
-              </el-checkbox-group>
-            ),
-          },
-          {
-            label: "标签宽度",
-            editor: (
-              <el-input-number
-                size="small"
-                min={0}
-                model-value={this.formItemProps.labelWidth}
-                onChange={(v) => {
-                  this.formItemProps.labelWidth = v;
-                }}
-              />
-            ),
-          },
-          ...this.formItemLabelFontStyle.render(),
-          {
-            label: "组件大小",
-            editor: (
-              <el-select
-                model-value={this.formItemProps.size}
-                size="small"
-                onChange={(v) => {
-                  this.formItemProps.size = v;
-                }}
-                placeholder="请选择"
-                clearable
-              >
-                <el-option label="large" value="large" />
-                <el-option label="default" value="default" />
-                <el-option label="small" value="small" />
-              </el-select>
-            ),
-          },
-          {
-            label: "显示校验错误信息",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.formItemProps.showMessage}
-                onChange={(v) => {
-                  this.formItemProps.showMessage = v;
-                }}
-              ></el-switch>
-            ),
-          },
-          ...this.formItemRules.reder(),
-        ],
+        childs: hasEditor && [...this.formItem.reder()],
       },
     ];
   }

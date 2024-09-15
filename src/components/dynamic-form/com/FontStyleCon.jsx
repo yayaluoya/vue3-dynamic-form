@@ -2,9 +2,9 @@ import { predefineColors } from "../config/predefineColors";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
 
 /**
- * 字体样式
+ * 字体样式控制器
  */
-export class FontStyle {
+export class FontStyleCon {
   fontSize = 16;
   color = "#000000";
   fontWeight = "normal";
@@ -12,7 +12,7 @@ export class FontStyle {
   fontStyle = "";
 
   /**
-   * @param {Partial<FontStyle>} op
+   * @param {Partial<FontStyleCon>} op
    */
   constructor(op = {}) {
     for (let i in op) {

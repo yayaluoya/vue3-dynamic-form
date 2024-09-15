@@ -6,15 +6,13 @@ import { BaseCon } from "./BaseCon";
 export class NonForm extends BaseCon {
   constructor() {
     super();
-    this.formItemProps.prop = undefined;
+    this.formItem.prop = undefined;
   }
 
   /** 转JSON字符串 */
   toJSON() {
     let d = { ...super.toJSON() };
-    delete d.formItemProps;
-    delete d.formItemRules;
-    delete d.formItemLabelFontStyle;
+    delete d.formItem;
     return d;
   }
 
@@ -23,7 +21,7 @@ export class NonForm extends BaseCon {
   }
 
   getRight() {
-    let _ = super.getRight(...arguments).filter((_) => _.title != "表单属性");
+    let _ = super.getRight(...arguments).filter((_) => _.key != "form");
     return _;
   }
 }

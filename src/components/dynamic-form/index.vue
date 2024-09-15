@@ -195,6 +195,7 @@ export default defineComponent({
         for (let i in formConfig) {
           props.formConfig[i] = formConfig[i];
         }
+        activateCon.value = null;
         JSONH.show = false;
       } catch (e) {
         ElMessage({
@@ -458,7 +459,7 @@ export default defineComponent({
       </template>
     </el-dialog>
     <el-dialog v-model="previewOp.show" title="表单预览" width="900" draggable>
-      <el-scrollbar style="height: 500px" wrap-class="scrollbar-wrapper">
+      <el-scrollbar style="height: 700px" wrap-class="scrollbar-wrapper">
         <Preview
           ref="previewEl"
           :cons="previewOp.cons"

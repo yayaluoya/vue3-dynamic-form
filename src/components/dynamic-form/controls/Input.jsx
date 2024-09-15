@@ -44,7 +44,7 @@ export class Input extends BaseCon {
   getRight(op, hasEditor = true) {
     let _ = super.getRight(...arguments);
     hasEditor &&
-      _.find((_) => _.title == "常用属性").childs.unshift(
+      _.find((_) => _.key == "com").childs.unshift(
         ...[
           {
             label: "类型",
@@ -81,6 +81,7 @@ export class Input extends BaseCon {
                   label: "可清除",
                   editor: (
                     <el-switch
+                      size="small"
                       model-value={this.props.clearable}
                       onChange={(v) => {
                         this.props.clearable = v;

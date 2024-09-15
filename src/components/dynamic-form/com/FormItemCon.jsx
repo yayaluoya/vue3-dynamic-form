@@ -1,40 +1,177 @@
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
-import "../style/formItem-rules.scss";
+import "../style/formItem.scss";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
+import { FontStyleCon } from "./FontStyleCon";
+import { ArrayUtils } from "../tool/ArrayUtils";
 
 /**
- * 表单验证规则
+ * 表单项控制器
  */
-export class FormItemRules {
+export class FormItemCon {
+  /** 最终绑定到formData上的属性名，如果设置为undefined的话表示这个控件不绑定值到formData上 */
+  prop = undefined;
+  label = "控件";
+  /** 隐藏label */
+  hideLabel = false;
+  /** 标签字体样式 */
+  LabelFontStyle = new FontStyleCon({
+    fontSize: 14,
+  });
+  /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 默认会继承 Form的label-position */
+  labelPosition = [];
+  /** 标签对齐方式 */
+  labelAlign = [];
+  /** 标签宽度，例如 '50px'。 可以使用 auto。 */
+  labelWidth = 0;
+  /** 是否显示校验错误信息 */
+  showMessage = true;
+  /** 用于控制该表单域下组件的默认尺寸 */
+  size = "";
   /** @type {import('element-plus').FormItemRule[]} 校验规则列表 */
-  list = [];
+  rules = [];
 
   /**
-   * @param {FormItemRules} op
+   * @param {FormItemCon} op
    */
   constructor(op) {
     for (let i in op) {
       this[i] = ObjectUtils.clone2(op[i]);
     }
+    this.LabelFontStyle = new FontStyleCon(this.LabelFontStyle);
   }
 
   reder() {
     return [
       {
+        label: "表单字段名",
+        editor: (
+          <el-input
+            size="small"
+            model-value={this.prop}
+            onInput={(v) => {
+              this.prop = v;
+            }}
+          />
+        ),
+      },
+      {
+        label: "组件大小",
+        editor: (
+          <el-select
+            model-value={this.size}
+            size="small"
+            onChange={(v) => {
+              this.size = v;
+            }}
+            placeholder="请选择"
+            clearable
+          >
+            <el-option label="large" value="large" />
+            <el-option label="default" value="default" />
+            <el-option label="small" value="small" />
+          </el-select>
+        ),
+      },
+      {
+        label: "隐藏标签",
+        editor: (
+          <el-switch
+            size="small"
+            model-value={this.hideLabel}
+            onChange={(v) => {
+              this.hideLabel = v;
+            }}
+          ></el-switch>
+        ),
+      },
+      {
+        label: "标签名",
+        editor: (
+          <el-input
+            size="small"
+            model-value={this.label}
+            onInput={(v) => {
+              this.label = v;
+            }}
+          />
+        ),
+      },
+      {
+        label: "标签位置",
+        editor: (
+          <el-checkbox-group
+            size="small"
+            model-value={this.labelPosition}
+            onChange={(v) => {
+              this.labelPosition = ArrayUtils.eliminate(v, (_) =>
+                this.labelPosition.includes(_)
+              );
+            }}
+          >
+            <el-checkbox-button label="left" value="left" />
+            <el-checkbox-button label="top" value="top" />
+          </el-checkbox-group>
+        ),
+      },
+      {
+        label: "字段标签对齐",
+        editor: (
+          <el-checkbox-group
+            size="small"
+            model-value={this.labelAlign}
+            onChange={(v) => {
+              this.labelAlign = ArrayUtils.eliminate(v, (_) =>
+                this.labelAlign.includes(_)
+              );
+            }}
+          >
+            <el-checkbox-button label="left" value="left" />
+            <el-checkbox-button label="center" value="center" />
+            <el-checkbox-button label="right" value="right" />
+          </el-checkbox-group>
+        ),
+      },
+      {
+        label: "标签宽度",
+        editor: (
+          <el-input-number
+            size="small"
+            min={0}
+            model-value={this.labelWidth}
+            onChange={(v) => {
+              this.labelWidth = v;
+            }}
+          />
+        ),
+      },
+      ...this.LabelFontStyle.render(),
+      {
+        label: "显示校验错误信息",
+        editor: (
+          <el-switch
+            size="small"
+            model-value={this.showMessage}
+            onChange={(v) => {
+              this.showMessage = v;
+            }}
+          ></el-switch>
+        ),
+      },
+      {
         label: "校验规则：",
       },
       {
         editor: (
-          <div class="formItem-rules">
-            {this.list <= 0 ? (
+          <div class="form-item-rules">
+            {this.rules <= 0 ? (
               <span style={"color: gray"}>无校验规则</span>
             ) : null}
             <Draggable
               class="draggable"
-              modelValue={this.list}
+              modelValue={this.rules}
               onUpdate:modelValue={(_) => {
-                this.list = [..._];
+                this.rules = [..._];
               }}
               animation={draggableC.animation}
               handle=".drag-handler"
@@ -102,11 +239,11 @@ export class FormItemRules {
                         <el-icon
                           class="remove"
                           onClick={() => {
-                            let i = this.list.findIndex(
+                            let i = this.rules.findIndex(
                               (__) => _.key == __.key
                             );
                             if (i >= 0) {
-                              this.list.splice(i, 1);
+                              this.rules.splice(i, 1);
                             }
                           }}
                         >
@@ -123,8 +260,8 @@ export class FormItemRules {
               size="small"
               type="primary"
               onClick={() => {
-                this.list.push({
-                  key: Math.max(...this.list.map((_) => _.key), 1) + 1,
+                this.rules.push({
+                  key: Math.max(...this.rules.map((_) => _.key), 1) + 1,
                   required: false,
                   message: "",
                 });
