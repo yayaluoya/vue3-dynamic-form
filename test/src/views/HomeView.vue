@@ -1,16 +1,13 @@
 <script>
 import { defineComponent, ref } from "vue";
-// import {
-//   vue3EditableForm,
-//   vue3EditableFormRender,
-//   getFormConfig,
-//   ConT,
-//   Button,
-//   Test,
-// } from "vue3-editable-form/dist-lib/index.es";
-import "vue3-editable-form-builds";
-
-console.log(vue3EditableForm);
+import {
+  vue3EditableForm,
+  vue3EditableFormRender,
+  getFormConfig,
+  ConT,
+  Button,
+  Test,
+} from "vue3-editable-form-builds/index.umd";
 
 export default defineComponent({
   components: { vue3EditableForm },

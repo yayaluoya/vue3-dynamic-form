@@ -9,7 +9,6 @@ import {
   nextTick,
 } from "vue";
 import draggableC from "./config/draggableC";
-import { DocumentCopy } from "@element-plus/icons-vue";
 import Right from "./right/index.vue";
 import Item from "./com/item.vue";
 import { WindowSizeChangeE } from "./tool/web/event/WindowSizeChangeE";
@@ -37,7 +36,6 @@ import CodeEditInput from "./com/codeEditInput.vue";
 import { ConT } from "./ConT";
 import { Clipboard } from "./tool/web/Clipboard";
 import { FileT } from "./tool/web/FileT";
-import { ElMessage } from "element-plus";
 import { ObjectUtils } from "./tool/obj/ObjectUtils";
 import Render from "./render.vue";
 
@@ -47,7 +45,6 @@ export default defineComponent({
     DraggableCon,
     Item,
     Right,
-    DocumentCopy,
     CodeEditInput,
     Render,
   },
@@ -205,28 +202,14 @@ export default defineComponent({
         }
         activateCon.value = null;
         JSONH.show = false;
-      } catch (e) {
-        ElMessage({
-          message: e,
-          type: "error",
-        });
-      }
+      } catch (e) {}
     }
     function copy() {
       Clipboard.set(JSONH.jsonText)
         .then(() => {
-          ElMessage({
-            message: "已复制到剪切板",
-            type: "success",
-          });
           JSONH.show = false;
         })
-        .catch((e) => {
-          ElMessage({
-            message: e,
-            type: "error",
-          });
-        });
+        .catch((e) => {});
     }
     function saveToFile() {
       FileT.download(

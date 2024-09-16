@@ -28,7 +28,7 @@ export class FormItemCon {
   showMessage = true;
   /** 用于控制该表单域下组件的默认尺寸 */
   size = "";
-  /** @type {import('element-plus').FormItemRule[]} 校验规则列表 */
+  /** @type {any[]} 校验规则列表 */
   rules = [];
 
   /**
