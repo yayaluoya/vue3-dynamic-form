@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lib-build": "node ./.node/build-lib.js build --config vite-lib.config.js",
+    "lib-build": "vite build --config vite-lib.config.js && node ./.node/copy-lib-package.js",
     "preview": "vite preview",
     "打包代码片段": "codess b",
     "上传包到服务器": "sfs -s "
