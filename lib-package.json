@@ -1,0 +1,21 @@
+{
+  "name": "vue3-editable-form-builds",
+  "description": "vue3可编辑表单",
+  "version": "1.0.0",
+  "main": "./index.umd.js",
+  "module": "./index.es.js",
+  "scripts": {
+    "npm-publish": "npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yayaluoya/vue3-dynamic-form.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yayaluoya/vue3-dynamic-form/issues"
+  },
+  "homepage": "https://github.com/yayaluoya/vue3-dynamic-form"
+}

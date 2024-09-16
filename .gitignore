@@ -11,7 +11,8 @@ node_modules
 .DS_Store
 dist
 dist-ssr
-dist-lib
+dist-lib/*
+!dist-lib/package.json
 coverage
 *.local
 

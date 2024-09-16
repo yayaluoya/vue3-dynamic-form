@@ -4,3 +4,4 @@ export { default as vue3EditableFormRender } from "./src/components/dynamic-form
 export * from "./src/components/dynamic-form/controls/index";
 export * from "./src/components/dynamic-form/com/FontStyleCon";
 export * from "./src/components/dynamic-form/com/FormItemCon";
+export * from "./src/components/dynamic-form/config/getFormConfig";

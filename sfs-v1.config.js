@@ -3,7 +3,7 @@ const fs = require("fs");
 
 /** @type {()=>import('server-file-sync/dist/config/TConfig').TConfig} */
 module.exports = async function () {
-  const keyUrl = path.join(__dirname, "../.local/key");
+  const keyUrl = path.join(__dirname, "./.local/key");
   if (
     !fs
       .statSync(keyUrl, {
@@ -30,7 +30,7 @@ module.exports = async function () {
         title: "前端代码",
         paths: [
           {
-            local: path.join(__dirname, "../dist/index.html"),
+            local: path.join(__dirname, "./dist/index.html"),
             remote: remoteRootPath + "/index.html",
           },
         ],

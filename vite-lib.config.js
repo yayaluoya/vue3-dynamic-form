@@ -10,7 +10,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "./lib.js"),
       name: "vue3EditableForm",
-      formats: ["umd"],
+      formats: ["es", "cjs", "umd"],
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
