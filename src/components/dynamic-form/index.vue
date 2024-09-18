@@ -56,6 +56,7 @@ export default defineComponent({
       type: Array as PropType<BaseCon[]>,
       required: true,
     },
+    /** 扩展组件列表 */
     extendCons: {
       type: Array as PropType<(typeof BaseCon)[]>,
       default: () => [],

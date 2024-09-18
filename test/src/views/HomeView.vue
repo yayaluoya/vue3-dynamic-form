@@ -7,7 +7,7 @@ import {
   ConT,
   Button,
   Test,
-} from "vue3-editable-form-builds/index.umd";
+} from "vue3-editable-form-builds";
 
 export default defineComponent({
   components: { vue3EditableForm },
