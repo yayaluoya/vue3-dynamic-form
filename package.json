@@ -1,20 +1,22 @@
 {
-  "name": "vue3-editable-form",
-  "version": "0.0.1",
+  "name": "vue3-ts",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lib-build": "vite build --config vite-lib.config.js && node ./.node/copy-lib-package.js",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "lib-build": "vite build --config vite-lib.config.js && node ./.node/lib-handle.js",
     "preview": "vite preview",
+    "test:unit": "vitest",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
     "打包代码片段": "codess b",
-    "上传包到服务器": "sfs -s "
+    "上传包到服务器": "sfs -s  -c ./sfs-v1.config.cjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "color": "^4.2.3",
-    "element-plus": "^2.8.2",
+    "element-plus": "^2.8.3",
     "nanoid": "^5.0.7",
     "pinia": "^2.1.7",
     "server-file-sync": "^1.7.2",
@@ -25,10 +27,21 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^20.14.5",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.5.1",
     "codess": "^1.1.5",
+    "jsdom": "^24.1.0",
+    "npm-run-all2": "^6.2.0",
     "sass-embedded": "^1.78.0",
-    "vite": "^5.3.1"
+    "typescript": "~5.4.0",
+    "vite": "^5.3.1",
+    "vite-plugin-dts": "^4.2.1",
+    "vitest": "^1.6.0",
+    "vue-tsc": "^2.0.21"
   }
 }

@@ -3,10 +3,6 @@
         {
             "package": "file:codess",
             "prefix": ""
-        },
-        {
-            "package": "element-plus",
-            "prefix": ""
         }
     ],
     "installRecord": {

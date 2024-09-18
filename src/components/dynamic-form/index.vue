@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import {
   ref,
   reactive,
@@ -7,6 +7,7 @@ import {
   onUnmounted,
   toRef,
   nextTick,
+  type PropType,
 } from "vue";
 import draggableC from "./config/draggableC";
 import Right from "./right/index.vue";
@@ -29,6 +30,7 @@ import {
   ColorPicker,
   Rate,
   Slider,
+  BaseCon,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -38,6 +40,7 @@ import { Clipboard } from "./tool/web/Clipboard";
 import { FileT } from "./tool/web/FileT";
 import { ObjectUtils } from "./tool/obj/ObjectUtils";
 import Render from "./render.vue";
+import { type IFormConfig } from "./config/getFormConfig";
 
 export default defineComponent({
   components: {
@@ -50,29 +53,34 @@ export default defineComponent({
   },
   props: {
     cons: {
-      type: Array,
+      type: Array as PropType<BaseCon[]>,
       required: true,
     },
     extendCons: {
-      type: Array,
+      type: Array as PropType<(typeof BaseCon)[]>,
       default: () => [],
     },
     formConfig: {
-      type: Object,
+      type: Object as PropType<IFormConfig>,
       required: true,
     },
   },
   emits: ["update:cons"],
   setup(props, ctx) {
-    const rootElRef = ref();
+    const rootElRef = ref<HTMLDivElement>();
     const bScrollbarRef = ref();
-    const leftTabsActiveNames = ref("con");
     const renderEl = ref();
-    const renderOp = reactive({
+    const leftTabsActiveNames = ref<"con" | "template">("con");
+    const renderOp = reactive<{
+      show: boolean;
+      cons?: BaseCon[];
+      formData?: Record<string, any>;
+      formConfig?: IFormConfig;
+    }>({
       show: false,
-      cons: [],
-      formData: {},
-      formConfig: {},
+      cons: undefined,
+      formData: undefined,
+      formConfig: undefined,
     });
     /** 拖拽中 */
     const draggableLoading = ref(false);
@@ -111,7 +119,7 @@ export default defineComponent({
     const ConsCollapseActiveNames = ref(Cons.map((_) => _.label));
 
     /** 当前激活的控件 */
-    const activateCon = ref(null);
+    const activateCon = ref<BaseCon>();
     /** 鼠标是否在控件内 */
     const mouseOn = ref(false);
 
@@ -134,7 +142,7 @@ export default defineComponent({
           top:
             el.scrollTop +
             el
-              .querySelector(`[data-key='${activateCon.value.key}']`)
+              .querySelector(`[data-key='${activateCon.value!.key}']`)
               .getBoundingClientRect().y -
             el.getBoundingClientRect().y -
             50,
@@ -144,12 +152,12 @@ export default defineComponent({
     }
 
     /** 更新控件列表 */
-    function updateCons(cons) {
+    function updateCons(cons: BaseCon[]) {
       ctx.emit("update:cons", cons);
     }
 
     /** 克隆组件 */
-    function cloneComponent(Con) {
+    function cloneComponent(Con: typeof BaseCon) {
       return new Con();
     }
 
@@ -195,12 +203,15 @@ export default defineComponent({
 
     function importJSONH() {
       try {
-        let { formConfig, cons } = JSON.parse(JSONH.jsonText);
-        updateCons(ConT.toCons(cons), props.extendCons);
+        let { formConfig, cons } = JSON.parse(JSONH.jsonText) as {
+          formConfig: IFormConfig;
+          cons: BaseCon[];
+        };
+        updateCons(ConT.toCons(cons, props.extendCons));
         for (let i in formConfig) {
-          props.formConfig[i] = formConfig[i];
+          (props.formConfig as any)[i] = (formConfig as any)[i];
         }
-        activateCon.value = null;
+        activateCon.value = undefined;
         JSONH.show = false;
       } catch (e) {}
     }
@@ -229,8 +240,8 @@ export default defineComponent({
     }
 
     function getContentHeight() {
-      let rootHeight = rootElRef.value.getBoundingClientRect().height;
-      rootElRef.value.style.setProperty("--height", `${rootHeight}px`);
+      let rootHeight = rootElRef.value!.getBoundingClientRect().height;
+      rootElRef.value!.style.setProperty("--height", `${rootHeight}px`);
     }
     onMounted(() => {
       getContentHeight();
@@ -310,7 +321,9 @@ export default defineComponent({
                       @end="draggableLoading = false"
                       item-key="type"
                     >
-                      <template #item="{ element: Con }">
+                      <template
+                        #item="{ element: Con }: { element: typeof BaseCon }"
+                      >
                         <div
                           class="draggable-item"
                           :class="{
@@ -319,7 +332,7 @@ export default defineComponent({
                         >
                           <span>{{ Con.ConName }}</span>
                           <div class="draggable-show-item">
-                            <Item drag :formConfig="formConfig" :con="Con.I" />
+                            <Item drag :formConfig="formConfig" :con="Con.I!" />
                           </div>
                         </div>
                       </template>
@@ -349,7 +362,7 @@ export default defineComponent({
             style="margin-right: 10px"
             type="primary"
             link
-            @click="preview([])"
+            @click="preview()"
           >
             预览
           </el-button>
@@ -453,9 +466,9 @@ export default defineComponent({
       <el-scrollbar style="height: 700px" wrap-class="scrollbar-wrapper">
         <Render
           ref="renderEl"
-          :cons="renderOp.cons"
-          :formConfig="renderOp.formConfig"
-          :formData="renderOp.formData"
+          :cons="renderOp.cons!"
+          :formConfig="renderOp.formConfig!"
+          :formData="renderOp.formData!"
         />
       </el-scrollbar>
       <template #footer>

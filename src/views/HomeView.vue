@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { defineComponent, ref } from "vue";
 import DynamicForm from "@/components/dynamic-form/index.vue";
 import { getFormConfig } from "@/components/dynamic-form/config/getFormConfig";
@@ -23,6 +23,7 @@ export default defineComponent({
   <div class="home">
     <div class="top">
       <h1>vue3-dynamic-form <el-tag type="warning">开发中...</el-tag></h1>
+      <span>vue3+ts</span>
       <div>
         <a
           href="https://github.com/yayaluoya/vue3-dynamic-form"

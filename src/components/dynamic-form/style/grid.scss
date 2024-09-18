@@ -1,15 +1,15 @@
 .controls__.grid {
-  &:not(.preview) {
+  &:not(.form-render) {
     padding: 5px;
   }
 
-  &:not(.preview).border {
+  &:not(.form-render).border {
     border: 1px dashed #afafaf;
   }
 }
 
 .controls__.grid-col {
-  &:not(.preview).border {
+  &:not(.form-render).border {
     border: 1px dashed #afafaf;
   }
 }

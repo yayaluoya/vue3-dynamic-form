@@ -1,31 +1,46 @@
-<script lang="jsx">
-import { ref, reactive, defineComponent, watchEffect } from "vue";
+<script lang="tsx">
+import {
+  ref,
+  reactive,
+  defineComponent,
+  watchEffect,
+  type PropType,
+} from "vue";
+import type { BaseCon } from "../controls";
+import type { IFormConfig } from "../config/getFormConfig";
 
 export default defineComponent({
   components: {},
   props: {
     cons: {
-      type: Array,
+      type: Array as PropType<BaseCon[]>,
       required: true,
     },
     activateCon: {
-      type: Object,
+      type: Object as PropType<BaseCon>,
       default: null,
     },
     formConfig: {
-      type: Object,
+      type: Object as PropType<IFormConfig>,
       required: true,
     },
   },
   setup(props, ctx) {
-    const tabsActiveName = ref("con");
-    const formCollapseActiveNames = ref(["1"]);
-    const conCollapseActiveNames = ref([]);
+    const tabsActiveName = ref<"con" | "form">("con");
+    const formCollapseActiveNames = ref<string[]>(["1"]);
+    const conCollapseActiveNames = ref<string[]>([]);
     watchEffect(() => {
       if (props.activateCon) {
         tabsActiveName.value = "con";
         conCollapseActiveNames.value = props.activateCon
-          .getRight({}, false)
+          .getRight(
+            {
+              ctx,
+              formConfig: props.formConfig,
+              cons: props.cons,
+            },
+            false
+          )
           .map((_) => _.title);
       } else {
         tabsActiveName.value = "form";
@@ -38,7 +53,7 @@ export default defineComponent({
         <div class="right">
           <el-tabs
             model-value={tabsActiveName.value}
-            onTabChange={(v) => {
+            onTabChange={(v: any) => {
               tabsActiveName.value = v;
             }}
           >
@@ -53,21 +68,20 @@ export default defineComponent({
                 {tabsActiveName.value == "con" ? (
                   <el-collapse
                     model-value={conCollapseActiveNames.value}
-                    onChange={(v) => {
+                    onChange={(v: any) => {
                       conCollapseActiveNames.value = v;
                     }}
                   >
                     {activateCon.renderRight({
                       ctx,
                       formConfig,
-                      activateCon,
                       cons: props.cons,
                     })}
                   </el-collapse>
                 ) : tabsActiveName.value == "form" ? (
                   <el-collapse
                     model-value={formCollapseActiveNames.value}
-                    onChange={(v) => {
+                    onChange={(v: any) => {
                       formCollapseActiveNames.value = v;
                     }}
                   >
@@ -76,7 +90,7 @@ export default defineComponent({
                         <el-select
                           model-value={formConfig.size}
                           size="small"
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.size = v;
                           }}
                           placeholder="请选择"
@@ -91,7 +105,7 @@ export default defineComponent({
                         <el-radio-group
                           size="small"
                           model-value={formConfig.labelPosition}
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.labelPosition = v;
                           }}
                         >
@@ -103,7 +117,7 @@ export default defineComponent({
                         <el-radio-group
                           size="small"
                           model-value={formConfig.labelAlign}
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.labelAlign = v;
                           }}
                         >
@@ -116,7 +130,7 @@ export default defineComponent({
                         <el-input-number
                           size="small"
                           model-value={formConfig.labelWidth}
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.labelWidth = v;
                           }}
                         />
@@ -125,7 +139,7 @@ export default defineComponent({
                         <el-input
                           size="small"
                           model-value={formConfig.labelsuffix}
-                          onInput={(v) => {
+                          onInput={(v: any) => {
                             formConfig.labelsuffix = v;
                           }}
                           clearable
@@ -135,7 +149,7 @@ export default defineComponent({
                         <el-radio-group
                           size="small"
                           model-value={formConfig.requireAsteriskPosition}
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.requireAsteriskPosition = v;
                           }}
                         >
@@ -147,7 +161,7 @@ export default defineComponent({
                         <el-switch
                           size="small"
                           model-value={formConfig.hideRequiredAsterisk}
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.hideRequiredAsterisk = v;
                           }}
                         ></el-switch>
@@ -156,7 +170,7 @@ export default defineComponent({
                         <el-switch
                           size="small"
                           model-value={formConfig.showMessage}
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.showMessage = v;
                           }}
                         ></el-switch>
@@ -165,7 +179,7 @@ export default defineComponent({
                         <el-switch
                           size="small"
                           model-value={formConfig.inlineMessage}
-                          onChange={(v) => {
+                          onChange={(v: any) => {
                             formConfig.inlineMessage = v;
                           }}
                         ></el-switch>

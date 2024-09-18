@@ -1,20 +1,22 @@
-<script>
-import { defineComponent, ref } from "vue";
+<script lang="ts">
+import { defineComponent, ref, type PropType } from "vue";
 import Item from "./com/item.vue";
+import type { BaseCon } from "./controls";
+import type { IFormConfig } from "./config/getFormConfig";
 
 export default defineComponent({
   components: { Item },
   props: {
     cons: {
-      type: Array,
+      type: Array as PropType<BaseCon[]>,
       required: true,
     },
     formConfig: {
-      type: Object,
+      type: Object as PropType<IFormConfig>,
       required: true,
     },
     formData: {
-      type: Object,
+      type: Object as PropType<Record<string, any>>,
       required: true,
     },
   },
@@ -37,7 +39,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="dynamic-form-preview">
+  <div class="dynamic-form-render">
     <el-form
       ref="formEl"
       :model="formData"
@@ -60,14 +62,14 @@ export default defineComponent({
         :formData="formData"
         :cons="cons"
         :con="con"
-        preview
+        formRender
       />
     </el-form>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.dynamic-form-preview {
+.dynamic-form-render {
   width: 100%;
 }
 </style>

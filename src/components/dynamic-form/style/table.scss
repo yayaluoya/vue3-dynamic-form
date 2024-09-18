@@ -16,7 +16,7 @@
     }
   }
 
-  &.preview {
+  &.form-render {
     >table {
       td {
         border: 1px solid #e5e5e5;
@@ -28,7 +28,7 @@
 .controls__.cell {
   height: 100%;
 
-  &:not(.preview).border {
+  &:not(.form-render).border {
     border: 1px dashed #afafaf;
   }
 

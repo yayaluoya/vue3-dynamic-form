@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 /**
  * 代码编辑器
  *  */

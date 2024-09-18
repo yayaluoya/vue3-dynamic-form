@@ -1,44 +1,45 @@
-<script>
-import { defineComponent } from "vue";
+<script lang="ts">
+import { defineComponent, type PropType } from "vue";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
 import Item from "./item.vue";
 import { BaseCon } from "../controls/BaseCon.jsx";
 import { ArrayUtils } from "../tool/ArrayUtils";
+import type { IFormConfig } from "../config/getFormConfig";
 
 export default defineComponent({
   components: { Draggable, Item },
   props: {
     formConfig: {
-      type: Object,
+      type: Object as PropType<IFormConfig>,
       required: true,
     },
     parent: {
-      type: Object,
+      type: Object as PropType<BaseCon>,
       default: undefined,
     },
     cons: {
-      type: Array,
+      type: Array as PropType<BaseCon[]>,
       required: true,
     },
     activateCon: {
-      type: Object,
+      type: Object as PropType<BaseCon>,
       default: null,
     },
   },
   emits: ["update:activateCon", "update:cons"],
   setup(props, ctx) {
-    function activateConChange(con) {
+    function activateConChange(con: BaseCon | null) {
       ctx.emit("update:activateCon", con);
     }
 
     /** 拖拽改变 */
-    function draggableChange(list) {
+    function draggableChange(list: BaseCon[]) {
       ctx.emit("update:cons", [...list]);
     }
 
     /** 删除控件 */
-    function removeF(con) {
+    function removeF(con: BaseCon) {
       /** @type {BaseCon[]} */
       const list = [...props.cons];
       ArrayUtils.eliminate(list, (_) => _.key == con.key);
@@ -49,7 +50,7 @@ export default defineComponent({
     }
 
     /** 移动控件 */
-    function moveF(con, type) {
+    function moveF(con: BaseCon, type: "up" | "down") {
       BaseCon.moveCon(props.cons, con, type);
       ctx.emit("update:cons", [...props.cons]);
     }
@@ -66,12 +67,12 @@ export default defineComponent({
     :modelValue="cons"
     @update:modelValue="draggableChange"
     @change="
-      ({ added, removed, moved }) => {
+      ({ added, removed, moved }: any) => {
         (added || moved) && activateConChange((added || moved).element);
       }
     "
     @start="
-      ({ oldIndex }) => {
+      ({ oldIndex }: any) => {
         activateConChange(cons[oldIndex]);
       }
     "
@@ -79,7 +80,7 @@ export default defineComponent({
     item-key="renderKey"
     handle=".drag-handler"
   >
-    <template #item="{ element: con }">
+    <template #item="{ element: con }: { element: BaseCon }">
       <Item
         :key="con.key"
         :parent="parent"
@@ -89,7 +90,7 @@ export default defineComponent({
         :con="con"
         :activateCon="activateCon"
         @activateConF="
-          (v) => {
+          (v: any) => {
             activateConChange(v);
           }
         "

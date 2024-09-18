@@ -1,7 +1,9 @@
 {
   "name": "vue3-editable-form-builds",
   "description": "vue3可编辑表单",
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "module": "./index.umd.js",
+  "types": "./lib.d.ts",
   "scripts": {
     "npm-publish": "npm publish"
   },

@@ -1,71 +1,68 @@
-<script lang="jsx">
-import { defineComponent } from "vue";
-import { BaseCon } from "../controls/BaseCon";
-import { getFormConfig } from "../config/getFormConfig";
+<script lang="tsx">
+import { defineComponent, type PropType } from "vue";
+import type { IFormConfig } from "../config/getFormConfig";
+import type { BaseCon } from "../controls";
+import type { JSX } from "vue/jsx-runtime";
 
 export default defineComponent({
   components: {},
   props: {
     formConfig: {
-      type: Object,
+      type: Object as PropType<IFormConfig>,
       required: true,
     },
     parent: {
-      type: Object,
+      type: Object as PropType<BaseCon>,
       default: undefined,
     },
     cons: {
-      type: Array,
+      type: Array as PropType<BaseCon[]>,
       default: () => [],
     },
     con: {
-      type: Object,
+      type: Object as PropType<BaseCon>,
       required: true,
     },
     formData: {
-      type: Object,
+      type: Object as PropType<Record<string, any>>,
       default: undefined,
     },
-    /** 是否是拖拽时显示 */
     drag: {
       type: Boolean,
       default: false,
     },
-    /** 是否在预览时显示 */
-    preview: {
+    formRender: {
       type: Boolean,
       default: false,
     },
     activateCon: {
-      type: Object,
+      type: Object as PropType<BaseCon>,
       default: null,
     },
   },
   emits: ["activateConF", "removeF", "moveF"],
   setup(props, ctx) {
     return () => {
-      /** @type {BaseCon} */
-      let con = props.con;
-      let _ = [];
+      let _: JSX.Element | undefined;
       if (props.drag) {
-        _ = con.renderDrag({
+        _ = props.con.renderDrag({
           ctx,
           formConfig: props.formConfig,
           parent: props.parent,
           cons: props.cons,
-          activateCon: con,
+          activateCon: props.con,
         });
-      } else if (props.preview) {
-        _ = con.render({
+      } else if (props.formRender) {
+        _ = props.con.render({
           ctx,
           formConfig: props.formConfig,
           parent: props.parent,
           cons: props.cons,
-          activateCon: con,
+          activateCon: props.con,
           formData: props.formData,
         });
       } else {
-        _ = con.render({
+        _ = props.con.render({
           ctx,
           formConfig: props.formConfig,
           parent: props.parent,
