@@ -64,27 +64,25 @@ export default defineComponent({
             pane-wrapper-style="padding: 0 10px"
             animated
           >
-            {activateCon ? (
-              <NTabPane tab="组件设置" name="con">
-                <NScrollbar style="max-height: calc(var(--height) - 60px);">
-                  <NForm
-                    label-width="100px"
-                    label-placement="left"
-                    labelAlign="left"
+            <NTabPane tab="组件设置" name="con" disabled={!activateCon}>
+              <NScrollbar style="max-height: calc(var(--height) - 60px);">
+                <NForm
+                  label-width="100px"
+                  label-placement="left"
+                  labelAlign="left"
+                >
+                  <NCollapse
+                    default-expanded-names={conCollapseActiveNames.value}
                   >
-                    <NCollapse
-                      default-expanded-names={conCollapseActiveNames.value}
-                    >
-                      {activateCon.renderRight({
-                        ctx,
-                        formConfig,
-                        cons: props.cons,
-                      })}
-                    </NCollapse>
-                  </NForm>
-                </NScrollbar>
-              </NTabPane>
-            ) : undefined}
+                    {activateCon?.renderRight({
+                      ctx,
+                      formConfig,
+                      cons: props.cons,
+                    })}
+                  </NCollapse>
+                </NForm>
+              </NScrollbar>
+            </NTabPane>
             <NTabPane tab="表单设置" name="form">
               <NScrollbar style="max-height: calc(var(--height) - 60px);">
                 <NForm
