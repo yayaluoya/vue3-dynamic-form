@@ -54,6 +54,8 @@ import {
   NRadioButton,
   NSelect,
   NScrollbar,
+  NButton,
+  NSpace,
 } from "naive-ui";
 
 export default defineComponent({
@@ -76,6 +78,8 @@ export default defineComponent({
     Right,
     CodeEditInput,
     Render,
+    NButton,
+    NSpace,
   },
   props: {
     cons: {
@@ -157,21 +161,6 @@ export default defineComponent({
       title: "",
       jsonText: "",
     });
-
-    /** 定位到当前操作con */
-    function positionToOnCon() {
-      if (!activateCon.value) {
-        return;
-      }
-      setTimeout(() => {
-        bScrollbarRef.value.scrollTo({
-          top: document
-            .querySelector(`[data-key='${activateCon.value!.key}']`)!
-            .getBoundingClientRect().y,
-          behavior: "smooth",
-        });
-      }, 0);
-    }
 
     /** 更新控件列表 */
     function updateCons(cons: BaseCon[]) {
@@ -285,7 +274,6 @@ export default defineComponent({
       activateCon,
       mouseOn,
       cloneComponent,
-      positionToOnCon,
       updateCons,
       JSONH,
       importJSON,
@@ -375,41 +363,40 @@ export default defineComponent({
     <div class="b">
       <div class="top">
         <div></div>
-        <div>
-          <el-button
+        <NSpace>
+          <NButton
             style="margin-right: 10px"
             type="primary"
-            link
+            text
             @click="updateCons([])"
           >
             清空
-          </el-button>
-          <el-button
+          </NButton>
+          <NButton
             style="margin-right: 10px"
             type="primary"
-            link
+            text
             @click="preview()"
           >
             预览
-          </el-button>
-          <el-button
+          </NButton>
+          <NButton
             style="margin-right: 10px"
             type="primary"
-            link
+            text
             @click="importJSON()"
           >
             导入JSON
-          </el-button>
-          <el-button
+          </NButton>
+          <NButton
             style="margin-right: 10px"
             type="primary"
-            link
+            text
             @click="exportJSON()"
           >
             导出JSON
-          </el-button>
-          <!-- <el-icon @click="positionToOnCon()"><Aim /></el-icon> -->
-        </div>
+          </NButton>
+        </NSpace>
       </div>
       <div
         class="content"

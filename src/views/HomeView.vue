@@ -3,9 +3,10 @@ import { defineComponent, ref } from "vue";
 import DynamicForm from "@/components/dynamic-form/index.vue";
 import { getFormConfig } from "@/components/dynamic-form/config/getFormConfig";
 import { Test } from "@/components/dynamic-form/controls";
+import { NSpace, NTag } from "naive-ui";
 
 export default defineComponent({
-  components: { DynamicForm },
+  components: { DynamicForm, NTag, NSpace },
   setup() {
     let cons = ref([]);
     let extendCons = ref([Test]);
@@ -22,20 +23,29 @@ export default defineComponent({
 <template>
   <div class="home">
     <div class="top">
-      <h1>vue3-dynamic-form <el-tag type="warning">开发中...</el-tag></h1>
-      <span>vue3+ts</span>
-      <div>
+      <NSpace
+        ><h3>vue3-dynamic-form</h3>
+        <NTag type="warning">开发中...</NTag></NSpace
+      >
+      <NSpace>
+        <NTag type="success">vue3+ts+naive-ui</NTag>
         <a
           href="https://github.com/yayaluoya/vue3-dynamic-form"
           target="_blank"
         >
           <img
+            style="
+              height: 20px;
+              width: 20px;
+              border-radius: 50%;
+              margin-right: 3px;
+            "
             src="@/assets/apple-touch-icon-144x144-b882e354c005.png"
             alt=""
           />
           Github
         </a>
-      </div>
+      </NSpace>
     </div>
     <DynamicForm
       :cons="cons"
@@ -59,33 +69,13 @@ export default defineComponent({
   height: 100vh;
   > .top {
     box-sizing: border-box;
-    padding: 0 10px;
+    padding: 10px;
     width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--el-border-color-light);
-    > h1 {
-      font-weight: bold;
-    }
-    > div {
-      > a {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        font-size: 13px;
-        text-decoration: none;
-        margin-right: 10px;
-        color: #606266;
-        > img {
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          margin-right: 3px;
-        }
-      }
-    }
+    background-color: #f3f3f3;
   }
   > .dynamic-form {
     flex: 1 1 0;
