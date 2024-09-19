@@ -1,7 +1,12 @@
 import DraggableCon from "../com/draggable.vue";
 import "../style/grid.scss";
 import Item from "../com/item.vue";
-import { BaseCon, type IConRenderOp, type IConRightRenderOp } from "./BaseCon";
+import {
+  BaseCon,
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightReterItemOp,
+} from "./BaseCon";
 import { NonForm } from "./NonForm";
 
 /**
@@ -126,9 +131,6 @@ class GridCol extends NonForm {
     );
   }
 
-  /**
-   * @param _
-   */
   getHandler({ parent }: IConRenderOp & { parent: Grid }) {
     return [
       <el-icon
@@ -161,69 +163,67 @@ class GridCol extends NonForm {
     ];
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "占据列数量",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.colProps.span}
-                min={1}
-                max={24}
-                onChange={(_: any) => {
-                  this.colProps.span = _;
-                }}
-              />
-            ),
-          },
-          {
-            label: "栅格左侧间隔",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.colProps.offset}
-                min={0}
-                max={24}
-                onChange={(_: any) => {
-                  this.colProps.offset = _;
-                }}
-              />
-            ),
-          },
-          {
-            label: "右移格数",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.colProps.push}
-                min={0}
-                max={24}
-                onChange={(_: any) => {
-                  this.colProps.push = _;
-                }}
-              />
-            ),
-          },
-          {
-            label: "左移格数",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.colProps.pull}
-                min={0}
-                max={24}
-                onChange={(_: any) => {
-                  this.colProps.pull = _;
-                }}
-              />
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "占据列数量",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.colProps.span}
+            min={1}
+            max={24}
+            onChange={(_: any) => {
+              this.colProps.span = _;
+            }}
+          />
+        ),
+      },
+      {
+        label: "栅格左侧间隔",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.colProps.offset}
+            min={0}
+            max={24}
+            onChange={(_: any) => {
+              this.colProps.offset = _;
+            }}
+          />
+        ),
+      },
+      {
+        label: "右移格数",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.colProps.push}
+            min={0}
+            max={24}
+            onChange={(_: any) => {
+              this.colProps.push = _;
+            }}
+          />
+        ),
+      },
+      {
+        label: "左移格数",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.colProps.pull}
+            min={0}
+            max={24}
+            onChange={(_: any) => {
+              this.colProps.pull = _;
+            }}
+          />
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }
@@ -299,112 +299,108 @@ export class Grid extends NonForm {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "栅格间隔",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.rowProps.gutter}
-                min={0}
-                onChange={(_: any) => {
-                  this.rowProps.gutter = _;
-                }}
-              />
-            ),
-          },
-          {
-            label: "水平排列方式",
-            editor: (
-              <el-select
-                model-value={this.rowProps.justify}
-                size="small"
-                onChange={(_: any) => {
-                  this.rowProps.justify = _;
-                }}
-                placeholder="请选择"
-              >
-                <el-option label="start" value="start" />
-                <el-option label="end" value="end" />
-                <el-option label="center" value="center" />
-                <el-option label="space-around" value="space-around" />
-                <el-option label="space-between" value="space-between" />
-                <el-option label="space-evenly" value="space-evenly" />
-              </el-select>
-            ),
-          },
-          {
-            label: "垂直排列方式",
-            editor: (
-              <el-select
-                model-value={this.rowProps.align}
-                size="small"
-                onChange={(_: any) => {
-                  this.rowProps.align = _;
-                }}
-                placeholder="请选择"
-              >
-                <el-option label="top" value="top" />
-                <el-option label="middle" value="middle" />
-                <el-option label="bottom" value="bottom" />
-              </el-select>
-            ),
-          },
-        ]
-      );
-    hasEditor &&
-      _.find((_) => _.title == "常用属性")?.childs!.push(
-        ...[
-          {
-            label: "当前栅格列：",
-          },
-          {
-            editor: (
-              <div class="controls__ grid-right">
-                {this.list.map((_, i) => {
-                  return (
-                    <div class="i">
-                      <span>栅格{i + 1}</span>
-                      <div>
-                        <el-input-number
-                          size="small"
-                          model-value={_.colProps.span}
-                          min={1}
-                          max={24}
-                          onChange={(__: any) => {
-                            _.colProps.span = __;
-                          }}
-                        />
-                        <el-icon
-                          onClick={() => {
-                            this.list.splice(i, 1);
-                          }}
-                        >
-                          <CircleClose />
-                        </el-icon>
-                      </div>
-                    </div>
-                  );
-                })}
-                <el-button
-                  plain
-                  size="small"
-                  type="primary"
-                  onClick={() => {
-                    this.list.push(new GridCol().setCol(12));
-                  }}
-                >
-                  增加栅格
-                </el-button>
-              </div>
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "栅格间隔",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.rowProps.gutter}
+            min={0}
+            onChange={(_: any) => {
+              this.rowProps.gutter = _;
+            }}
+          />
+        ),
+      },
+      {
+        label: "水平排列方式",
+        editor: (
+          <el-select
+            model-value={this.rowProps.justify}
+            size="small"
+            onChange={(_: any) => {
+              this.rowProps.justify = _;
+            }}
+            placeholder="请选择"
+          >
+            <el-option label="start" value="start" />
+            <el-option label="end" value="end" />
+            <el-option label="center" value="center" />
+            <el-option label="space-around" value="space-around" />
+            <el-option label="space-between" value="space-between" />
+            <el-option label="space-evenly" value="space-evenly" />
+          </el-select>
+        ),
+      },
+      {
+        label: "垂直排列方式",
+        editor: (
+          <el-select
+            model-value={this.rowProps.align}
+            size="small"
+            onChange={(_: any) => {
+              this.rowProps.align = _;
+            }}
+            placeholder="请选择"
+          >
+            <el-option label="top" value="top" />
+            <el-option label="middle" value="middle" />
+            <el-option label="bottom" value="bottom" />
+          </el-select>
+        ),
+      },
+    ];
+    let push: IConRightReterItemOp["childs"] = [
+      {
+        label: "当前栅格列：",
+      },
+      {
+        editor: (
+          <div class="controls__ grid-right">
+            {this.list.map((_, i) => {
+              return (
+                <div class="i">
+                  <span>栅格{i + 1}</span>
+                  <div>
+                    <el-input-number
+                      size="small"
+                      model-value={_.colProps.span}
+                      min={1}
+                      max={24}
+                      onChange={(__: any) => {
+                        _.colProps.span = __;
+                      }}
+                    />
+                    <el-icon
+                      onClick={() => {
+                        this.list.splice(i, 1);
+                      }}
+                    >
+                      <CircleClose />
+                    </el-icon>
+                  </div>
+                </div>
+              );
+            })}
+            <el-button
+              plain
+              size="small"
+              type="primary"
+              onClick={() => {
+                this.list.push(new GridCol().setCol(12));
+              }}
+            >
+              增加栅格
+            </el-button>
+          </div>
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
+    _.find((_) => _.key == "com")?.childs!.push(...push);
     return _;
   }
 }

@@ -2,17 +2,18 @@
 import { defineComponent, ref, type PropType } from "vue";
 import Item from "./com/item.vue";
 import type { BaseCon } from "./controls";
-import type { IFormConfig } from "./config/getFormConfig";
+import type { TFormConfig } from "./config/getFormConfig";
+import { NForm, NFormItem } from "naive-ui";
 
 export default defineComponent({
-  components: { Item },
+  components: { Item, NForm, NFormItem },
   props: {
     cons: {
       type: Array as PropType<BaseCon[]>,
       required: true,
     },
     formConfig: {
-      type: Object as PropType<IFormConfig>,
+      type: Object as PropType<TFormConfig>,
       required: true,
     },
     formData: {
@@ -30,30 +31,28 @@ export default defineComponent({
     }
 
     /** 清理某个字段的表单验证信息。 */
-    function clearValidate() {
-      return formEl.value.clearValidate(...arguments);
+    function restoreValidation() {
+      return formEl.value.restoreValidation(...arguments);
     }
-    return { formEl, validate, clearValidate };
+    return { formEl, validate, restoreValidation };
   },
 });
 </script>
 
 <template>
   <div class="dynamic-form-render">
-    <el-form
+    <NForm
       ref="formEl"
       :model="formData"
       :inline="formConfig.inline"
-      :label-position="formConfig.labelPosition"
       :label-width="formConfig.labelWidth"
-      :label-suffix="formConfig.labelsuffix"
-      :hide-required-asterisk="formConfig.hideRequiredAsterisk"
-      :require-asterisk-position="formConfig.requireAsteriskPosition"
-      :show-message="formConfig.showMessage"
-      :inline-message="formConfig.inlineMessage"
-      :status-icon="formConfig.statusIcon"
+      :label-align="formConfig.labelAlign"
+      :label-placement="formConfig.labelPlacement"
+      :show-feedback="formConfig.showFeedback"
+      :show-label="formConfig.showLabel"
+      :show-require-mark="formConfig.showRequireMark"
+      :require-mark-placement="formConfig.requireMarkPlacement"
       :size="formConfig.size"
-      :disabled="formConfig.disabled"
     >
       <Item
         v-for="con in cons"
@@ -64,7 +63,7 @@ export default defineComponent({
         :con="con"
         formRender
       />
-    </el-form>
+    </NForm>
   </div>
 </template>
 

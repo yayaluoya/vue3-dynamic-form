@@ -40,10 +40,36 @@ import { Clipboard } from "./tool/web/Clipboard";
 import { FileT } from "./tool/web/FileT";
 import { ObjectUtils } from "./tool/obj/ObjectUtils";
 import Render from "./render.vue";
-import { type IFormConfig } from "./config/getFormConfig";
+import type { TFormConfig } from "./config/getFormConfig";
+import {
+  NTabs,
+  NTabPane,
+  NForm,
+  NFormItem,
+  NCollapse,
+  NCollapseItem,
+  NSwitch,
+  NInput,
+  NRadioGroup,
+  NRadioButton,
+  NSelect,
+  NScrollbar,
+} from "naive-ui";
 
 export default defineComponent({
   components: {
+    NForm,
+    NTabs,
+    NTabPane,
+    NFormItem,
+    NCollapse,
+    NCollapseItem,
+    NSwitch,
+    NInput,
+    NRadioGroup,
+    NRadioButton,
+    NSelect,
+    NScrollbar,
     Draggable,
     DraggableCon,
     Item,
@@ -62,7 +88,7 @@ export default defineComponent({
       default: () => [],
     },
     formConfig: {
-      type: Object as PropType<IFormConfig>,
+      type: Object as PropType<TFormConfig>,
       required: true,
     },
   },
@@ -76,7 +102,7 @@ export default defineComponent({
       show: boolean;
       cons?: BaseCon[];
       formData?: Record<string, any>;
-      formConfig?: IFormConfig;
+      formConfig?: TFormConfig;
     }>({
       show: false,
       cons: undefined,
@@ -138,15 +164,10 @@ export default defineComponent({
         return;
       }
       setTimeout(() => {
-        let el = bScrollbarRef.value.$el.firstElementChild;
-        bScrollbarRef.value.$el.firstElementChild.scrollTo({
-          top:
-            el.scrollTop +
-            el
-              .querySelector(`[data-key='${activateCon.value!.key}']`)
-              .getBoundingClientRect().y -
-            el.getBoundingClientRect().y -
-            50,
+        bScrollbarRef.value.scrollTo({
+          top: document
+            .querySelector(`[data-key='${activateCon.value!.key}']`)!
+            .getBoundingClientRect().y,
           behavior: "smooth",
         });
       }, 0);
@@ -169,7 +190,7 @@ export default defineComponent({
       renderOp.formData = ConT.getFromData(renderOp.cons);
       renderOp.formConfig = ObjectUtils.clone2(props.formConfig);
       nextTick(() => {
-        renderEl.value.clearValidate();
+        renderEl.value.restoreValidation();
       });
     }
 
@@ -205,7 +226,7 @@ export default defineComponent({
     function importJSONH() {
       try {
         let { formConfig, cons } = JSON.parse(JSONH.jsonText) as {
-          formConfig: IFormConfig;
+          formConfig: TFormConfig;
           cons: BaseCon[];
         };
         updateCons(ConT.toCons(cons, props.extendCons));
@@ -284,68 +305,72 @@ export default defineComponent({
 <template>
   <div class="dynamic-form" ref="rootElRef">
     <div class="a">
-      <el-tabs v-model="leftTabsActiveNames">
-        <el-tab-pane label="组件库" name="con">
-          <el-scrollbar wrap-class="scrollbar-wrapper">
-            <div class="content__">
-              <el-form
-                :inline="formConfig.inline"
-                :label-position="formConfig.labelPosition"
-                :label-width="formConfig.labelWidth"
-                :label-suffix="formConfig.labelsuffix"
-                :hide-required-asterisk="formConfig.hideRequiredAsterisk"
-                :require-asterisk-position="formConfig.requireAsteriskPosition"
-                :show-message="formConfig.showMessage"
-                :inline-message="formConfig.inlineMessage"
-                :status-icon="formConfig.statusIcon"
-                :size="formConfig.size"
-                :disabled="formConfig.disabled"
-              >
-                <el-collapse v-model="ConsCollapseActiveNames">
-                  <el-collapse-item
-                    v-for="(item, index) in Cons"
-                    :key="index"
-                    :title="item.label"
-                    :name="item.label"
+      <NTabs
+        v-model:value="leftTabsActiveNames"
+        type="line"
+        :tabs-padding="10"
+        pane-wrapper-style="padding: 0 10px"
+        animated
+      >
+        <NTabPane tab="组件库" name="con">
+          <NScrollbar style="height: calc(var(--height) - 60px)">
+            <NForm
+              :inline="formConfig.inline"
+              :label-width="formConfig.labelWidth"
+              :label-align="formConfig.labelAlign"
+              :label-placement="formConfig.labelPlacement"
+              :show-feedback="formConfig.showFeedback"
+              :show-label="formConfig.showLabel"
+              :show-require-mark="formConfig.showRequireMark"
+              :require-mark-placement="formConfig.requireMarkPlacement"
+              :size="formConfig.size"
+            >
+              <NCollapse :default-expanded-names="ConsCollapseActiveNames">
+                <NCollapseItem
+                  v-for="(item, index) in Cons"
+                  :key="index"
+                  :title="item.label"
+                  :name="item.label"
+                >
+                  <Draggable
+                    :class="draggableC.class + ' a'"
+                    :list="item.cons"
+                    :group="{
+                      name: draggableC.group,
+                      pull: 'clone',
+                      put: false,
+                    }"
+                    :clone="cloneComponent"
+                    :sort="false"
+                    @start="draggableLoading = true"
+                    @end="draggableLoading = false"
+                    item-key="type"
                   >
-                    <Draggable
-                      :class="draggableC.class"
-                      :list="item.cons"
-                      :group="{
-                        name: draggableC.group,
-                        pull: 'clone',
-                        put: false,
-                      }"
-                      :clone="cloneComponent"
-                      :sort="false"
-                      @start="draggableLoading = true"
-                      @end="draggableLoading = false"
-                      item-key="type"
+                    <template
+                      #item="{ element: Con }: { element: typeof BaseCon }"
                     >
-                      <template
-                        #item="{ element: Con }: { element: typeof BaseCon }"
+                      <div
+                        class="draggable-item"
+                        :class="{
+                          on: Con.ConType === activateCon?.conType,
+                        }"
                       >
-                        <div
-                          class="draggable-item"
-                          :class="{
-                            on: Con.ConType === activateCon?.conType,
-                          }"
-                        >
-                          <span>{{ Con.ConName }}</span>
-                          <div class="draggable-show-item">
-                            <Item drag :formConfig="formConfig" :con="Con.I!" />
-                          </div>
+                        <span>{{ Con.ConName }}</span>
+                        <div class="draggable-show-item">
+                          <Item drag :formConfig="formConfig" :con="Con.I!" />
                         </div>
-                      </template>
-                    </Draggable>
-                  </el-collapse-item>
-                </el-collapse>
-              </el-form>
-            </div>
-          </el-scrollbar>
-        </el-tab-pane>
-        <el-tab-pane label="表单模板" name="template"></el-tab-pane>
-      </el-tabs>
+                      </div>
+                    </template>
+                  </Draggable>
+                </NCollapseItem>
+              </NCollapse>
+            </NForm>
+          </NScrollbar>
+        </NTabPane>
+        <NTabPane tab="表单模板" name="template">
+          <NScrollbar style="height: calc(var(--height) - 60px)"></NScrollbar>
+        </NTabPane>
+      </NTabs>
     </div>
     <div class="b">
       <div class="top">
@@ -383,7 +408,7 @@ export default defineComponent({
           >
             导出JSON
           </el-button>
-          <el-icon @click="positionToOnCon()"><Aim /></el-icon>
+          <!-- <el-icon @click="positionToOnCon()"><Aim /></el-icon> -->
         </div>
       </div>
       <div
@@ -397,21 +422,22 @@ export default defineComponent({
         <span class="null" v-if="cons.length <= 0"
           >请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</span
         >
-        <el-scrollbar wrap-class="scrollbar-wrapper" ref="bScrollbarRef">
-          <div class="content__">
-            <el-form
-              :inline="formConfig.inline"
-              :label-position="formConfig.labelPosition"
-              :label-width="formConfig.labelWidth"
-              :label-suffix="formConfig.labelsuffix"
-              :hide-required-asterisk="formConfig.hideRequiredAsterisk"
-              :require-asterisk-position="formConfig.requireAsteriskPosition"
-              :show-message="formConfig.showMessage"
-              :inline-message="formConfig.inlineMessage"
-              :status-icon="formConfig.statusIcon"
-              :size="formConfig.size"
-              :disabled="formConfig.disabled"
-            >
+        <NScrollbar
+          ref="bScrollbarRef"
+          style="height: calc(var(--height) - 42px)"
+        >
+          <NForm
+            :inline="formConfig.inline"
+            :label-width="formConfig.labelWidth"
+            :label-align="formConfig.labelAlign"
+            :label-placement="formConfig.labelPlacement"
+            :show-feedback="formConfig.showFeedback"
+            :show-label="formConfig.showLabel"
+            :show-require-mark="formConfig.showRequireMark"
+            :require-mark-placement="formConfig.requireMarkPlacement"
+            :size="formConfig.size"
+          >
+            <div class="draggable-con-div">
               <DraggableCon
                 class="draggable-con"
                 :cons="cons"
@@ -428,9 +454,9 @@ export default defineComponent({
                   }
                 "
               />
-            </el-form>
-          </div>
-        </el-scrollbar>
+            </div>
+          </NForm>
+        </NScrollbar>
       </div>
     </div>
     <div class="c">
@@ -464,14 +490,14 @@ export default defineComponent({
       </template>
     </el-dialog>
     <el-dialog v-model="renderOp.show" title="表单预览" width="900" draggable>
-      <el-scrollbar style="height: 700px" wrap-class="scrollbar-wrapper">
+      <NScrollbar style="max-height: 700px" wrap-class="scrollbar-wrapper">
         <Render
           ref="renderEl"
           :cons="renderOp.cons!"
           :formConfig="renderOp.formConfig!"
           :formData="renderOp.formData!"
         />
-      </el-scrollbar>
+      </NScrollbar>
       <template #footer>
         <el-button type="primary" @click="getFromData()"
           >获取表单数据</el-button
@@ -501,70 +527,44 @@ export default defineComponent({
     width: 260px;
     box-sizing: border-box;
     display: flex;
-    > .el-tabs {
+
+    .dynamic-form-draggable.a {
       width: 100%;
-      ::v-deep .el-tabs__header {
-        margin-bottom: 0;
-      }
-      ::v-deep .el-tabs__nav-scroll {
-        padding: 0 10px;
-      }
-      .el-scrollbar {
-        width: 100%;
-        height: calc(var(--height) - 40px);
-        .content__ {
-          display: flex;
-          flex-direction: column;
-          padding: 0 10px;
-          ::v-deep .el-collapse-item__header {
-            font-weight: bold;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      .draggable-item {
+        width: calc(50% - 4px);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 4px;
+        background-color: white;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        margin-bottom: 5px;
+        cursor: move;
+        > .draggable-show-item {
+          display: none;
+        }
+        &.on,
+        &:hover {
+          border-color: #1890ff;
+          background-color: #eff2f5;
+          > span {
+            color: #1890ff;
           }
-          ::v-deep .el-collapse-item__content {
-            padding-bottom: 10px;
-          }
-          .dynamic-form-draggable {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            .draggable-item {
-              width: calc(50% - 4px);
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-              box-sizing: border-box;
-              padding: 4px;
-              background-color: white;
-              border: 1px solid #dddddd;
-              border-radius: 4px;
-              margin-bottom: 5px;
-              cursor: move;
-              > .draggable-show-item {
-                display: none;
-              }
-              &.on,
-              &:hover {
-                border-color: #1890ff;
-                background-color: #eff2f5;
-                > span {
-                  color: #1890ff;
-                }
-              }
-              > span {
-                font-family: "Source Han Sans CN";
-                font-style: normal;
-                font-weight: 400;
-                font-size: 13px;
-                line-height: 20px;
-                /* identical to box height */
-                color: #7a7a86;
-              }
-            }
-          }
-          > .list:nth-last-child(1) {
-            margin-bottom: 0px;
-          }
+        }
+        > span {
+          font-family: "Source Han Sans CN";
+          font-style: normal;
+          font-weight: 400;
+          font-size: 13px;
+          line-height: 20px;
+          /* identical to box height */
+          color: #7a7a86;
         }
       }
     }
@@ -575,8 +575,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     > .top {
-      height: 40px;
-      border-bottom: 1px solid var(--el-border-color-light);
+      height: 41.8px;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -596,18 +595,13 @@ export default defineComponent({
     }
     > .content {
       width: 100%;
-      height: calc(var(--height) - 40px);
       display: flex;
       flex-direction: column;
       position: relative;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      &.draggableLoading {
-        .dynamic-form-draggable {
-          box-shadow: 0px 0px 4px #409eff;
-        }
-      }
+      background-color: #f3f3f3;
       > .null {
         position: absolute;
         color: #999;
@@ -615,27 +609,11 @@ export default defineComponent({
         pointer-events: none;
         z-index: 2;
       }
-      > .el-scrollbar {
-        width: 100%;
-        position: relative;
-        z-index: 1;
-        background-color: #f3f3f3;
-        box-sizing: border-box;
-        .content__ {
-          width: 100%;
-          box-sizing: border-box;
-          position: relative;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: center;
-          padding: 10px;
-          > .el-form {
-            width: 100%;
-            .draggable-con {
-              min-height: calc(var(--height) - 40px - 20px);
-            }
-          }
+      .draggable-con-div {
+        padding: 10px;
+        > .draggable-con {
+          background-color: white;
+          min-height: calc(var(--height) - 40px - 25px);
         }
       }
     }

@@ -1,20 +1,18 @@
 import { customAlphabet } from "nanoid";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
-import { type IFormConfig } from "../config/getFormConfig";
+import { type TFormConfig } from "../config/getFormConfig";
 import "../style/controls.scss";
 import { FormItemCon } from "../com/FormItemCon";
 import type { JSX } from "vue/jsx-runtime";
+import { NCollapseItem, NFormItem, type FormItemProps } from "naive-ui";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 15);
 
-/**
- * 控件渲染函数op
- */
 export interface IConRenderOp {
   ctx: import("vue").SetupContext<["activateConF", "removeF", "moveF"]>;
   /** 表单配置 */
-  formConfig: IFormConfig;
+  formConfig: TFormConfig;
   /** 父控件 */
   parent?: BaseCon;
   cons?: BaseCon[];
@@ -24,14 +22,24 @@ export interface IConRenderOp {
   formData?: Record<string, any>;
 }
 
-/**
- * 控件又操作栏渲染函数op
- */
 export interface IConRightRenderOp {
   ctx: import("vue").SetupContext;
   /** 表单配置 */
-  formConfig: IFormConfig;
+  formConfig: TFormConfig;
   cons?: BaseCon[];
+}
+
+export interface IConRightReterItemOp {
+  key: "com" | "form";
+  title: string;
+  childs: (
+    | {
+        label?: string | JSX.Element;
+        editor?: JSX.Element;
+        labelPlacement?: FormItemProps["labelPlacement"];
+      }
+    | undefined
+  )[];
 }
 
 /**
@@ -46,11 +54,11 @@ export class BaseCon {
   static ConName = "";
 
   /** 控件类型 */
-  conType = "";
+  readonly conType: string = "";
   /** 控件名字 */
-  conName = "";
+  readonly conName: string = "";
   /** 控件实例唯一的key，不可变的 */
-  key = "";
+  readonly key: string = "";
   /** 渲染key */
   renderKey = "";
   /** 子控件 */
@@ -63,7 +71,7 @@ export class BaseCon {
   formDefaultValue: any = undefined;
 
   /** 是否可拖拽 */
-  towable = true;
+  protected towable = true;
 
   /** 是否隐藏 */
   hide = false;
@@ -75,7 +83,7 @@ export class BaseCon {
     this.key = "key-" + key;
     this.renderKey = this.key;
     // 属性名默认和key同名
-    this.formItem.prop =
+    this.formItem.path =
       this.conType.toLocaleLowerCase() + "-" + key.slice(0, 7);
     this.formItem.label = this.conName;
     //
@@ -83,16 +91,16 @@ export class BaseCon {
   }
 
   /** 获取表单属性名 */
-  getFormProp() {
-    return this.formItem?.prop;
+  getFormPath() {
+    return this.formItem.path;
   }
 
   /** 转JSON字符串 */
   toJSON() {
-    let d = { ...this } as any;
-    delete d.conName;
-    delete d.renderKey;
-    delete d.towable;
+    let d = { ...this };
+    Reflect.deleteProperty(d, "conName");
+    Reflect.deleteProperty(d, "renderKey");
+    Reflect.deleteProperty(d, "towable");
     return d;
   }
 
@@ -158,12 +166,12 @@ export class BaseCon {
         value: {
           get: () => {
             return formData
-              ? formData[this.formItem.prop || ""]
+              ? formData[this.formItem.path || ""]
               : this.formDefaultValue;
           },
           set: (v) => {
             formData
-              ? (formData[this.formItem.prop || ""] = v)
+              ? (formData[this.formItem.path || ""] = v)
               : (this.formDefaultValue = v);
           },
         },
@@ -289,64 +297,25 @@ export class BaseCon {
    * @param op
    * @returns
    */
-  renderFormItem({ formConfig }: IConRenderOp): JSX.Element {
+  renderFormItem(op: IConRenderOp): JSX.Element {
+    let formItemProps = this.formItem.getFormItemProps();
     return (
-      <el-form-item
-        class={[""].join(" ")}
-        prop={this.formItem.prop}
-        label-position={this.formItem.labelPosition[0]}
-        label-width={
-          !this.formItem.hideLabel && this.formItem.label
-            ? this.formItem.labelWidth && this.formItem.labelWidth + "px"
-            : "0px"
-        }
-        rules={this.formItem.rules}
-        show-message={this.formItem.showMessage}
-        size={this.formItem.size}
+      <NFormItem
+        path={formItemProps.path}
+        label={formItemProps.label}
+        label-align={formItemProps.labelAlign}
+        label-placement={formItemProps.labelPlacement}
+        label-style={formItemProps.labelStyle}
+        label-width={formItemProps.labelWidth}
+        rule={formItemProps.rule}
+        show-feedback={formItemProps.showFeedback}
+        show-label={formItemProps.showLabel}
+        show-require-mark={formItemProps.showRequireMark}
+        require-mark-placement={formItemProps.requireMarkPlacement}
+        size={formItemProps.size}
       >
-        {{
-          label: () => {
-            if (this.formItem.hideLabel) {
-              return [];
-            }
-            return (
-              <div
-                style={`
-                display: inline-flex;
-                flex-direction: row;
-                ${
-                  (this.formItem.labelPosition[0] ||
-                    formConfig.labelPosition) == "top"
-                    ? ""
-                    : "width: 100%;"
-                }
-                justify-content: ${
-                  this.formItem.labelAlign[0] || formConfig.labelAlign
-                };
-              `}
-              >
-                <span
-                  style={{
-                    "font-size": this.formItem.LabelFontStyle.fontSize + "px",
-                    color: this.formItem.LabelFontStyle.color,
-                    // 'text-align': this.formItem.LabelFontStyle.textAlign,
-                    "font-weight": this.formItem.LabelFontStyle.fontWeight,
-                    "text-decoration":
-                      this.formItem.LabelFontStyle.textDecoration,
-                    "font-style": this.formItem.LabelFontStyle.fontStyle,
-                  }}
-                >
-                  {this.formItem.label}
-                  {formConfig.labelsuffix}
-                </span>
-              </div>
-            );
-          },
-          default: () => {
-            return this.renderRaw(arguments[0]);
-          },
-        }}
-      </el-form-item>
+        {this.renderRaw(op)}
+      </NFormItem>
     );
   }
 
@@ -366,25 +335,31 @@ export class BaseCon {
   renderRight(op: IConRightRenderOp): JSX.Element[] {
     return this.getRight(arguments[0])?.map((_, i) => {
       return (
-        <el-collapse-item key={i} title={_.title} name={_.title}>
+        <NCollapseItem key={i} title={_.title} name={_.key}>
           {_.childs &&
             _.childs.filter(Boolean).map((__, j) => {
               let { editor, ...props } = __!;
               return props.label ? (
-                <el-form-item
-                  key={j}
-                  label={props.label}
-                  label-position={props.labelPosition}
-                >
-                  {editor}
-                </el-form-item>
+                <NFormItem key={j} label-placement={props.labelPlacement}>
+                  {{
+                    label: () => props.label,
+                    default: () => editor,
+                  }}
+                </NFormItem>
               ) : (
                 editor
               );
             })}
-        </el-collapse-item>
+        </NCollapseItem>
       );
     });
+  }
+
+  /**
+   * 获取右侧编辑栏默认展开的栏目
+   */
+  getRightDefaultExpanded(): IConRightReterItemOp["key"][] {
+    return ["com", "form"];
   }
 
   /**
@@ -393,46 +368,30 @@ export class BaseCon {
    * @param hasEditor 是否获取编辑器
    * @returns
    */
-  getRight(
-    op: IConRightRenderOp,
-    hasEditor = true
-  ): {
-    key: "com" | "form";
-    title: string;
-    childs?: (
-      | {
-          label?: string;
-          editor?: JSX.Element;
-          labelPosition?: string;
-        }
-      | undefined
-    )[];
-  }[] {
+  getRight(op: IConRightRenderOp): IConRightReterItemOp[] {
     return [
       {
         key: "com",
         title: "常用属性",
-        childs: hasEditor
-          ? [
-              {
-                label: "是否隐藏",
-                editor: (
-                  <el-switch
-                    size="small"
-                    model-value={this.hide}
-                    onChange={(v: any) => {
-                      this.hide = v;
-                    }}
-                  ></el-switch>
-                ),
-              },
-            ]
-          : undefined,
+        childs: [
+          {
+            label: "是否隐藏",
+            editor: (
+              <el-switch
+                size="small"
+                model-value={this.hide}
+                onChange={(v: any) => {
+                  this.hide = v;
+                }}
+              ></el-switch>
+            ),
+          },
+        ],
       },
       {
         key: "form",
         title: "表单属性",
-        childs: hasEditor ? [...this.formItem.reder()] : undefined,
+        childs: [...this.formItem.render()],
       },
     ];
   }

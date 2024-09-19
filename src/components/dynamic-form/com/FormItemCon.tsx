@@ -2,174 +2,303 @@ import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import "../style/form-item.scss";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
-import { FontStyleCon } from "./FontStyleCon";
-import { ArrayUtils } from "../tool/ArrayUtils";
+import {
+  NCheckbox,
+  NInput,
+  NRadioButton,
+  NRadioGroup,
+  NSelect,
+  NSpace,
+  NSwitch,
+  type FormItemProps,
+  type FormItemRule,
+} from "naive-ui";
+import type { IConRightReterItemOp } from "../controls/BaseCon";
 
 /**
  * 表单项控制器
  */
 export class FormItemCon {
-  /** 最终绑定到formData上的属性名，如果设置为undefined的话表示这个控件不绑定值到formData上 */
-  prop: string | undefined = undefined;
   label = "控件";
-  /** 隐藏label */
-  hideLabel = false;
-  /** 标签字体样式 */
-  LabelFontStyle = new FontStyleCon({
-    fontSize: 14,
-  });
-  /** 表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 默认会继承 Form的label-position */
-  labelPosition: string[] = [];
-  /** 标签对齐方式 */
-  labelAlign: string[] = [];
-  /** 标签宽度，例如 '50px'。 可以使用 auto。 */
-  labelWidth = 0;
-  /** 是否显示校验错误信息 */
-  showMessage = true;
-  /** 用于控制该表单域下组件的默认尺寸 */
-  size = "";
+  /** 将值收集到外层表单 model 对象的路径 */
+  path: string | undefined = undefined;
+  private labelAlign: FormItemProps["labelAlign"] = "right";
+  private labelPlacement: FormItemProps["labelPlacement"] = "left";
+  private labelStyle: FormItemProps["labelStyle"] = "";
+  private labelWidth: FormItemProps["labelWidth"] = "auto";
+  private showFeedback: FormItemProps["showFeedback"] = true;
+  private showLabel: FormItemProps["showLabel"] = true;
+  private showRequireMark: FormItemProps["showRequireMark"] = true;
+  private requireMarkPlacement: FormItemProps["requireMarkPlacement"] = "right";
+  private size: FormItemProps["size"] = "medium";
   /** 校验规则列表 */
-  rules: any[] = [];
+  private rule: (FormItemRule & { key_: number })[] = [];
 
-  /**
-   * @param op
-   */
+  private selfProps: (keyof Pick<
+    FormItemProps,
+    | "labelAlign"
+    | "labelPlacement"
+    | "labelWidth"
+    | "showFeedback"
+    | "showLabel"
+    | "showRequireMark"
+    | "requireMarkPlacement"
+    | "size"
+  >)[] = [];
+
   constructor(op?: FormItemCon) {
     for (let i in op) {
       (this as any)[i] = ObjectUtils.clone2((op as any)[i]);
     }
-    this.LabelFontStyle = new FontStyleCon(this.LabelFontStyle);
   }
 
-  reder() {
+  getFormItemProps(): FormItemProps {
+    return {
+      label: this.label,
+      path: this.path,
+      labelAlign: this.selfProps.includes("labelAlign")
+        ? this.labelAlign
+        : undefined,
+      labelPlacement: this.selfProps.includes("labelPlacement")
+        ? this.labelPlacement
+        : undefined,
+      labelStyle: this.labelStyle,
+      labelWidth: this.selfProps.includes("labelWidth")
+        ? this.labelWidth
+        : undefined,
+      showFeedback: this.selfProps.includes("showFeedback")
+        ? this.showFeedback
+        : undefined,
+      showLabel: this.selfProps.includes("showLabel")
+        ? this.showLabel
+        : undefined,
+      showRequireMark: this.selfProps.includes("showRequireMark")
+        ? this.showRequireMark
+        : undefined,
+      requireMarkPlacement: this.selfProps.includes("requireMarkPlacement")
+        ? this.requireMarkPlacement
+        : undefined,
+      size: this.selfProps.includes("size") ? this.size : undefined,
+      rule: this.rule,
+    };
+  }
+
+  render(): IConRightReterItemOp["childs"] {
     return [
       {
-        label: "表单字段名",
-        labelPosition: "top",
-        editor: (
-          <el-input
-            size="small"
-            model-value={this.prop}
-            onInput={(v: any) => {
-              this.prop = v;
-            }}
-          />
-        ),
-      },
-      {
-        label: "组件大小",
-        editor: (
-          <el-select
-            model-value={this.size}
-            size="small"
-            onChange={(v: any) => {
-              this.size = v;
-            }}
-            placeholder="请选择"
-            clearable
-          >
-            <el-option label="large" value="large" />
-            <el-option label="default" value="default" />
-            <el-option label="small" value="small" />
-          </el-select>
-        ),
-      },
-      {
-        label: "隐藏标签",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.hideLabel}
-            onChange={(v: any) => {
-              this.hideLabel = v;
-            }}
-          ></el-switch>
-        ),
+        label: "表单字段路径",
+        labelPlacement: "top",
+        editor: <NInput v-model:value={this.path} size="small" />,
       },
       {
         label: "标签名",
+        editor: <NInput v-model:value={this.label} size="small" />,
+      },
+      {
+        label: (
+          <NSpace>
+            <span>标签宽度</span>
+            <NCheckbox
+              checked={this.selfProps.includes("labelWidth")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("labelWidth")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "labelWidth"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
+        ),
+        editor: <NInput v-model:value={this.labelWidth} size="small" />,
+      },
+      {
+        label: (
+          <NSpace>
+            <span>标签文本对齐方式</span>
+            <NCheckbox
+              checked={this.selfProps.includes("labelAlign")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("labelAlign")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "labelAlign"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
+        ),
+        labelPlacement: "top",
         editor: (
-          <el-input
+          <NRadioGroup v-model:value={this.labelAlign} size="small">
+            <NRadioButton label="left" value="left" />
+            <NRadioButton label="center" value="center" />
+            <NRadioButton label="right" value="right" />
+          </NRadioGroup>
+        ),
+      },
+      {
+        label: (
+          <NSpace>
+            <span>标签位置</span>
+            <NCheckbox
+              checked={this.selfProps.includes("labelPlacement")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("labelPlacement")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "labelPlacement"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
+        ),
+        editor: (
+          <NRadioGroup v-model:value={this.labelPlacement} size="small">
+            <NRadioButton label="left" value="left" />
+            <NRadioButton label="top" value="top" />
+          </NRadioGroup>
+        ),
+      },
+      {
+        label: "标签样式",
+        labelPlacement: "top",
+        editor: (
+          <NInput
+            v-model:value={this.labelStyle}
             size="small"
-            model-value={this.label}
-            onInput={(v: any) => {
-              this.label = v;
-            }}
+            type="textarea"
           />
         ),
       },
+
       {
-        label: "标签位置",
+        label: (
+          <NSpace>
+            <span>展示标签</span>
+            <NCheckbox
+              checked={this.selfProps.includes("showLabel")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("showLabel")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "showLabel"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
+        ),
+        editor: <NSwitch v-model:value={this.showLabel} size="small" />,
+      },
+      {
+        label: (
+          <NSpace>
+            <span>展示必填星号</span>
+            <NCheckbox
+              checked={this.selfProps.includes("showRequireMark")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("showRequireMark")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "showRequireMark"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
+        ),
+        editor: <NSwitch v-model:value={this.showRequireMark} size="small" />,
+      },
+      {
+        label: (
+          <NSpace>
+            <span>必填星号位置</span>
+            <NCheckbox
+              checked={this.selfProps.includes("requireMarkPlacement")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("requireMarkPlacement")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "requireMarkPlacement"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
+        ),
+        labelPlacement: "top",
         editor: (
-          <el-checkbox-group
-            size="small"
-            model-value={this.labelPosition}
-            onChange={(v: any) => {
-              this.labelPosition = ArrayUtils.eliminate(v, (_) =>
-                this.labelPosition.includes(_)
-              );
-            }}
-          >
-            <el-checkbox-button label="left" value="left" />
-            <el-checkbox-button label="top" value="top" />
-          </el-checkbox-group>
+          <NRadioGroup v-model:value={this.requireMarkPlacement} size="small">
+            <NRadioButton label="left" value="left" />
+            <NRadioButton label="right" value="right" />
+            <NRadioButton label="right-hanging" value="right-hanging" />
+          </NRadioGroup>
         ),
       },
       {
-        label: "字段标签对齐",
-        labelPosition: "top",
-        editor: (
-          <el-checkbox-group
-            size="small"
-            model-value={this.labelAlign}
-            onChange={(v: any) => {
-              this.labelAlign = ArrayUtils.eliminate(v, (_) =>
-                this.labelAlign.includes(_)
-              );
-            }}
-          >
-            <el-checkbox-button label="left" value="left" />
-            <el-checkbox-button label="center" value="center" />
-            <el-checkbox-button label="right" value="right" />
-          </el-checkbox-group>
+        label: (
+          <NSpace>
+            <span>展示校验反馈</span>
+            <NCheckbox
+              checked={this.selfProps.includes("showFeedback")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("showFeedback")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "showFeedback"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
         ),
+        editor: <NSwitch v-model:value={this.showFeedback} size="small" />,
       },
       {
-        label: "标签宽度",
+        label: (
+          <NSpace>
+            <span>尺寸</span>
+            <NCheckbox
+              checked={this.selfProps.includes("size")}
+              on-update:checked={(v: boolean) => {
+                v
+                  ? this.selfProps.push("size")
+                  : (this.selfProps = this.selfProps.filter(
+                      (_) => _ != "size"
+                    ));
+              }}
+              size="small"
+            ></NCheckbox>
+          </NSpace>
+        ),
         editor: (
-          <el-input-number
+          <NSelect
+            v-model:value={this.size}
             size="small"
-            min={0}
-            model-value={this.labelWidth}
-            onChange={(v: any) => {
-              this.labelWidth = v;
-            }}
+            placeholder="请选择"
+            clearable
+            options={[
+              { label: "large", value: "large" },
+              { label: "medium", value: "medium" },
+              { label: "small", value: "small" },
+            ]}
           />
-        ),
-      },
-      ...this.LabelFontStyle.render(),
-      {
-        label: "显示校验错误信息",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.showMessage}
-            onChange={(v: any) => {
-              this.showMessage = v;
-            }}
-          ></el-switch>
         ),
       },
       {
         label: "校验规则",
-        labelPosition: "top",
+        labelPlacement: "top",
         editor: (
           <div class="form-item-rules">
             <Draggable
               class="draggable"
-              modelValue={this.rules}
+              modelValue={this.rule}
               onUpdate:modelValue={(_: any[]) => {
-                this.rules = [..._];
+                this.rule = [..._];
               }}
               animation={draggableC.animation}
               handle=".drag-handler"
@@ -179,7 +308,7 @@ export class FormItemCon {
                 item: ({
                   element: _,
                 }: {
-                  element: getArrayItemType<FormItemCon["rules"]>;
+                  element: getArrayItemType<FormItemCon["rule"]>;
                 }) => {
                   return (
                     <div class="i">
@@ -241,11 +370,11 @@ export class FormItemCon {
                         <el-icon
                           class="remove"
                           onClick={() => {
-                            let i = this.rules.findIndex(
+                            let i = this.rule.findIndex(
                               (__) => _.key == __.key
                             );
                             if (i >= 0) {
-                              this.rules.splice(i, 1);
+                              this.rule.splice(i, 1);
                             }
                           }}
                         >
@@ -262,8 +391,8 @@ export class FormItemCon {
               size="small"
               type="primary"
               onClick={() => {
-                this.rules.push({
-                  key: Math.max(...this.rules.map((_) => _.key), 1) + 1,
+                this.rule.push({
+                  key_: Math.max(...this.rule.map((_) => _.key_), 1) + 1,
                   required: false,
                   message: "",
                 });

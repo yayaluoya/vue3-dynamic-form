@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, type PropType } from "vue";
-import type { IFormConfig } from "../config/getFormConfig";
+import type { TFormConfig } from "../config/getFormConfig";
 import type { BaseCon } from "../controls";
 import type { JSX } from "vue/jsx-runtime";
 
@@ -8,7 +8,7 @@ export default defineComponent({
   components: {},
   props: {
     formConfig: {
-      type: Object as PropType<IFormConfig>,
+      type: Object as PropType<TFormConfig>,
       required: true,
     },
     parent: {

@@ -6,12 +6,12 @@ import { BaseCon, type IConRenderOp, type IConRightRenderOp } from "./BaseCon";
 export class NonForm extends BaseCon {
   constructor() {
     super();
-    this.formItem.prop = undefined;
+    this.formItem.path = undefined;
   }
 
   /** 转JSON字符串 */
   toJSON() {
-    let d = { ...super.toJSON() };
+    let d = { ...super.toJSON() } as any;
     delete d.formItem;
     return d;
   }
@@ -20,8 +20,8 @@ export class NonForm extends BaseCon {
     return this.renderRaw(op);
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor).filter((_) => _.key != "form");
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op).filter((_) => _.key != "form");
     return _;
   }
 }

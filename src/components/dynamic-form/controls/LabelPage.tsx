@@ -3,7 +3,12 @@ import "../style/label-page.scss";
 import Item from "../com/item.vue";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
-import { BaseCon, type IConRenderOp, type IConRightRenderOp } from "./BaseCon";
+import {
+  BaseCon,
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightReterItemOp,
+} from "./BaseCon";
 import { NonForm } from "./NonForm";
 
 /**
@@ -122,129 +127,127 @@ export class LabelPage extends NonForm {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "风格类型",
-            editor: (
-              <el-select
-                model-value={this.tabsProps.type}
-                size="small"
-                onChange={(v: any) => {
-                  this.tabsProps.type = v;
-                }}
-                placeholder="请选择"
-                clearable
-              >
-                <el-option label="card" value="card" />
-                <el-option label="border-card" value="border-card" />
-              </el-select>
-            ),
-          },
-          {
-            label: "选项卡位置",
-            editor: (
-              <el-radio-group
-                size="small"
-                model-value={this.tabsProps.tabPosition}
-                onChange={(v: any) => {
-                  this.tabsProps.tabPosition = v;
-                }}
-              >
-                <el-radio-button label="top" value="top" />
-                <el-radio-button label="bottom" value="bottom" />
-                <el-radio-button label="left" value="left" />
-                <el-radio-button label="right" value="right" />
-              </el-radio-group>
-            ),
-          },
-          {
-            label: "选项卡设置：",
-          },
-          {
-            editor: (
-              <div class="controls__ label-page-right">
-                <Draggable
-                  class="draggable"
-                  modelValue={this.tabs}
-                  onUpdate:modelValue={(_: any[]) => {
-                    this.tabs = [..._];
-                  }}
-                  animation={draggableC.animation}
-                  handle=".drag-handler"
-                  item-key="key"
-                >
-                  {{
-                    item: ({
-                      element: _,
-                    }: {
-                      element: getArrayItemType<LabelPage["tabs"]>;
-                    }) => {
-                      return (
-                        <div class={"i " + (_.activate ? "activate" : "")}>
-                          <div>
-                            <span>激活</span>
-                            <el-switch
-                              size="small"
-                              model-value={_.activate}
-                              onChange={(v: any) => {
-                                _.activate = v;
-                              }}
-                            ></el-switch>
-                          </div>
-                          <div>
-                            <el-input
-                              size="small"
-                              model-value={_.label}
-                              onInput={(v: any) => {
-                                _.label = v;
-                              }}
-                            />
-                            <el-icon class="drag-handler">
-                              <Rank />
-                            </el-icon>
-                            <el-icon
-                              class="remove"
-                              onClick={() => {
-                                let i = this.tabs.findIndex(
-                                  (__) => _.key == __.key
-                                );
-                                if (i >= 0) {
-                                  this.tabs.splice(i, 1);
-                                }
-                              }}
-                            >
-                              <CircleClose />
-                            </el-icon>
-                          </div>
-                        </div>
-                      );
-                    },
-                  }}
-                </Draggable>
-                <el-button
-                  plain
-                  size="small"
-                  type="primary"
-                  onClick={() => {
-                    this.tabs.push({
-                      key: BaseCon.getHash(),
-                      label: "tab" + (this.tabs.length + 1),
-                      activate: true,
-                      childs: [],
-                    });
-                  }}
-                >
-                  增加选项卡
-                </el-button>
-              </div>
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "风格类型",
+        editor: (
+          <el-select
+            model-value={this.tabsProps.type}
+            size="small"
+            onChange={(v: any) => {
+              this.tabsProps.type = v;
+            }}
+            placeholder="请选择"
+            clearable
+          >
+            <el-option label="card" value="card" />
+            <el-option label="border-card" value="border-card" />
+          </el-select>
+        ),
+      },
+      {
+        label: "选项卡位置",
+        editor: (
+          <el-radio-group
+            size="small"
+            model-value={this.tabsProps.tabPosition}
+            onChange={(v: any) => {
+              this.tabsProps.tabPosition = v;
+            }}
+          >
+            <el-radio-button label="top" value="top" />
+            <el-radio-button label="bottom" value="bottom" />
+            <el-radio-button label="left" value="left" />
+            <el-radio-button label="right" value="right" />
+          </el-radio-group>
+        ),
+      },
+      {
+        label: "选项卡设置：",
+      },
+      {
+        editor: (
+          <div class="controls__ label-page-right">
+            <Draggable
+              class="draggable"
+              modelValue={this.tabs}
+              onUpdate:modelValue={(_: any[]) => {
+                this.tabs = [..._];
+              }}
+              animation={draggableC.animation}
+              handle=".drag-handler"
+              item-key="key"
+            >
+              {{
+                item: ({
+                  element: _,
+                }: {
+                  element: getArrayItemType<LabelPage["tabs"]>;
+                }) => {
+                  return (
+                    <div class={"i " + (_.activate ? "activate" : "")}>
+                      <div>
+                        <span>激活</span>
+                        <el-switch
+                          size="small"
+                          model-value={_.activate}
+                          onChange={(v: any) => {
+                            _.activate = v;
+                          }}
+                        ></el-switch>
+                      </div>
+                      <div>
+                        <el-input
+                          size="small"
+                          model-value={_.label}
+                          onInput={(v: any) => {
+                            _.label = v;
+                          }}
+                        />
+                        <el-icon class="drag-handler">
+                          <Rank />
+                        </el-icon>
+                        <el-icon
+                          class="remove"
+                          onClick={() => {
+                            let i = this.tabs.findIndex(
+                              (__) => _.key == __.key
+                            );
+                            if (i >= 0) {
+                              this.tabs.splice(i, 1);
+                            }
+                          }}
+                        >
+                          <CircleClose />
+                        </el-icon>
+                      </div>
+                    </div>
+                  );
+                },
+              }}
+            </Draggable>
+            <el-button
+              plain
+              size="small"
+              type="primary"
+              onClick={() => {
+                this.tabs.push({
+                  key: BaseCon.getHash(),
+                  label: "tab" + (this.tabs.length + 1),
+                  activate: true,
+                  childs: [],
+                });
+              }}
+            >
+              增加选项卡
+            </el-button>
+          </div>
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }

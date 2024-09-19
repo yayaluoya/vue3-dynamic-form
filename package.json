@@ -36,6 +36,7 @@
     "@vue/tsconfig": "^0.5.1",
     "codess": "^1.1.5",
     "jsdom": "^24.1.0",
+    "naive-ui": "^2.39.0",
     "npm-run-all2": "^6.2.0",
     "sass-embedded": "^1.78.0",
     "typescript": "~5.4.0",

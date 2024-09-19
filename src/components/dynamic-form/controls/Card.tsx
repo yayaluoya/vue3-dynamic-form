@@ -1,7 +1,11 @@
 import DraggableCon from "../com/draggable.vue";
 import Item from "../com/item.vue";
 import "../style/card.scss";
-import type { IConRenderOp, IConRightRenderOp } from "./BaseCon";
+import type {
+  IConRenderOp,
+  IConRightRenderOp,
+  IConRightReterItemOp,
+} from "./BaseCon";
 import { NonForm } from "./NonForm";
 
 /**
@@ -87,56 +91,54 @@ export class Card extends NonForm {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "标题",
-            editor: (
-              <el-input
-                size="small"
-                clearable
-                model-value={this.cardName}
-                onInput={(v: any) => {
-                  this.cardName = v;
-                }}
-              />
-            ),
-          },
-          {
-            label: "页脚",
-            editor: (
-              <el-input
-                size="small"
-                clearable
-                model-value={this.cardFooter}
-                onInput={(v: any) => {
-                  this.cardFooter = v;
-                }}
-              />
-            ),
-          },
-          {
-            label: "阴影显示时机",
-            editor: (
-              <el-select
-                model-value={this.props.shadow}
-                size="small"
-                onChange={(v: any) => {
-                  this.props.shadow = v;
-                }}
-                placeholder="请选择"
-              >
-                <el-option label="always" value="always" />
-                <el-option label="never" value="never" />
-                <el-option label="hover" value="hover" />
-              </el-select>
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "标题",
+        editor: (
+          <el-input
+            size="small"
+            clearable
+            model-value={this.cardName}
+            onInput={(v: any) => {
+              this.cardName = v;
+            }}
+          />
+        ),
+      },
+      {
+        label: "页脚",
+        editor: (
+          <el-input
+            size="small"
+            clearable
+            model-value={this.cardFooter}
+            onInput={(v: any) => {
+              this.cardFooter = v;
+            }}
+          />
+        ),
+      },
+      {
+        label: "阴影显示时机",
+        editor: (
+          <el-select
+            model-value={this.props.shadow}
+            size="small"
+            onChange={(v: any) => {
+              this.props.shadow = v;
+            }}
+            placeholder="请选择"
+          >
+            <el-option label="always" value="always" />
+            <el-option label="never" value="never" />
+            <el-option label="hover" value="hover" />
+          </el-select>
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }

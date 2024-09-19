@@ -1,4 +1,9 @@
-import { BaseCon, type IConRenderOp, type IConRightRenderOp } from "./BaseCon";
+import {
+  BaseCon,
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightReterItemOp,
+} from "./BaseCon";
 
 /**
  * 数字输入框
@@ -42,116 +47,114 @@ export class InputNumber extends BaseCon {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "占位字符串",
-            editor: (
-              <el-input
-                size="small"
-                model-value={this.props.placeholder}
-                onInput={(v: any) => {
-                  this.props.placeholder = v;
-                }}
-              />
-            ),
-          },
-          {
-            label: "最小值限制",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.props.useMin}
-                onChange={(v: any) => {
-                  this.props.useMin = v;
-                }}
-              ></el-switch>
-            ),
-          },
-          this.props.useMin
-            ? {
-                label: "最小值",
-                editor: (
-                  <el-input-number
-                    size="small"
-                    model-value={this.props.min}
-                    onChange={(_: any) => {
-                      this.props.min = _;
-                    }}
-                  />
-                ),
-              }
-            : undefined,
-          {
-            label: "最大值限制",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.props.useMax}
-                onChange={(v: any) => {
-                  this.props.useMax = v;
-                }}
-              ></el-switch>
-            ),
-          },
-          this.props.useMax
-            ? {
-                label: "最大值",
-                editor: (
-                  <el-input-number
-                    size="small"
-                    model-value={this.props.max}
-                    onChange={(_: any) => {
-                      this.props.max = _;
-                    }}
-                  />
-                ),
-              }
-            : undefined,
-          {
-            label: "步数",
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "占位字符串",
+        editor: (
+          <el-input
+            size="small"
+            model-value={this.props.placeholder}
+            onInput={(v: any) => {
+              this.props.placeholder = v;
+            }}
+          />
+        ),
+      },
+      {
+        label: "最小值限制",
+        editor: (
+          <el-switch
+            size="small"
+            model-value={this.props.useMin}
+            onChange={(v: any) => {
+              this.props.useMin = v;
+            }}
+          ></el-switch>
+        ),
+      },
+      this.props.useMin
+        ? {
+            label: "最小值",
             editor: (
               <el-input-number
                 size="small"
-                model-value={this.props.step}
+                model-value={this.props.min}
                 onChange={(_: any) => {
-                  this.props.step = _;
+                  this.props.min = _;
                 }}
               />
             ),
-          },
-          {
-            label: "使用控制按钮",
+          }
+        : undefined,
+      {
+        label: "最大值限制",
+        editor: (
+          <el-switch
+            size="small"
+            model-value={this.props.useMax}
+            onChange={(v: any) => {
+              this.props.useMax = v;
+            }}
+          ></el-switch>
+        ),
+      },
+      this.props.useMax
+        ? {
+            label: "最大值",
             editor: (
-              <el-switch
+              <el-input-number
                 size="small"
-                model-value={this.props.controls}
-                onChange={(v: any) => {
-                  this.props.controls = v;
+                model-value={this.props.max}
+                onChange={(_: any) => {
+                  this.props.max = _;
                 }}
-              ></el-switch>
+              />
             ),
-          },
-          {
-            label: "控制按钮位置",
-            editor: (
-              <el-radio-group
-                size="small"
-                model-value={this.props.controlsPosition}
-                onChange={(v: any) => {
-                  this.props.controlsPosition = v;
-                }}
-              >
-                <el-radio-button label="default" value="" />
-                <el-radio-button label="right" value="right" />
-              </el-radio-group>
-            ),
-          },
-        ]
-      );
+          }
+        : undefined,
+      {
+        label: "步数",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.props.step}
+            onChange={(_: any) => {
+              this.props.step = _;
+            }}
+          />
+        ),
+      },
+      {
+        label: "使用控制按钮",
+        editor: (
+          <el-switch
+            size="small"
+            model-value={this.props.controls}
+            onChange={(v: any) => {
+              this.props.controls = v;
+            }}
+          ></el-switch>
+        ),
+      },
+      {
+        label: "控制按钮位置",
+        editor: (
+          <el-radio-group
+            size="small"
+            model-value={this.props.controlsPosition}
+            onChange={(v: any) => {
+              this.props.controlsPosition = v;
+            }}
+          >
+            <el-radio-button label="default" value="" />
+            <el-radio-button label="right" value="right" />
+          </el-radio-group>
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }

@@ -5,13 +5,13 @@ import draggableC from "../config/draggableC";
 import Item from "./item.vue";
 import { BaseCon } from "../controls/BaseCon.jsx";
 import { ArrayUtils } from "../tool/ArrayUtils";
-import type { IFormConfig } from "../config/getFormConfig";
+import type { TFormConfig } from "../config/getFormConfig";
 
 export default defineComponent({
   components: { Draggable, Item },
   props: {
     formConfig: {
-      type: Object as PropType<IFormConfig>,
+      type: Object as PropType<TFormConfig>,
       required: true,
     },
     parent: {
@@ -104,7 +104,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .dynamic-form-draggable {
   padding: 5px;
-  background-color: white;
   width: 100%;
   height: 100%;
   display: flex;

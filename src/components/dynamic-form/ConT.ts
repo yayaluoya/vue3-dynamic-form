@@ -52,8 +52,8 @@ export class ConT {
   static getFromData(cons: BaseCon[]) {
     let fromData: Record<string, any> = {};
     BaseCon.consForeach(cons, (_) => {
-      _.getFormProp() &&
-        (fromData[_.getFormProp()!] = ObjectUtils.clone2(_.formDefaultValue));
+      _.getFormPath() &&
+        (fromData[_.getFormPath()!] = ObjectUtils.clone2(_.formDefaultValue));
     });
     return fromData;
   }

@@ -2,7 +2,12 @@ import DraggableCon from "../com/draggable.vue";
 import Item from "../com/item.vue";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
-import { BaseCon, type IConRenderOp, type IConRightRenderOp } from "./BaseCon";
+import {
+  BaseCon,
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightReterItemOp,
+} from "./BaseCon";
 import "../style/collapse.scss";
 import { NonForm } from "./NonForm";
 
@@ -102,94 +107,92 @@ export class Collapse extends NonForm {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "手风琴模式",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.collapseProps.accordion}
-                onChange={(v: any) => {
-                  this.collapseProps.accordion = v;
-                }}
-              ></el-switch>
-            ),
-          },
-          {
-            label: "选项设置：",
-          },
-          {
-            editor: (
-              <div class="controls__ collapse-right">
-                <Draggable
-                  class="draggable"
-                  modelValue={this.collapses}
-                  onUpdate:modelValue={(_: Collapse["collapses"]) => {
-                    this.collapses = [..._];
-                  }}
-                  animation={draggableC.animation}
-                  handle=".drag-handler"
-                  item-key="key"
-                >
-                  {{
-                    item: ({
-                      element: _,
-                    }: {
-                      element: getArrayItemType<Collapse["collapses"]>;
-                    }) => {
-                      return (
-                        <div class="i">
-                          <el-input
-                            size="small"
-                            model-value={_.title}
-                            onInput={(v: any) => {
-                              _.title = v;
-                            }}
-                          />
-                          <el-icon class="drag-handler">
-                            <Rank />
-                          </el-icon>
-                          <el-icon
-                            class="remove"
-                            onClick={() => {
-                              let i = this.collapses.findIndex(
-                                (__) => _.key == __.key
-                              );
-                              if (i >= 0) {
-                                this.collapses.splice(i, 1);
-                              }
-                            }}
-                          >
-                            <CircleClose />
-                          </el-icon>
-                        </div>
-                      );
-                    },
-                  }}
-                </Draggable>
-                <el-button
-                  plain
-                  size="small"
-                  type="primary"
-                  onClick={() => {
-                    this.collapses.push({
-                      key: BaseCon.getHash(),
-                      title: "Collapse" + (this.collapses.length + 1),
-                      childs: [],
-                    });
-                  }}
-                >
-                  增加选项
-                </el-button>
-              </div>
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "手风琴模式",
+        editor: (
+          <el-switch
+            size="small"
+            model-value={this.collapseProps.accordion}
+            onChange={(v: any) => {
+              this.collapseProps.accordion = v;
+            }}
+          ></el-switch>
+        ),
+      },
+      {
+        label: "选项设置：",
+      },
+      {
+        editor: (
+          <div class="controls__ collapse-right">
+            <Draggable
+              class="draggable"
+              modelValue={this.collapses}
+              onUpdate:modelValue={(_: Collapse["collapses"]) => {
+                this.collapses = [..._];
+              }}
+              animation={draggableC.animation}
+              handle=".drag-handler"
+              item-key="key"
+            >
+              {{
+                item: ({
+                  element: _,
+                }: {
+                  element: getArrayItemType<Collapse["collapses"]>;
+                }) => {
+                  return (
+                    <div class="i">
+                      <el-input
+                        size="small"
+                        model-value={_.title}
+                        onInput={(v: any) => {
+                          _.title = v;
+                        }}
+                      />
+                      <el-icon class="drag-handler">
+                        <Rank />
+                      </el-icon>
+                      <el-icon
+                        class="remove"
+                        onClick={() => {
+                          let i = this.collapses.findIndex(
+                            (__) => _.key == __.key
+                          );
+                          if (i >= 0) {
+                            this.collapses.splice(i, 1);
+                          }
+                        }}
+                      >
+                        <CircleClose />
+                      </el-icon>
+                    </div>
+                  );
+                },
+              }}
+            </Draggable>
+            <el-button
+              plain
+              size="small"
+              type="primary"
+              onClick={() => {
+                this.collapses.push({
+                  key: BaseCon.getHash(),
+                  title: "Collapse" + (this.collapses.length + 1),
+                  childs: [],
+                });
+              }}
+            >
+              增加选项
+            </el-button>
+          </div>
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }

@@ -1,4 +1,9 @@
-import { BaseCon, type IConRenderOp, type IConRightRenderOp } from "./BaseCon";
+import {
+  BaseCon,
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightReterItemOp,
+} from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
 import "../style/table.scss";
 import Item from "../com/item.vue";
@@ -293,38 +298,36 @@ class Cell extends NonForm {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "边框宽度",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.borderWidth}
-                onChange={(_: any) => {
-                  this.borderWidth = _;
-                }}
-              />
-            ),
-          },
-          {
-            label: "边框颜色",
-            editor: (
-              <el-color-picker
-                model-value={this.borderColor}
-                onChange={(v: any) => {
-                  this.borderColor = v;
-                }}
-                predefine={predefineColors}
-                size="small"
-              />
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "边框宽度",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.borderWidth}
+            onChange={(_: any) => {
+              this.borderWidth = _;
+            }}
+          />
+        ),
+      },
+      {
+        label: "边框颜色",
+        editor: (
+          <el-color-picker
+            model-value={this.borderColor}
+            onChange={(v: any) => {
+              this.borderColor = v;
+            }}
+            predefine={predefineColors}
+            size="small"
+          />
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }
@@ -671,38 +674,36 @@ export class Table extends NonForm {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "边框宽度",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.borderWidth}
-                onChange={(v: any) => {
-                  this.borderWidth = v;
-                }}
-              />
-            ),
-          },
-          {
-            label: "边框颜色",
-            editor: (
-              <el-color-picker
-                model-value={this.borderColor}
-                onChange={(v: any) => {
-                  this.borderColor = v;
-                }}
-                predefine={predefineColors}
-                size="small"
-              />
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "边框宽度",
+        editor: (
+          <el-input-number
+            size="small"
+            model-value={this.borderWidth}
+            onChange={(v: any) => {
+              this.borderWidth = v;
+            }}
+          />
+        ),
+      },
+      {
+        label: "边框颜色",
+        editor: (
+          <el-color-picker
+            model-value={this.borderColor}
+            onChange={(v: any) => {
+              this.borderColor = v;
+            }}
+            predefine={predefineColors}
+            size="small"
+          />
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }

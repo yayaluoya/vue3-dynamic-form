@@ -3,7 +3,7 @@ import "../style/test.scss";
 import { FormItemCon } from "../com/FormItemCon";
 
 class FormItemCon_ extends FormItemCon {
-  reder() {
+  render() {
     return [];
   }
 }

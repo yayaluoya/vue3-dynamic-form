@@ -1,4 +1,9 @@
-import { BaseCon, type IConRenderOp, type IConRightRenderOp } from "./BaseCon";
+import {
+  BaseCon,
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightReterItemOp,
+} from "./BaseCon";
 import "../style/color-picker.scss";
 import { predefineColors } from "../config/predefineColors";
 
@@ -37,70 +42,68 @@ export class ColorPicker extends BaseCon {
     );
   }
 
-  getRight(op: IConRightRenderOp, hasEditor = true) {
-    let _ = super.getRight(op, hasEditor);
-    hasEditor &&
-      _.find((_) => _.key == "com")?.childs!.unshift(
-        ...[
-          {
-            label: "选择透明度",
-            editor: (
-              <el-switch
-                model-value={this.props.showAlpha}
-                onChange={(v: any) => {
-                  this.props.showAlpha = v;
-                  this.formDefaultValue = "";
-                  this.upadteRenderKey();
-                }}
-                size="small"
-              ></el-switch>
-            ),
-          },
-          {
-            label: "预定义颜色",
-            labelPosition: "top",
-            editor: (
-              <div class="controls__ color-picker">
-                <div class="list">
-                  {this.props.predefine.map((_, i) => {
-                    return (
-                      <div class="i">
-                        <el-color-picker
-                          size="small"
-                          model-value={_}
-                          onChange={(v: any) => {
-                            this.props.predefine[i] = v;
-                          }}
-                          show-alpha
-                          predefine={predefineColors}
-                        />
-                        <el-icon
-                          class="remove"
-                          onClick={() => {
-                            this.props.predefine.splice(i, 1);
-                          }}
-                        >
-                          <CircleClose />
-                        </el-icon>
-                      </div>
-                    );
-                  })}
-                </div>
-                <el-button
-                  plain
-                  size="small"
-                  type="primary"
-                  onClick={() => {
-                    this.props.predefine.push("");
-                  }}
-                >
-                  增加选项
-                </el-button>
-              </div>
-            ),
-          },
-        ]
-      );
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    let add: IConRightReterItemOp["childs"] = [
+      {
+        label: "选择透明度",
+        editor: (
+          <el-switch
+            model-value={this.props.showAlpha}
+            onChange={(v: any) => {
+              this.props.showAlpha = v;
+              this.formDefaultValue = "";
+              this.upadteRenderKey();
+            }}
+            size="small"
+          ></el-switch>
+        ),
+      },
+      {
+        label: "预定义颜色",
+        labelPlacement: "top",
+        editor: (
+          <div class="controls__ color-picker">
+            <div class="list">
+              {this.props.predefine.map((_, i) => {
+                return (
+                  <div class="i">
+                    <el-color-picker
+                      size="small"
+                      model-value={_}
+                      onChange={(v: any) => {
+                        this.props.predefine[i] = v;
+                      }}
+                      show-alpha
+                      predefine={predefineColors}
+                    />
+                    <el-icon
+                      class="remove"
+                      onClick={() => {
+                        this.props.predefine.splice(i, 1);
+                      }}
+                    >
+                      <CircleClose />
+                    </el-icon>
+                  </div>
+                );
+              })}
+            </div>
+            <el-button
+              plain
+              size="small"
+              type="primary"
+              onClick={() => {
+                this.props.predefine.push("");
+              }}
+            >
+              增加选项
+            </el-button>
+          </div>
+        ),
+      },
+    ];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }
