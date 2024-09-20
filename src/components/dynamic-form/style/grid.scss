@@ -4,38 +4,12 @@
   }
 
   &:not(.form-render).border {
-    border: 1px dashed #afafaf;
+    border: 1px dashed var(--borderColor);
   }
 }
 
 .controls__.grid-col {
   &:not(.form-render).border {
-    border: 1px dashed #afafaf;
-  }
-}
-
-.controls__.grid-right {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-
-  >.i {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2px;
-
-    >div {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-
-      >.el-icon {
-        cursor: pointer;
-        margin-left: 2px;
-      }
-    }
+    border: 1px dashed var(--borderColor);
   }
 }

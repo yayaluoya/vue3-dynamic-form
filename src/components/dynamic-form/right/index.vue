@@ -70,6 +70,7 @@ export default defineComponent({
                   label-width="100px"
                   label-placement="left"
                   labelAlign="left"
+                  size="small"
                 >
                   <NCollapse
                     default-expanded-names={conCollapseActiveNames.value}
@@ -89,77 +90,59 @@ export default defineComponent({
                   label-width="100px"
                   label-placement="left"
                   labelAlign="left"
+                  size="small"
                 >
                   <NCollapse
                     default-expanded-names={formCollapseActiveNames.value}
                   >
                     <NCollapseItem title="基本属性" name="1">
-                      {/* <NFormItem label="行内表单">
-                        <NSwitch
-                          v-model:value={formConfig.inline}
-                          size="small"
-                        />
-                      </NFormItem> */}
                       <NFormItem label="标签宽度">
-                        <NInput
-                          v-model:value={formConfig.labelWidth}
-                          size="small"
-                        />
+                        <NInput v-model:value={formConfig.labelWidth} />
                       </NFormItem>
-                      <NFormItem label="标签文本对齐方式" label-placement="top">
-                        <NRadioGroup
+                      <NFormItem label="标签文本对齐方式">
+                        <NSelect
                           v-model:value={formConfig.labelAlign}
-                          size="small"
-                        >
-                          <NRadioButton label="left" value="left" />
-                          <NRadioButton label="center" value="center" />
-                          <NRadioButton label="right" value="right" />
-                        </NRadioGroup>
+                          placeholder="请选择"
+                          options={[
+                            { label: "left", value: "left" },
+                            { label: "center", value: "center" },
+                            { label: "right", value: "right" },
+                          ]}
+                        />
                       </NFormItem>
                       <NFormItem label="标签位置">
-                        <NRadioGroup
+                        <NSelect
                           v-model:value={formConfig.labelPlacement}
-                          size="small"
-                        >
-                          <NRadioButton label="left" value="left" />
-                          <NRadioButton label="top" value="top" />
-                        </NRadioGroup>
+                          placeholder="请选择"
+                          options={[
+                            { label: "left", value: "left" },
+                            { label: "top", value: "top" },
+                          ]}
+                        />
                       </NFormItem>
                       <NFormItem label="展示标签">
-                        <NSwitch
-                          v-model:value={formConfig.showLabel}
-                          size="small"
-                        />
+                        <NSwitch v-model:value={formConfig.showLabel} />
                       </NFormItem>
                       <NFormItem label="展示必填星号">
-                        <NSwitch
-                          v-model:value={formConfig.showRequireMark}
-                          size="small"
-                        />
+                        <NSwitch v-model:value={formConfig.showRequireMark} />
                       </NFormItem>
-                      <NFormItem label="必填星号位置" label-placement="top">
-                        <NRadioGroup
+                      <NFormItem label="必填星号位置">
+                        <NSelect
                           v-model:value={formConfig.requireMarkPlacement}
-                          size="small"
-                        >
-                          <NRadioButton label="left" value="left" />
-                          <NRadioButton label="right" value="right" />
-                          <NRadioButton
-                            label="right-hanging"
-                            value="right-hanging"
-                          />
-                        </NRadioGroup>
+                          placeholder="请选择"
+                          options={[
+                            { label: "left", value: "left" },
+                            { label: "right", value: "right" },
+                            { label: "right-hanging", value: "right-hanging" },
+                          ]}
+                        />
                       </NFormItem>
                       <NFormItem label="展示校验反馈">
-                        <NSwitch
-                          v-model:value={formConfig.showFeedback}
-                          size="small"
-                        />
+                        <NSwitch v-model:value={formConfig.showFeedback} />
                       </NFormItem>
                       <NFormItem label="尺寸">
                         <NSelect
                           v-model:value={formConfig.size}
-                          size="small"
                           placeholder="请选择"
                           options={[
                             { label: "large", value: "large" },

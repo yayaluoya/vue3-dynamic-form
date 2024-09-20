@@ -4,7 +4,12 @@ import { type TFormConfig } from "../config/getFormConfig";
 import "../style/controls.scss";
 import { FormItemCon } from "../com/FormItemCon";
 import type { JSX } from "vue/jsx-runtime";
-import { NCollapseItem, NFormItem, type FormItemProps } from "naive-ui";
+import {
+  NCollapseItem,
+  NFormItem,
+  NSwitch,
+  type FormItemProps,
+} from "naive-ui";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 15);
@@ -36,7 +41,6 @@ export interface IConRightReterItemOp {
     | {
         label?: string | JSX.Element;
         editor?: JSX.Element;
-        labelPlacement?: FormItemProps["labelPlacement"];
       }
     | undefined
   )[];
@@ -339,15 +343,18 @@ export class BaseCon {
           {_.childs &&
             _.childs.filter(Boolean).map((__, j) => {
               let { editor, ...props } = __!;
-              return props.label ? (
-                <NFormItem key={j} label-placement={props.labelPlacement}>
+              return (
+                <NFormItem
+                  key={j}
+                  show-feedback={!!editor}
+                  label-placement={props.label ? "left" : "top"}
+                  show-label={!!props.label}
+                >
                   {{
                     label: () => props.label,
                     default: () => editor,
                   }}
                 </NFormItem>
-              ) : (
-                editor
               );
             })}
         </NCollapseItem>
@@ -376,15 +383,7 @@ export class BaseCon {
         childs: [
           {
             label: "是否隐藏",
-            editor: (
-              <el-switch
-                size="small"
-                model-value={this.hide}
-                onChange={(v: any) => {
-                  this.hide = v;
-                }}
-              ></el-switch>
-            ),
+            editor: <NSwitch v-model:value={this.hide} />,
           },
         ],
       },

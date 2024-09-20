@@ -8,6 +8,15 @@ import {
   type IConRightReterItemOp,
 } from "./BaseCon";
 import { NonForm } from "./NonForm";
+import {
+  NButton,
+  NFlex,
+  NGrid,
+  NGridItem,
+  NIcon,
+  NInputNumber,
+} from "naive-ui";
+import { RemoveCircle } from "@vicons/ionicons5";
 
 /**
  * 栅格列
@@ -25,17 +34,11 @@ class GridCol extends NonForm {
     span: 24,
     /** 栅格左侧的间隔格数 */
     offset: 0,
-    /** 栅格向右移动格数 */
-    push: 0,
-    /** 栅格向左移动格数 */
-    pull: 0,
   };
 
-  setCol(span?: number, offset?: number, push?: number, pull?: number) {
+  setCol(span?: number, offset?: number) {
     typeof span != "undefined" && (this.colProps.span = span);
     typeof offset != "undefined" && (this.colProps.offset = offset);
-    typeof push != "undefined" && (this.colProps.push = push);
-    typeof pull != "undefined" && (this.colProps.pull = pull);
     return this;
   }
 
@@ -51,7 +54,7 @@ class GridCol extends NonForm {
       return undefined;
     }
     return (
-      <el-col
+      <NGridItem
         class={[
           formData ? "" : "controller",
           "controls__ grid-col",
@@ -61,12 +64,6 @@ class GridCol extends NonForm {
         key={this.renderKey}
         span={this.colProps.span}
         offset={this.colProps.offset}
-        push={this.colProps.push}
-        pull={this.colProps.pull}
-        onClick={(e: Event) => {
-          e.stopPropagation();
-          ctx.emit("activateConF", this);
-        }}
       >
         {activateCon?.key == this.key
           ? [
@@ -92,7 +89,13 @@ class GridCol extends NonForm {
               </div>,
             ]
           : null}
-        <div class="content">
+        <div
+          class="content"
+          onClick={(e: Event) => {
+            e.stopPropagation();
+            ctx.emit("activateConF", this);
+          }}
+        >
           {formData ? (
             this.childs.map((con) => {
               return (
@@ -127,7 +130,7 @@ class GridCol extends NonForm {
             />
           )}
         </div>
-      </el-col>
+      </NGridItem>
     );
   }
 
@@ -194,34 +197,6 @@ class GridCol extends NonForm {
           />
         ),
       },
-      {
-        label: "右移格数",
-        editor: (
-          <el-input-number
-            size="small"
-            model-value={this.colProps.push}
-            min={0}
-            max={24}
-            onChange={(_: any) => {
-              this.colProps.push = _;
-            }}
-          />
-        ),
-      },
-      {
-        label: "左移格数",
-        editor: (
-          <el-input-number
-            size="small"
-            model-value={this.colProps.pull}
-            min={0}
-            max={24}
-            onChange={(_: any) => {
-              this.colProps.pull = _;
-            }}
-          />
-        ),
-      },
     ];
     _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
@@ -239,13 +214,10 @@ export class Grid extends NonForm {
   /** 单例对象 */
   static I = new Grid();
 
-  rowProps = {
-    /** 栅格间隔 */
-    gutter: 0,
-    /** flex 布局下的水平排列方式 */
-    justify: "start",
-    /** flex 布局下的垂直排列方式 */
-    align: "top",
+  props = {
+    cols: 24,
+    xGap: 0,
+    yGap: 0,
   };
 
   list = [new GridCol().setCol(12), new GridCol().setCol(12)];
@@ -279,15 +251,15 @@ export class Grid extends NonForm {
 
   renderRaw(op: IConRenderOp) {
     return (
-      <el-row
+      <NGrid
         class={[
           "controls__ grid",
           op.activateCon?.key == this.key ? "" : "border",
           op.formData ? "form-render" : "",
         ].join(" ")}
-        gutter={this.rowProps.gutter}
-        justify={this.rowProps.justify}
-        align={this.rowProps.align}
+        cols={this.props.cols}
+        xGap={this.props.xGap}
+        yGap={this.props.yGap}
       >
         {this.list.map((_) => {
           return _.render({
@@ -295,7 +267,7 @@ export class Grid extends NonForm {
             parent: this,
           });
         })}
-      </el-row>
+      </NGrid>
     );
   }
 
@@ -303,90 +275,54 @@ export class Grid extends NonForm {
     let _ = super.getRight(op);
     let add: IConRightReterItemOp["childs"] = [
       {
-        label: "栅格间隔",
-        editor: (
-          <el-input-number
-            size="small"
-            model-value={this.rowProps.gutter}
-            min={0}
-            onChange={(_: any) => {
-              this.rowProps.gutter = _;
-            }}
-          />
-        ),
+        label: "栅格数量",
+        editor: <NInputNumber v-model:value={this.props.cols} min={0} />,
       },
       {
-        label: "水平排列方式",
-        editor: (
-          <el-select
-            model-value={this.rowProps.justify}
-            size="small"
-            onChange={(_: any) => {
-              this.rowProps.justify = _;
-            }}
-            placeholder="请选择"
-          >
-            <el-option label="start" value="start" />
-            <el-option label="end" value="end" />
-            <el-option label="center" value="center" />
-            <el-option label="space-around" value="space-around" />
-            <el-option label="space-between" value="space-between" />
-            <el-option label="space-evenly" value="space-evenly" />
-          </el-select>
-        ),
+        label: "横向间隔",
+        editor: <NInputNumber v-model:value={this.props.xGap} min={0} />,
       },
       {
-        label: "垂直排列方式",
-        editor: (
-          <el-select
-            model-value={this.rowProps.align}
-            size="small"
-            onChange={(_: any) => {
-              this.rowProps.align = _;
-            }}
-            placeholder="请选择"
-          >
-            <el-option label="top" value="top" />
-            <el-option label="middle" value="middle" />
-            <el-option label="bottom" value="bottom" />
-          </el-select>
-        ),
+        label: "纵向间隔",
+        editor: <NInputNumber v-model:value={this.props.yGap} min={0} />,
       },
     ];
     let push: IConRightReterItemOp["childs"] = [
       {
-        label: "当前栅格列：",
+        label: "当前栅格列",
       },
       {
         editor: (
-          <div class="controls__ grid-right">
+          <NFlex vertical>
             {this.list.map((_, i) => {
               return (
-                <div class="i">
-                  <span>栅格{i + 1}</span>
-                  <div>
-                    <el-input-number
-                      size="small"
-                      model-value={_.colProps.span}
-                      min={1}
-                      max={24}
-                      onChange={(__: any) => {
-                        _.colProps.span = __;
-                      }}
-                    />
-                    <el-icon
-                      onClick={() => {
-                        this.list.splice(i, 1);
-                      }}
-                    >
-                      <CircleClose />
-                    </el-icon>
-                  </div>
-                </div>
+                <NGrid xGap={5}>
+                  <NGridItem span={6}>栅格{i + 1}</NGridItem>
+                  <NGridItem span={18}>
+                    <NFlex wrap={false}>
+                      <NInputNumber
+                        v-model:value={_.colProps.span}
+                        min={1}
+                        max={24}
+                      />
+                      <NButton
+                        quaternary
+                        circle
+                        disabled={this.list.length <= 1}
+                        onClick={() => {
+                          this.list.splice(i, 1);
+                        }}
+                      >
+                        <NIcon size={20}>
+                          <RemoveCircle />
+                        </NIcon>
+                      </NButton>
+                    </NFlex>
+                  </NGridItem>
+                </NGrid>
               );
             })}
-            <el-button
-              plain
+            <NButton
               size="small"
               type="primary"
               onClick={() => {
@@ -394,8 +330,8 @@ export class Grid extends NonForm {
               }}
             >
               增加栅格
-            </el-button>
-          </div>
+            </NButton>
+          </NFlex>
         ),
       },
     ];

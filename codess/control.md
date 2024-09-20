@@ -16,14 +16,14 @@ export class $0 extends BaseCon {
 
   formDefaultValue = "";
 
-  renderRaw({ formData }) {
+  renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return <div></div>;
   }
 
-  getRight(op, hasEditor = true) {
-    let _ = super.getRight(...arguments);
-    hasEditor && _.find((_) => _.title == "常用属性").childs.unshift(...[]);
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    _.find((_) => _.title == "常用属性")?.childs!.unshift(...[]);
     return _;
   }
 }
@@ -51,9 +51,9 @@ export class $0 extends NonForm {
     return <div></div>;
   }
 
-  getRight(op, hasEditor = true) {
-    let _ = super.getRight(...arguments);
-    hasEditor && _.find((_) => _.title == "常用属性").childs.unshift(...[]);
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    _.find((_) => _.title == "常用属性")?.childs!.unshift(...[]);
     return _;
   }
 }

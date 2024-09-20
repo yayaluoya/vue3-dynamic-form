@@ -19,14 +19,14 @@
             "",
             "  formDefaultValue = \"\";",
             "",
-            "  renderRaw({ formData }) {",
+            "  renderRaw({ formData }: IConRenderOp) {",
             "    let ref = this.getFormValueRef(formData, this.formDefaultValue);",
             "    return <div></div>;",
             "  }",
             "",
-            "  getRight(op, hasEditor = true) {",
-            "    let _ = super.getRight(...arguments);",
-            "    hasEditor && _.find((_) => _.title == \"常用属性\").childs.unshift(...[]);",
+            "  getRight(op: IConRightRenderOp) {",
+            "    let _ = super.getRight(op);",
+            "    _.find((_) => _.title == \"常用属性\")?.childs!.unshift(...[]);",
             "    return _;",
             "  }",
             "}"
@@ -54,169 +54,44 @@
             "    return <div></div>;",
             "  }",
             "",
-            "  getRight(op, hasEditor = true) {",
-            "    let _ = super.getRight(...arguments);",
-            "    hasEditor && _.find((_) => _.title == \"常用属性\").childs.unshift(...[]);",
+            "  getRight(op: IConRightRenderOp) {",
+            "    let _ = super.getRight(op);",
+            "    _.find((_) => _.title == \"常用属性\")?.childs!.unshift(...[]);",
             "    return _;",
             "  }",
             "}"
         ],
         "description": "非表单控件"
     },
-    "jsx/el-checkbox-group javascriptreact": {
+    "jsx/n-input javascriptreact": {
         "scope": "javascriptreact",
-        "prefix": "jsx>el-checkbox-group",
+        "prefix": "jsx>n-input",
         "body": [
-            "<el-checkbox-group",
-            "  size=\"small\"",
-            "  model-value={$0}",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            ">",
-            "  <el-checkbox label={\"\"} value={\"\"} />",
-            "</el-checkbox-group>"
+            "<NInput v-model:value={$0} />"
         ],
         "description": ""
     },
-    "jsx/el-checkbox-group-button javascriptreact": {
+    "jsx/n-input-number javascriptreact": {
         "scope": "javascriptreact",
-        "prefix": "jsx>el-checkbox-group-button",
+        "prefix": "jsx>n-input-number",
         "body": [
-            "<el-checkbox-group",
-            "  size=\"small\"",
-            "  model-value={$0}",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            ">",
-            "  <el-checkbox-button label={\"\"} value={\"\"} />",
-            "</el-checkbox-group>"
+            "<NInputNumber v-model:value=\"value\" />"
         ],
         "description": ""
     },
-    "jsx/el-color-picker javascriptreact": {
+    "jsx/n-input-textarea javascriptreact": {
         "scope": "javascriptreact",
-        "prefix": "jsx>el-color-picker",
+        "prefix": "jsx>n-input-textarea",
         "body": [
-            "<el-color-picker",
-            "  size=\"small\"",
-            "  model-value={$0}",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            "  predefine={predefineColors}",
-            "/>"
-        ],
-        "description": "注意 predefineColors 要导入一下，不然找不到"
-    },
-    "jsx/el-input javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>el-input",
-        "body": [
-            "<el-input",
-            "  size=\"small\"",
-            "  placeholder=\"\"",
-            "  model-value={$0}",
-            "  onInput={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            "/>"
+            "<NInput v-model:value={$0} type=\"textarea\" />"
         ],
         "description": ""
     },
-    "jsx/el-input-number javascriptreact": {
+    "jsx/n-switch javascriptreact": {
         "scope": "javascriptreact",
-        "prefix": "jsx>el-input-number",
+        "prefix": "jsx>n-switch",
         "body": [
-            "<el-input-number",
-            "  size=\"small\"",
-            "  model-value={$0}",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            "/>"
-        ],
-        "description": ""
-    },
-    "jsx/el-input-textarea javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>el-input-textarea",
-        "body": [
-            "<el-input",
-            "  type=\"textarea\"",
-            "  size=\"small\"",
-            "  rows={2}",
-            "  placeholder=\"\"",
-            "  model-value={$0}",
-            "  onInput={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            "/>"
-        ],
-        "description": ""
-    },
-    "jsx/el-radio-group javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>el-radio-group",
-        "body": [
-            "<el-radio-group",
-            "  size=\"small\"",
-            "  model-value={$0}",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            ">",
-            "  <el-radio label={\"\"} value={\"\"} />",
-            "</el-radio-group>"
-        ],
-        "description": ""
-    },
-    "jsx/el-radio-group-button javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>el-radio-group-button",
-        "body": [
-            "<el-radio-group",
-            "  size=\"small\"",
-            "  model-value={$0}",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            ">",
-            "  <el-radio-button label={\"\"} value={\"\"} />",
-            "</el-radio-group>"
-        ],
-        "description": ""
-    },
-    "jsx/el-select javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>el-select",
-        "body": [
-            "<el-select",
-            "  model-value={$0}",
-            "  size=\"small\"",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            "  placeholder=\"请选择\"",
-            "  clearable",
-            ">",
-            "  <el-option label={\"\"} value={\"\"} />",
-            "</el-select>"
-        ],
-        "description": ""
-    },
-    "jsx/el-switch javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>el-switch",
-        "body": [
-            "<el-switch",
-            "  size=\"small\"",
-            "  model-value={$0}",
-            "  onChange={(v) => {",
-            "    $0 = v;",
-            "  }}",
-            "></el-switch>"
+            "<NSwitch v-model:value={$0} />"
         ],
         "description": ""
     },
