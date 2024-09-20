@@ -57,6 +57,7 @@ import {
   NDialog,
   NDialogProvider,
   NMessageProvider,
+  useThemeVars,
 } from "naive-ui";
 import IndexDialog, { type IJSONH, type IRenderOp } from "./indexDialog";
 
@@ -108,6 +109,7 @@ export default defineComponent({
     const DialogI = ref<InstanceType<typeof IndexDialog>>();
     const leftTabsActiveNames = ref<"con" | "template">("con");
     const renderOp = reactive<IRenderOp>({});
+    const themeVars = useThemeVars();
     /** 拖拽中 */
     const draggableLoading = ref(false);
     /** 控件列表 */
@@ -226,6 +228,7 @@ export default defineComponent({
 
     return {
       log: console.log,
+      themeVars,
       rootElRef,
       leftTabsActiveNames,
       ConsCollapseActiveNames,
@@ -252,6 +255,9 @@ export default defineComponent({
     :ref="(_: any)=>{ 
       rootElRef= _;
     }"
+    :style="`
+    background-color: ${themeVars.baseColor}
+    `"
   >
     <div class="a">
       <NTabs
@@ -303,6 +309,11 @@ export default defineComponent({
                         :class="{
                           on: Con.ConType === activateCon?.conType,
                         }"
+                        :style="`
+                          --hover-color: ${themeVars.primaryColorHover};
+                          background-color: ${themeVars.baseColor};
+                          border: 1px solid ${themeVars.borderColor};
+                        `"
                       >
                         <span>{{ Con.ConName }}</span>
                         <div class="draggable-show-item">
@@ -322,7 +333,12 @@ export default defineComponent({
       </NTabs>
     </div>
     <div class="b">
-      <div class="top">
+      <div
+        class="top"
+        :style="`
+          border-bottom: 1px solid ${themeVars.dividerColor};
+        `"
+      >
         <div></div>
         <NSpace>
           <NButton
@@ -361,8 +377,18 @@ export default defineComponent({
           </NButton>
         </NSpace>
       </div>
-      <div class="content">
-        <span class="null" v-if="cons.length <= 0"
+      <div
+        class="content"
+        :style="`
+          background-color: ${themeVars.dividerColor}
+        `"
+      >
+        <span
+          class="null"
+          v-if="cons.length <= 0"
+          :style="`
+          color: ${themeVars.textColor3}
+        `"
           >请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</span
         >
         <NScrollbar style="height: calc(var(--height) - 42px)">
@@ -380,6 +406,10 @@ export default defineComponent({
             <div class="draggable-con-div">
               <DraggableCon
                 class="draggable-con"
+                :style="`
+                  --primary-color: ${themeVars.primaryColor};
+                  background-color: ${themeVars.baseColor};
+                `"
                 :class="{
                   draggableLoading: draggableLoading,
                 }"
@@ -432,7 +462,6 @@ export default defineComponent({
   > .b,
   > .c {
     box-sizing: border-box;
-    background: #ffffff;
     height: var(--height);
   }
 
@@ -454,8 +483,6 @@ export default defineComponent({
         align-items: center;
         box-sizing: border-box;
         padding: 4px;
-        background-color: white;
-        border: 1px solid #dddddd;
         border-radius: 4px;
         margin-bottom: 5px;
         cursor: move;
@@ -464,10 +491,9 @@ export default defineComponent({
         }
         &.on,
         &:hover {
-          border-color: #1890ff;
-          background-color: #eff2f5;
+          border-color: var(--hover-color) !important;
           > span {
-            color: #1890ff;
+            color: var(--hover-color);
           }
         }
         > span {
@@ -514,11 +540,9 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      background-color: #f3f3f3;
 
       > .null {
         position: absolute;
-        color: #999;
         font-size: 18px;
         pointer-events: none;
         z-index: 2;
@@ -527,10 +551,9 @@ export default defineComponent({
         padding: 10px;
         width: 100%;
         > .draggable-con {
-          background-color: white;
           min-height: calc(var(--height) - 40px - 25px);
           &.draggableLoading {
-            box-shadow: 0px 0px 4px #409eff;
+            box-shadow: 0px 0px 4px var(--primary-color);
           }
         }
       }
