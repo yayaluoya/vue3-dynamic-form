@@ -94,12 +94,12 @@ export default defineComponent({
                     default-expanded-names={formCollapseActiveNames.value}
                   >
                     <NCollapseItem title="基本属性" name="1">
-                      <NFormItem label="行内表单">
+                      {/* <NFormItem label="行内表单">
                         <NSwitch
                           v-model:value={formConfig.inline}
                           size="small"
                         />
-                      </NFormItem>
+                      </NFormItem> */}
                       <NFormItem label="标签宽度">
                         <NInput
                           v-model:value={formConfig.labelWidth}

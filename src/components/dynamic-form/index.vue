@@ -36,8 +36,6 @@ import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
 import CodeEditInput from "./com/codeEditInput.vue";
 import { ConT } from "./ConT";
-import { Clipboard } from "./tool/web/Clipboard";
-import { FileT } from "./tool/web/FileT";
 import { ObjectUtils } from "./tool/obj/ObjectUtils";
 import Render from "./render.vue";
 import type { TFormConfig } from "./config/getFormConfig";
@@ -56,7 +54,11 @@ import {
   NScrollbar,
   NButton,
   NSpace,
+  NDialog,
+  NDialogProvider,
+  NMessageProvider,
 } from "naive-ui";
+import IndexDialog, { type IJSONH, type IRenderOp } from "./indexDialog";
 
 export default defineComponent({
   components: {
@@ -80,6 +82,10 @@ export default defineComponent({
     Render,
     NButton,
     NSpace,
+    NDialog,
+    IndexDialog,
+    NDialogProvider: NDialogProvider as any,
+    NMessageProvider: NMessageProvider as any,
   },
   props: {
     cons: {
@@ -99,20 +105,9 @@ export default defineComponent({
   emits: ["update:cons"],
   setup(props, ctx) {
     const rootElRef = ref<HTMLDivElement>();
-    const bScrollbarRef = ref();
-    const renderEl = ref();
+    const DialogI = ref<InstanceType<typeof IndexDialog>>();
     const leftTabsActiveNames = ref<"con" | "template">("con");
-    const renderOp = reactive<{
-      show: boolean;
-      cons?: BaseCon[];
-      formData?: Record<string, any>;
-      formConfig?: TFormConfig;
-    }>({
-      show: false,
-      cons: undefined,
-      formData: undefined,
-      formConfig: undefined,
-    });
+    const renderOp = reactive<IRenderOp>({});
     /** 拖拽中 */
     const draggableLoading = ref(false);
     /** 控件列表 */
@@ -151,13 +146,10 @@ export default defineComponent({
 
     /** 当前激活的控件 */
     const activateCon = ref<BaseCon>();
-    /** 鼠标是否在控件内 */
-    const mouseOn = ref(false);
 
     /** Json导入导出处理 */
-    const JSONH = reactive({
+    const JSONH = reactive<IJSONH>({
       type: "",
-      show: false,
       title: "",
       jsonText: "",
     });
@@ -174,19 +166,15 @@ export default defineComponent({
 
     /** 预览 */
     function preview() {
-      renderOp.show = true;
       renderOp.cons = ConT.toCons(ConT.toConfigs(props.cons), props.extendCons);
-      renderOp.formData = ConT.getFromData(renderOp.cons);
+      renderOp.formData = ConT.getFromData(renderOp.cons as any);
       renderOp.formConfig = ObjectUtils.clone2(props.formConfig);
-      nextTick(() => {
-        renderEl.value.restoreValidation();
-      });
+      DialogI.value?.preview(renderOp as any);
     }
 
     /** 导入json */
     function importJSON() {
       JSONH.type = "import";
-      JSONH.show = true;
       JSONH.title = "导入JSON";
       JSONH.jsonText = JSON.stringify(
         {
@@ -196,11 +184,22 @@ export default defineComponent({
         undefined,
         2
       );
+      DialogI.value?.importExport(JSONH, (jsonText: string) => {
+        let { formConfig, cons } = JSON.parse(jsonText) as {
+          formConfig: TFormConfig;
+          cons: BaseCon[];
+        };
+        updateCons(ConT.toCons(cons, props.extendCons));
+        for (let i in formConfig) {
+          (props.formConfig as any)[i] = (formConfig as any)[i];
+        }
+        activateCon.value = undefined;
+      });
     }
+
     /** 导出json */
     function exportJSON() {
       JSONH.type = "export";
-      JSONH.show = true;
       JSONH.title = "导出JSON";
       JSONH.jsonText = JSON.stringify(
         {
@@ -210,44 +209,7 @@ export default defineComponent({
         undefined,
         2
       );
-    }
-
-    function importJSONH() {
-      try {
-        let { formConfig, cons } = JSON.parse(JSONH.jsonText) as {
-          formConfig: TFormConfig;
-          cons: BaseCon[];
-        };
-        updateCons(ConT.toCons(cons, props.extendCons));
-        for (let i in formConfig) {
-          (props.formConfig as any)[i] = (formConfig as any)[i];
-        }
-        activateCon.value = undefined;
-        JSONH.show = false;
-      } catch (e) {}
-    }
-    function copy() {
-      Clipboard.set(JSONH.jsonText)
-        .then(() => {
-          JSONH.show = false;
-        })
-        .catch((e) => {});
-    }
-    function saveToFile() {
-      FileT.download(
-        URL.createObjectURL(new Blob([JSONH.jsonText])),
-        `vue3-dynamic-form-${JSONH.type}.json`
-      );
-      JSONH.show = false;
-    }
-
-    function getFromData() {
-      renderEl.value.validate().then(() => {
-        JSONH.type = "getFromData";
-        JSONH.show = true;
-        JSONH.title = "表单数据";
-        JSONH.jsonText = JSON.stringify(renderOp.formData, undefined, 2);
-      });
+      DialogI.value?.importExport(JSONH);
     }
 
     function getContentHeight() {
@@ -265,33 +227,32 @@ export default defineComponent({
     return {
       log: console.log,
       rootElRef,
-      bScrollbarRef,
       leftTabsActiveNames,
       ConsCollapseActiveNames,
       draggableLoading,
       draggableC,
       Cons,
       activateCon,
-      mouseOn,
       cloneComponent,
       updateCons,
       JSONH,
       importJSON,
       exportJSON,
-      importJSONH,
-      copy,
-      saveToFile,
       preview,
       renderOp,
-      getFromData,
-      renderEl,
+      DialogI,
     };
   },
 });
 </script>
 
 <template>
-  <div class="dynamic-form" ref="rootElRef">
+  <div
+    class="dynamic-form"
+    :ref="(_: any)=>{ 
+      rootElRef= _;
+    }"
+  >
     <div class="a">
       <NTabs
         v-model:value="leftTabsActiveNames"
@@ -367,6 +328,7 @@ export default defineComponent({
           <NButton
             style="margin-right: 10px"
             type="primary"
+            :disabled="cons.length <= 0"
             text
             @click="updateCons([])"
           >
@@ -375,6 +337,7 @@ export default defineComponent({
           <NButton
             style="margin-right: 10px"
             type="primary"
+            :disabled="cons.length <= 0"
             text
             @click="preview()"
           >
@@ -398,21 +361,11 @@ export default defineComponent({
           </NButton>
         </NSpace>
       </div>
-      <div
-        class="content"
-        :class="{
-          draggableLoading: draggableLoading,
-        }"
-        @mouseover="mouseOn = true"
-        @mouseleave="mouseOn = false"
-      >
+      <div class="content">
         <span class="null" v-if="cons.length <= 0"
           >请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</span
         >
-        <NScrollbar
-          ref="bScrollbarRef"
-          style="height: calc(var(--height) - 42px)"
-        >
+        <NScrollbar style="height: calc(var(--height) - 42px)">
           <NForm
             :inline="formConfig.inline"
             :label-width="formConfig.labelWidth"
@@ -427,6 +380,9 @@ export default defineComponent({
             <div class="draggable-con-div">
               <DraggableCon
                 class="draggable-con"
+                :class="{
+                  draggableLoading: draggableLoading,
+                }"
                 :cons="cons"
                 :formConfig="formConfig"
                 :activateCon="activateCon"
@@ -449,48 +405,18 @@ export default defineComponent({
     <div class="c">
       <Right :cons="cons" :activateCon="activateCon" :formConfig="formConfig" />
     </div>
-    <el-dialog v-model="JSONH.show" :title="JSONH.title" width="800" draggable>
-      <CodeEditInput
-        :value="JSONH.jsonText"
-        @update:value="
-          (v) => {
-            JSONH.jsonText = v;
-          }
-        "
-        :options="{
-          lang: 'json',
-        }"
-      />
-      <template #footer>
-        <template v-if="JSONH.type == 'import'">
-          <el-button type="primary" @click="importJSONH()">导入</el-button>
-        </template>
-        <template v-if="JSONH.type == 'export' || JSONH.type == 'getFromData'">
-          <el-button type="primary" @click="copy()">复制</el-button>
-          <el-button type="primary" @click="saveToFile()"
-            >保存为文件 ({{
-              (JSONH.jsonText.length / 1024).toFixed(2)
-            }}kb)</el-button
-          >
-        </template>
-        <el-button @click="JSONH.show = false">关闭</el-button>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="renderOp.show" title="表单预览" width="900" draggable>
-      <NScrollbar style="max-height: 700px" wrap-class="scrollbar-wrapper">
-        <Render
-          ref="renderEl"
-          :cons="renderOp.cons!"
-          :formConfig="renderOp.formConfig!"
-          :formData="renderOp.formData!"
-        />
-      </NScrollbar>
-      <template #footer>
-        <el-button type="primary" @click="getFromData()"
-          >获取表单数据</el-button
+    <NMessageProvider>
+      <NDialogProvider>
+        <IndexDialog
+          :ref="
+            (_: any) => {
+              DialogI = _;
+            }
+          "
         >
-      </template>
-    </el-dialog>
+        </IndexDialog>
+      </NDialogProvider>
+    </NMessageProvider>
   </div>
 </template>
 
@@ -589,6 +515,7 @@ export default defineComponent({
       justify-content: center;
       box-sizing: border-box;
       background-color: #f3f3f3;
+
       > .null {
         position: absolute;
         color: #999;
@@ -598,9 +525,13 @@ export default defineComponent({
       }
       .draggable-con-div {
         padding: 10px;
+        width: 100%;
         > .draggable-con {
           background-color: white;
           min-height: calc(var(--height) - 40px - 25px);
+          &.draggableLoading {
+            box-shadow: 0px 0px 4px #409eff;
+          }
         }
       }
     }
