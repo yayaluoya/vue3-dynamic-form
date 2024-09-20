@@ -110,6 +110,7 @@ export default defineComponent({
     const leftTabsActiveNames = ref<"con" | "template">("con");
     const renderOp = reactive<IRenderOp>({});
     const themeVars = useThemeVars();
+    const rootHeight = ref(0);
     /** 拖拽中 */
     const draggableLoading = ref(false);
     /** 控件列表 */
@@ -215,8 +216,7 @@ export default defineComponent({
     }
 
     function getContentHeight() {
-      let rootHeight = rootElRef.value!.getBoundingClientRect().height;
-      rootElRef.value!.style.setProperty("--height", `${rootHeight}px`);
+      rootHeight.value = rootElRef.value!.getBoundingClientRect().height;
     }
     onMounted(() => {
       getContentHeight();
@@ -228,6 +228,7 @@ export default defineComponent({
 
     return {
       log: console.log,
+      rootHeight,
       themeVars,
       rootElRef,
       leftTabsActiveNames,
@@ -256,7 +257,15 @@ export default defineComponent({
       rootElRef= _;
     }"
     :style="`
-    background-color: ${themeVars.baseColor}
+    --height: ${rootHeight}px;
+    --primaryColor: ${themeVars.primaryColor};
+    --primaryColorHover: ${themeVars.primaryColorHover};
+    --borderColor: ${themeVars.borderColor};
+    --baseColor: ${themeVars.baseColor};
+    --dividerColor: ${themeVars.dividerColor};
+    --textColor1: ${themeVars.textColor1};
+    --textColor2: ${themeVars.textColor2};
+    --textColor3: ${themeVars.textColor3};
     `"
   >
     <div class="a">
@@ -309,11 +318,6 @@ export default defineComponent({
                         :class="{
                           on: Con.ConType === activateCon?.conType,
                         }"
-                        :style="`
-                          --hover-color: ${themeVars.primaryColorHover};
-                          background-color: ${themeVars.baseColor};
-                          border: 1px solid ${themeVars.borderColor};
-                        `"
                       >
                         <span>{{ Con.ConName }}</span>
                         <div class="draggable-show-item">
@@ -333,12 +337,7 @@ export default defineComponent({
       </NTabs>
     </div>
     <div class="b">
-      <div
-        class="top"
-        :style="`
-          border-bottom: 1px solid ${themeVars.dividerColor};
-        `"
-      >
+      <div class="top">
         <div></div>
         <NSpace>
           <NButton
@@ -377,18 +376,8 @@ export default defineComponent({
           </NButton>
         </NSpace>
       </div>
-      <div
-        class="content"
-        :style="`
-          background-color: ${themeVars.dividerColor}
-        `"
-      >
-        <span
-          class="null"
-          v-if="cons.length <= 0"
-          :style="`
-          color: ${themeVars.textColor3}
-        `"
+      <div class="content">
+        <span class="null" v-if="cons.length <= 0"
           >请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</span
         >
         <NScrollbar style="height: calc(var(--height) - 42px)">
@@ -406,10 +395,6 @@ export default defineComponent({
             <div class="draggable-con-div">
               <DraggableCon
                 class="draggable-con"
-                :style="`
-                  --primary-color: ${themeVars.primaryColor};
-                  background-color: ${themeVars.baseColor};
-                `"
                 :class="{
                   draggableLoading: draggableLoading,
                 }"
@@ -457,6 +442,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
+  background-color: var(--baseColor);
 
   > .a,
   > .b,
@@ -486,14 +472,16 @@ export default defineComponent({
         border-radius: 4px;
         margin-bottom: 5px;
         cursor: move;
+        background-color: var(--baseColor);
+        border: 1px solid var(--borderColor);
         > .draggable-show-item {
           display: none;
         }
         &.on,
         &:hover {
-          border-color: var(--hover-color) !important;
+          border-color: var(--primaryColorHover) !important;
           > span {
-            color: var(--hover-color);
+            color: var(--primaryColorHover);
           }
         }
         > span {
@@ -520,6 +508,7 @@ export default defineComponent({
       justify-content: space-between;
       padding: 0 10px;
       box-sizing: border-box;
+      border-bottom: 1px solid var(--dividerColor);
       > div {
         display: flex;
         flex-direction: row;
@@ -539,20 +528,24 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
+      background-color: var(--dividerColor);
 
       > .null {
         position: absolute;
         font-size: 18px;
         pointer-events: none;
         z-index: 2;
+        color: var(--textColor3);
       }
       .draggable-con-div {
         padding: 10px;
         width: 100%;
+        background-color: var(--dividerColor);
         > .draggable-con {
-          min-height: calc(var(--height) - 40px - 25px);
+          min-height: calc(var(--height) - 40px - 22px);
+          background-color: var(--baseColor);
           &.draggableLoading {
-            box-shadow: 0px 0px 4px var(--primary-color);
+            box-shadow: 0px 0px 4px var(--primaryColor);
           }
         }
       }

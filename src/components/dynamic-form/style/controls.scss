@@ -3,7 +3,7 @@
   border: 2px solid transparent;
 
   &.on {
-    border: 2px solid #1890ff;
+    border: 2px solid var(--primaryColorHover);
   }
 
   >.drag-handler,
@@ -17,7 +17,7 @@
     z-index: 2;
 
     >.el-icon {
-      color: white;
+      color: var(--baseColor);
       margin-right: 4px;
     }
 
@@ -29,29 +29,31 @@
   >.drag-handler {
     top: 0;
     left: 0;
-    background: rgba(64, 158, 255, 0.6);
+    background: var(--primaryColorHover);
+    opacity: .6;
     cursor: move;
 
     &:hover {
-      background: #409eff;
+      opacity: 1;
     }
 
     >span {
       font-size: 12px;
       font-style: normal;
-      color: #fff;
+      color: var(--baseColor);
     }
   }
 
   >.con-name {
     top: 0;
     left: 0;
-    background: #409eff;
+    background: var(--primaryColorHover);
+    opacity: .7;
 
     >span {
       font-size: 12px;
       font-style: normal;
-      color: #fff;
+      color: var(--baseColor);
     }
   }
 
@@ -60,7 +62,13 @@
     bottom: 0;
     right: 0;
     cursor: pointer;
-    background: #409eff;
+    background: var(--primaryColorHover);
+    opacity: .6;
+
+    &:hover {
+      opacity: 1;
+    }
+
   }
 
   >.content {
