@@ -503,7 +503,6 @@ export default defineComponent({
           font-size: 13px;
           line-height: 20px;
           /* identical to box height */
-          color: #7a7a86;
         }
       }
     }
