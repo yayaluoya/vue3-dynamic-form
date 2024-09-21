@@ -57,7 +57,10 @@ export default defineComponent({
     "
   >
     <div class="home">
-      <NCard size="small">
+      <NCard
+        size="small"
+        style="border-radius: 0px; border-left: none; border-right: none"
+      >
         <NFlex justify="space-between" align="center">
           <NFlex align="center"
             ><h3>vue3-dynamic-form</h3>
