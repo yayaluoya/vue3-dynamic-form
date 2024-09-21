@@ -61,7 +61,6 @@ export class ColorPicker extends BaseCon {
       },
       {
         label: "预定义颜色",
-        labelPlacement: "top",
         editor: (
           <div class="controls__ color-picker">
             <div class="list">

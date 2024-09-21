@@ -73,7 +73,7 @@ export default defineComponent({
                   size="small"
                 >
                   <NCollapse
-                    default-expanded-names={conCollapseActiveNames.value}
+                    v-model:expanded-names={conCollapseActiveNames.value}
                   >
                     {activateCon?.renderRight({
                       ctx,
@@ -93,7 +93,7 @@ export default defineComponent({
                   size="small"
                 >
                   <NCollapse
-                    default-expanded-names={formCollapseActiveNames.value}
+                    v-model:expanded-names={formCollapseActiveNames.value}
                   >
                     <NCollapseItem title="基本属性" name="1">
                       <NFormItem label="标签宽度">

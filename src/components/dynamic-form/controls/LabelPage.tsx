@@ -211,9 +211,9 @@ export class LabelPage extends NonForm {
                           </NIcon>
                           <NButton
                             size="small"
-                            class="remove"
                             quaternary
                             circle
+                            disabled={this.tabs.length <= 1}
                             onClick={() => {
                               let i = this.tabs.findIndex(
                                 (__) => _.key == __.key

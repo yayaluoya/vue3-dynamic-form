@@ -8,8 +8,21 @@ import {
   type IConRightRenderOp,
   type IConRightReterItemOp,
 } from "./BaseCon";
-import "../style/collapse.scss";
 import { NonForm } from "./NonForm";
+import {
+  NButton,
+  NCollapse,
+  NCollapseItem,
+  NFlex,
+  NGrid,
+  NGridItem,
+  NIcon,
+  NInput,
+  NSelect,
+  NSwitch,
+  type CollapseProps,
+} from "naive-ui";
+import { Move, RemoveCircle } from "@vicons/ionicons5";
 
 /**
  * 折叠面板
@@ -34,9 +47,9 @@ export class Collapse extends NonForm {
     },
   ];
   activeNames = [0];
-  collapseProps = {
-    /** 是否手风琴模式 */
+  collapseProps: CollapseProps = {
     accordion: false,
+    arrowPlacement: "left",
   };
 
   getChild() {
@@ -55,55 +68,51 @@ export class Collapse extends NonForm {
 
   renderRaw({ ctx, formConfig, cons, activateCon, formData }: IConRenderOp) {
     return (
-      <div class="controls__ collapse">
-        <el-collapse
-          model-value={this.activeNames}
-          onChange={(_: any) => {
-            this.activeNames = _;
-          }}
-          accordion={this.collapseProps.accordion}
-        >
-          {this.collapses.map((_, i) => {
-            return (
-              <el-collapse-item key={_.key} title={_.title} name={i}>
-                {formData ? (
-                  _.childs.map((con) => {
-                    return (
-                      <Item
-                        key={con.key}
-                        parent={this}
-                        formConfig={formConfig}
-                        formData={formData}
-                        cons={cons}
-                        con={con}
-                        formRender
-                      />
-                    );
-                  })
-                ) : (
-                  <DraggableCon
-                    parent={this}
-                    cons={_.childs}
-                    formConfig={formConfig}
-                    activateCon={activateCon}
-                    onUpdate:cons={(__) => {
-                      _.childs = __;
-                    }}
-                    onUpdate:activateCon={(_) => {
-                      ctx.emit("activateConF", _);
-                    }}
-                    style={
-                      _.childs.length <= 0
-                        ? "min-height: 80px;"
-                        : "min-height: 20px;"
-                    }
-                  />
-                )}
-              </el-collapse-item>
-            );
-          })}
-        </el-collapse>
-      </div>
+      <NCollapse
+        v-model:expanded-names={this.activeNames}
+        accordion={this.collapseProps.accordion}
+        arrowPlacement={this.collapseProps.arrowPlacement}
+      >
+        {this.collapses.map((_, i) => {
+          return (
+            <NCollapseItem key={_.key} title={_.title} name={i}>
+              {formData ? (
+                _.childs.map((con) => {
+                  return (
+                    <Item
+                      key={con.key}
+                      parent={this}
+                      formConfig={formConfig}
+                      formData={formData}
+                      cons={cons}
+                      con={con}
+                      formRender
+                    />
+                  );
+                })
+              ) : (
+                <DraggableCon
+                  parent={this}
+                  cons={_.childs}
+                  formConfig={formConfig}
+                  activateCon={activateCon}
+                  onUpdate:cons={(__) => {
+                    _.childs = __;
+                  }}
+                  onUpdate:activateCon={(_) => {
+                    ctx.emit("activateConF", _);
+                  }}
+                  style={
+                    _.childs.length <= 0
+                      ? "min-height: 80px;"
+                      : "min-height: 20px;"
+                  }
+                />
+              )}
+            </NCollapseItem>
+          );
+        })}
+      </NCollapse>
     );
   }
 
@@ -112,22 +121,27 @@ export class Collapse extends NonForm {
     let add: IConRightReterItemOp["childs"] = [
       {
         label: "手风琴模式",
+        editor: <NSwitch v-model:value={this.collapseProps.accordion} />,
+      },
+      {
+        label: "",
         editor: (
-          <el-switch
-            size="small"
-            model-value={this.collapseProps.accordion}
-            onChange={(v: any) => {
-              this.collapseProps.accordion = v;
-            }}
-          ></el-switch>
+          <NSelect
+            v-model:value={this.collapseProps.arrowPlacement}
+            placeholder="请选择"
+            options={[
+              { label: "left", value: "left" },
+              { label: "right", value: "right" },
+            ]}
+          />
         ),
       },
       {
-        label: "选项设置：",
+        label: "选项设置",
       },
       {
         editor: (
-          <div class="controls__ collapse-right">
+          <NFlex vertical style={"width: 100%"}>
             <Draggable
               class="draggable"
               modelValue={this.collapses}
@@ -145,38 +159,43 @@ export class Collapse extends NonForm {
                   element: getArrayItemType<Collapse["collapses"]>;
                 }) => {
                   return (
-                    <div class="i">
-                      <el-input
-                        size="small"
-                        model-value={_.title}
-                        onInput={(v: any) => {
-                          _.title = v;
-                        }}
-                      />
-                      <el-icon class="drag-handler">
-                        <Rank />
-                      </el-icon>
-                      <el-icon
-                        class="remove"
-                        onClick={() => {
-                          let i = this.collapses.findIndex(
-                            (__) => _.key == __.key
-                          );
-                          if (i >= 0) {
-                            this.collapses.splice(i, 1);
-                          }
-                        }}
-                      >
-                        <CircleClose />
-                      </el-icon>
-                    </div>
+                    <NGrid yGap={5} xGap={5} style={"margin-bottom: 5px"}>
+                      <NGridItem span={19}>
+                        <NInput v-model:value={_.title} />
+                      </NGridItem>
+                      <NGridItem span={5}>
+                        <NIcon
+                          class="drag-handler"
+                          style="cursor: move;"
+                          size={20}
+                        >
+                          <Move />
+                        </NIcon>
+                        <NButton
+                          disabled={this.collapses.length <= 1}
+                          size="small"
+                          quaternary
+                          circle
+                          onClick={() => {
+                            let i = this.collapses.findIndex(
+                              (__) => _.key == __.key
+                            );
+                            if (i >= 0) {
+                              this.collapses.splice(i, 1);
+                            }
+                          }}
+                        >
+                          <NIcon size={20}>
+                            <RemoveCircle />
+                          </NIcon>
+                        </NButton>
+                      </NGridItem>
+                    </NGrid>
                   );
                 },
               }}
             </Draggable>
-            <el-button
-              plain
-              size="small"
+            <NButton
               type="primary"
               onClick={() => {
                 this.collapses.push({
@@ -187,8 +206,8 @@ export class Collapse extends NonForm {
               }}
             >
               增加选项
-            </el-button>
-          </div>
+            </NButton>
+          </NFlex>
         ),
       },
     ];
