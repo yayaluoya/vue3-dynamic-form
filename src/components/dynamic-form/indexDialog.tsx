@@ -46,7 +46,7 @@ export default defineComponent({
     function preview(op: IRenderOp) {
       let d = dialog.success({
         showIcon: false,
-        style: `width: 800px;`,
+        style: `width: 1000px;`,
         title: "表单预览",
         content: () => {
           return (
@@ -93,7 +93,7 @@ export default defineComponent({
     ) {
       let d = dialog.success({
         showIcon: false,
-        style: `width: 700px;`,
+        style: `width: 800px;`,
         title: op.title,
         content: () => {
           return (

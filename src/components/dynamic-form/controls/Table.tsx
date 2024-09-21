@@ -9,6 +9,25 @@ import "../style/table.scss";
 import Item from "../com/item.vue";
 import { predefineColors } from "../config/predefineColors";
 import { NonForm } from "./NonForm";
+import { NColorPicker, NDropdown, NFlex, NIcon, NInputNumber } from "naive-ui";
+import {
+  ArrowBack,
+  ArrowDown,
+  ArrowForward,
+  ArrowUp,
+  CaretDown,
+  CaretForward,
+  ChevronBack,
+  ChevronDown,
+  ChevronDownOutline,
+  ChevronForward,
+  ChevronForwardOutline,
+  ChevronUp,
+  EllipsisHorizontal,
+  EyeOff,
+  RemoveCircle,
+} from "@vicons/ionicons5";
+import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 
 /**
  * 单元格
@@ -50,26 +69,28 @@ class Cell extends NonForm {
       >
         {activateCon?.key == this.key
           ? [
-              <div class="con-name">
+              <NFlex class="con-name" size={[3, 0]} align="center">
                 <span>{this.conName}</span>
                 {this.hide ? (
-                  <el-icon style="margin-left: 2px">
-                    <Hide />
-                  </el-icon>
+                  <NIcon size={15}>
+                    <EyeOff />
+                  </NIcon>
                 ) : null}
-              </div>,
-              <div class="handler-button">
-                <el-icon
+              </NFlex>,
+              <NFlex class="handler-button" size={[3, 0]} align="center">
+                <div
                   title="选择父组件"
                   onClick={(e: Event) => {
                     e.stopPropagation();
                     ctx.emit("activateConF", parent);
                   }}
                 >
-                  <Back />
-                </el-icon>
+                  <NIcon size={15}>
+                    <ArrowBack />
+                  </NIcon>
+                </div>
                 {this.getHandler_(arguments[0], row, col)}
-              </div>,
+              </NFlex>,
             ]
           : null}
         <div class="content">{this.renderRaw(arguments[0])}</div>
@@ -87,178 +108,195 @@ class Cell extends NonForm {
     row: number,
     col: number
   ) {
+    let op: (DropdownMixedOption & { h?: () => void })[] = [
+      {
+        label: "插入左侧列",
+        icon: () => (
+          <NIcon>
+            <ArrowBack />
+          </NIcon>
+        ),
+        h: () => {
+          parent.insert("left", row, col);
+        },
+      },
+      {
+        label: "插入右侧列",
+        icon: () => (
+          <NIcon>
+            <ArrowForward />
+          </NIcon>
+        ),
+        h: () => {
+          parent.insert("right", row, col);
+        },
+      },
+      {
+        label: "插入上方行",
+        icon: () => (
+          <NIcon>
+            <ArrowUp />
+          </NIcon>
+        ),
+        h: () => {
+          parent.insert("up", row, col);
+        },
+      },
+      {
+        label: "插入下方行",
+        icon: () => (
+          <NIcon>
+            <ArrowDown />
+          </NIcon>
+        ),
+        h: () => {
+          parent.insert("down", row, col);
+        },
+      },
+      {
+        type: "divider",
+      },
+      {
+        label: "合并左侧单元格",
+        icon: () => (
+          <NIcon>
+            <ChevronBack />
+          </NIcon>
+        ),
+        disabled: !parent.merge("left", row, col, true),
+        h: () => {
+          parent.merge("left", row, col, false, (con) => {
+            ctx.emit("activateConF", con);
+          });
+        },
+      },
+      {
+        label: "合并右侧单元格",
+        icon: () => (
+          <NIcon>
+            <ChevronForward />
+          </NIcon>
+        ),
+        disabled: !parent.merge("right", row, col, true),
+        h: () => {
+          parent.merge("right", row, col, false, (con) => {
+            ctx.emit("activateConF", con);
+          });
+        },
+      },
+      {
+        label: "合并整行",
+        disabled: !parent.merge("row", row, col, true),
+        h: () => {
+          parent.merge("row", row, col, false, (con) => {
+            ctx.emit("activateConF", con);
+          });
+        },
+      },
+      {
+        type: "divider",
+      },
+      {
+        label: "合并上方单元格",
+        icon: () => (
+          <NIcon>
+            <ChevronUp />
+          </NIcon>
+        ),
+        disabled: !parent.merge("up", row, col, true),
+        h: () => {
+          parent.merge("up", row, col, false, (con) => {
+            ctx.emit("activateConF", con);
+          });
+        },
+      },
+      {
+        label: "合并下方单元格",
+        icon: () => (
+          <NIcon>
+            <ChevronDown />
+          </NIcon>
+        ),
+        disabled: !parent.merge("down", row, col, true),
+        h: () => {
+          parent.merge("down", row, col, false, (con) => {
+            ctx.emit("activateConF", con);
+          });
+        },
+      },
+      {
+        label: "合并整列",
+        disabled: !parent.merge("col", row, col, true),
+        h: () => {
+          parent.merge("col", row, col, false, (con) => {
+            ctx.emit("activateConF", con);
+          });
+        },
+      },
+      {
+        type: "divider",
+      },
+      {
+        label: "撤销垂直合并",
+        disabled: this.rowspan == 1,
+        h: () => {
+          parent.revocationMerge("row", row, col);
+        },
+      },
+      {
+        label: "撤销水平合并",
+        disabled: this.colspan == 1,
+        h: () => {
+          parent.revocationMerge("col", row, col);
+        },
+      },
+      {
+        type: "divider",
+      },
+      {
+        label: "删除整列",
+        icon: () => (
+          <NIcon>
+            <RemoveCircle />
+          </NIcon>
+        ),
+        disabled: !parent.merge("col", row, col, true),
+        h: () => {
+          parent.delete("col", row, col);
+        },
+      },
+      {
+        label: "删除整行",
+        icon: () => (
+          <NIcon>
+            <RemoveCircle />
+          </NIcon>
+        ),
+        disabled: !parent.merge("row", row, col, true),
+        h: () => {
+          parent.delete("row", row, col);
+        },
+      },
+    ];
     return [
-      <el-dropdown trigger="click" placement="bottom-end" size="small">
-        {{
-          default: () => {
-            return (
-              <el-icon color="white">
-                <Menu />
-              </el-icon>
-            );
-          },
-          dropdown: () => {
-            return (
-              <el-dropdown-menu>
-                <el-dropdown-item
-                  onClick={() => {
-                    parent.insert("left", row, col);
-                  }}
-                >
-                  <el-icon>
-                    <CaretLeft />
-                  </el-icon>
-                  插入左侧列
-                </el-dropdown-item>
-                <el-dropdown-item
-                  onClick={() => {
-                    parent.insert("right", row, col);
-                  }}
-                >
-                  <el-icon>
-                    <CaretRight />
-                  </el-icon>
-                  插入右侧列
-                </el-dropdown-item>
-                <el-dropdown-item
-                  onClick={() => {
-                    parent.insert("up", row, col);
-                  }}
-                >
-                  <el-icon>
-                    <CaretTop />
-                  </el-icon>
-                  插入上方行
-                </el-dropdown-item>
-                <el-dropdown-item
-                  onClick={() => {
-                    parent.insert("down", row, col);
-                  }}
-                >
-                  <el-icon>
-                    <CaretBottom />
-                  </el-icon>
-                  插入下方行
-                </el-dropdown-item>
-                <el-dropdown-item
-                  divided
-                  disabled={!parent.merge("left", row, col, true)}
-                  onClick={() => {
-                    parent.merge("left", row, col, false, (con) => {
-                      ctx.emit("activateConF", con);
-                    });
-                  }}
-                >
-                  <el-icon>
-                    <ArrowLeft />
-                  </el-icon>
-                  合并左侧单元格
-                </el-dropdown-item>
-                <el-dropdown-item
-                  disabled={!parent.merge("right", row, col, true)}
-                  onClick={() => {
-                    parent.merge("right", row, col, false, (con) => {
-                      ctx.emit("activateConF", con);
-                    });
-                  }}
-                >
-                  <el-icon>
-                    <ArrowRight />
-                  </el-icon>
-                  合并右侧单元格
-                </el-dropdown-item>
-                <el-dropdown-item
-                  disabled={!parent.merge("row", row, col, true)}
-                  onClick={() => {
-                    parent.merge("row", row, col, false, (con) => {
-                      ctx.emit("activateConF", con);
-                    });
-                  }}
-                >
-                  合并整行
-                </el-dropdown-item>
-                <el-dropdown-item
-                  divided
-                  disabled={!parent.merge("up", row, col, true)}
-                  onClick={() => {
-                    parent.merge("up", row, col, false, (con) => {
-                      ctx.emit("activateConF", con);
-                    });
-                  }}
-                >
-                  <el-icon>
-                    <ArrowUp />
-                  </el-icon>
-                  合并上方单元格
-                </el-dropdown-item>
-                <el-dropdown-item
-                  disabled={!parent.merge("down", row, col, true)}
-                  onClick={() => {
-                    parent.merge("down", row, col, false, (con) => {
-                      ctx.emit("activateConF", con);
-                    });
-                  }}
-                >
-                  <el-icon>
-                    <ArrowDown />
-                  </el-icon>
-                  合并下方单元格
-                </el-dropdown-item>
-                <el-dropdown-item
-                  disabled={!parent.merge("col", row, col, true)}
-                  onClick={() => {
-                    parent.merge("col", row, col, false, (con) => {
-                      ctx.emit("activateConF", con);
-                    });
-                  }}
-                >
-                  合并整列
-                </el-dropdown-item>
-                <el-dropdown-item
-                  divided
-                  disabled={this.rowspan == 1}
-                  onClick={() => {
-                    parent.revocationMerge("row", row, col);
-                  }}
-                >
-                  撤销行合并
-                </el-dropdown-item>
-                <el-dropdown-item
-                  disabled={this.colspan == 1}
-                  onClick={() => {
-                    parent.revocationMerge("col", row, col);
-                  }}
-                >
-                  撤销列合并
-                </el-dropdown-item>
-                <el-dropdown-item
-                  divided
-                  disabled={!parent.merge("col", row, col, true)}
-                  onClick={() => {
-                    parent.delete("col", row, col);
-                  }}
-                >
-                  <el-icon>
-                    <DeleteFilled />
-                  </el-icon>
-                  删除整列
-                </el-dropdown-item>
-                <el-dropdown-item
-                  disabled={!parent.merge("row", row, col, true)}
-                  onClick={() => {
-                    parent.delete("row", row, col);
-                  }}
-                >
-                  <el-icon>
-                    <DeleteFilled />
-                  </el-icon>
-                  删除整行
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            );
-          },
+      <NDropdown
+        trigger="click"
+        size="small"
+        options={op.map((_, i) => {
+          return {
+            ..._,
+            h: undefined,
+            key: i,
+          };
+        })}
+        onSelect={(e: number) => {
+          op[e]?.h?.();
         }}
-      </el-dropdown>,
+      >
+        <NIcon>
+          <EllipsisHorizontal />
+        </NIcon>
+      </NDropdown>,
     ];
   }
 
@@ -303,26 +341,14 @@ class Cell extends NonForm {
     let add: IConRightReterItemOp["childs"] = [
       {
         label: "边框宽度",
-        editor: (
-          <el-input-number
-            size="small"
-            model-value={this.borderWidth}
-            onChange={(_: any) => {
-              this.borderWidth = _;
-            }}
-          />
-        ),
+        editor: <NInputNumber v-model:value={this.borderWidth} />,
       },
       {
         label: "边框颜色",
         editor: (
-          <el-color-picker
-            model-value={this.borderColor}
-            onChange={(v: any) => {
-              this.borderColor = v;
-            }}
-            predefine={predefineColors}
-            size="small"
+          <NColorPicker
+            v-model:value={this.borderColor}
+            swatches={predefineColors}
           />
         ),
       },
@@ -607,7 +633,7 @@ export class Table extends NonForm {
       -1,
       0,
       ...[
-        <el-icon
+        <div
           title="插入新行"
           onClick={(e: Event) => {
             e.stopPropagation();
@@ -615,9 +641,11 @@ export class Table extends NonForm {
             this.list.push(new Array(colNum).fill(0).map(() => new Cell()));
           }}
         >
-          <CaretBottom />
-        </el-icon>,
-        <el-icon
+          <NIcon size={15}>
+            <CaretDown />
+          </NIcon>
+        </div>,
+        <div
           title="插入新列"
           onClick={(e: Event) => {
             e.stopPropagation();
@@ -626,8 +654,10 @@ export class Table extends NonForm {
             });
           }}
         >
-          <CaretRight />
-        </el-icon>,
+          <NIcon size={15}>
+            <CaretForward />
+          </NIcon>
+        </div>,
       ]
     );
     return _;
@@ -679,26 +709,14 @@ export class Table extends NonForm {
     let add: IConRightReterItemOp["childs"] = [
       {
         label: "边框宽度",
-        editor: (
-          <el-input-number
-            size="small"
-            model-value={this.borderWidth}
-            onChange={(v: any) => {
-              this.borderWidth = v;
-            }}
-          />
-        ),
+        editor: <NInputNumber v-model:value={this.borderWidth} />,
       },
       {
         label: "边框颜色",
         editor: (
-          <el-color-picker
-            model-value={this.borderColor}
-            onChange={(v: any) => {
-              this.borderColor = v;
-            }}
-            predefine={predefineColors}
-            size="small"
+          <NColorPicker
+            v-model:value={this.borderColor}
+            swatches={predefineColors}
           />
         ),
       },

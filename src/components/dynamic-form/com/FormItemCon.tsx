@@ -11,10 +11,7 @@ import {
   NGridItem,
   NIcon,
   NInput,
-  NRadioButton,
-  NRadioGroup,
   NSelect,
-  NSpace,
   NSwitch,
   type FormItemProps,
   type FormItemRule,
@@ -344,17 +341,14 @@ export class FormItemCon {
                             <NInput v-model:value={_.message} />
                           </NGridItem>
                         </NGrid>
-                        <NFlex vertical>
-                          <NButton
-                            size="small"
+                        <NFlex vertical align="center">
+                          <NIcon
                             class="drag-handler"
-                            quaternary
-                            circle
+                            style="cursor: move;"
+                            size={20}
                           >
-                            <NIcon size={20}>
-                              <Move />
-                            </NIcon>
-                          </NButton>
+                            <Move />
+                          </NIcon>
                           <NButton
                             size="small"
                             class="remove"

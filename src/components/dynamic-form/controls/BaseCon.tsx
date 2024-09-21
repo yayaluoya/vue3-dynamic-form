@@ -5,11 +5,22 @@ import "../style/controls.scss";
 import { FormItemCon } from "../com/FormItemCon";
 import type { JSX } from "vue/jsx-runtime";
 import {
+  NButton,
   NCollapseItem,
+  NFlex,
   NFormItem,
+  NIcon,
   NSwitch,
   type FormItemProps,
 } from "naive-ui";
+import {
+  ArrowBack,
+  ArrowDown,
+  ArrowUp,
+  EyeOff,
+  Move,
+  RemoveCircle,
+} from "@vicons/ionicons5";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 15);
@@ -220,39 +231,41 @@ export class BaseCon {
         {activateCon?.key == this.key
           ? [
               this.towable ? (
-                <div class="drag-handler">
-                  <el-icon>
-                    <Rank />
-                  </el-icon>
+                <NFlex class="drag-handler" size={[3, 0]} align="center">
+                  <NIcon size={15}>
+                    <Move />
+                  </NIcon>
                   <span>{this.conName}</span>
                   {this.hide ? (
-                    <el-icon style="margin-left: 2px">
-                      <Hide />
-                    </el-icon>
+                    <NIcon size={15}>
+                      <EyeOff />
+                    </NIcon>
                   ) : null}
-                </div>
+                </NFlex>
               ) : (
-                <div class="con-name">
+                <NFlex class="con-name" size={[3, 0]} align="center">
                   <span>{this.conName}</span>
                   {this.hide ? (
-                    <el-icon style="margin-left: 2px">
-                      <Hide />
-                    </el-icon>
+                    <NIcon size={15}>
+                      <EyeOff />
+                    </NIcon>
                   ) : null}
-                </div>
+                </NFlex>
               ),
-              <div class="handler-button">
-                <el-icon
+              <NFlex class="handler-button" size={[3, 0]} align="center">
+                <div
                   title="选择父组件"
                   onClick={(e: Event) => {
                     e.stopPropagation();
                     ctx.emit("activateConF", parent);
                   }}
                 >
-                  <Back />
-                </el-icon>
+                  <NIcon size={15}>
+                    <ArrowBack />
+                  </NIcon>
+                </div>
                 {this.getHandler(arguments[0])}
-              </div>,
+              </NFlex>,
             ]
           : null}
         <div class="content">{this.renderFormItem(arguments[0])}</div>
@@ -266,33 +279,39 @@ export class BaseCon {
    */
   getHandler({ ctx }: IConRenderOp): JSX.Element[] {
     return [
-      <el-icon
+      <div
         title="上移组件"
         onClick={(e: Event) => {
           e.stopPropagation();
           ctx.emit("moveF", this, "up");
         }}
       >
-        <Top />
-      </el-icon>,
-      <el-icon
+        <NIcon size={15}>
+          <ArrowUp />
+        </NIcon>
+      </div>,
+      <div
         title="下移组件"
         onClick={(e: Event) => {
           e.stopPropagation();
           ctx.emit("moveF", this, "down");
         }}
       >
-        <Bottom />
-      </el-icon>,
-      <el-icon
+        <NIcon size={15}>
+          <ArrowDown />
+        </NIcon>
+      </div>,
+      <div
         title="删除组件"
         onClick={(e: Event) => {
           e.stopPropagation();
           ctx.emit("removeF", this);
         }}
       >
-        <DeleteFilled />
-      </el-icon>,
+        <NIcon size={15}>
+          <RemoveCircle />
+        </NIcon>
+      </div>,
     ];
   }
 

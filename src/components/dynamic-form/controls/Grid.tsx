@@ -16,7 +16,13 @@ import {
   NIcon,
   NInputNumber,
 } from "naive-ui";
-import { RemoveCircle } from "@vicons/ionicons5";
+import {
+  ArrowBack,
+  ArrowDown,
+  ArrowUp,
+  EyeOff,
+  RemoveCircle,
+} from "@vicons/ionicons5";
 
 /**
  * 栅格列
@@ -67,26 +73,28 @@ class GridCol extends NonForm {
       >
         {activateCon?.key == this.key
           ? [
-              <div class="con-name">
+              <NFlex class="con-name" size={[3, 0]} align="center">
                 <span>{this.conName}</span>
                 {this.hide ? (
-                  <el-icon style="margin-left: 2px">
-                    <Hide />
-                  </el-icon>
+                  <NIcon size={15}>
+                    <EyeOff />
+                  </NIcon>
                 ) : null}
-              </div>,
-              <div class="handler-button">
-                <el-icon
+              </NFlex>,
+              <NFlex class="handler-button" size={[3, 0]} align="center">
+                <div
                   title="选择父组件"
                   onClick={(e: Event) => {
                     e.stopPropagation();
                     ctx.emit("activateConF", parent);
                   }}
                 >
-                  <Back />
-                </el-icon>
+                  <NIcon size={15}>
+                    <ArrowBack />
+                  </NIcon>
+                </div>
                 {this.getHandler(arguments[0])}
-              </div>,
+              </NFlex>,
             ]
           : null}
         <div
@@ -136,33 +144,39 @@ class GridCol extends NonForm {
 
   getHandler({ parent }: IConRenderOp & { parent: Grid }) {
     return [
-      <el-icon
+      <div
         title="上移组件"
         onClick={(e: Event) => {
           e.stopPropagation();
           parent.moveChild(this, "up");
         }}
       >
-        <Top />
-      </el-icon>,
-      <el-icon
+        <NIcon size={15}>
+          <ArrowUp />
+        </NIcon>
+      </div>,
+      <div
         title="下移组件"
         onClick={(e: Event) => {
           e.stopPropagation();
           parent.moveChild(this, "down");
         }}
       >
-        <Bottom />
-      </el-icon>,
-      <el-icon
+        <NIcon size={15}>
+          <ArrowDown />
+        </NIcon>
+      </div>,
+      <div
         title="删除组件"
         onClick={(e: Event) => {
           e.stopPropagation();
           parent.removeChild(this);
         }}
       >
-        <DeleteFilled />
-      </el-icon>,
+        <NIcon size={15}>
+          <RemoveCircle />
+        </NIcon>
+      </div>,
     ];
   }
 
@@ -172,29 +186,13 @@ class GridCol extends NonForm {
       {
         label: "占据列数量",
         editor: (
-          <el-input-number
-            size="small"
-            model-value={this.colProps.span}
-            min={1}
-            max={24}
-            onChange={(_: any) => {
-              this.colProps.span = _;
-            }}
-          />
+          <NInputNumber v-model:value={this.colProps.span} min={1} max={24} />
         ),
       },
       {
         label: "栅格左侧间隔",
         editor: (
-          <el-input-number
-            size="small"
-            model-value={this.colProps.offset}
-            min={0}
-            max={24}
-            onChange={(_: any) => {
-              this.colProps.offset = _;
-            }}
-          />
+          <NInputNumber v-model:value={this.colProps.offset} min={0} max={24} />
         ),
       },
     ];

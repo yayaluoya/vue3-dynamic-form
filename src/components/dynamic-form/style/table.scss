@@ -11,7 +11,7 @@
     td {
       height: 50px;
       padding: 5px;
-      border: 1px solid #afafaf;
+      border: 1px solid var(--borderColor);
       vertical-align: top;
     }
   }
@@ -19,7 +19,7 @@
   &.form-render {
     >table {
       td {
-        border: 1px solid #e5e5e5;
+        border: 1px solid var(--borderColor);
       }
     }
   }
@@ -29,7 +29,7 @@
   height: 100%;
 
   &:not(.form-render).border {
-    border: 1px dashed #afafaf;
+    border: 1px dashed var(--borderColor);
   }
 
   >.content {

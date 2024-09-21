@@ -53,11 +53,11 @@ import {
   NSelect,
   NScrollbar,
   NButton,
-  NSpace,
   NDialog,
   NDialogProvider,
   NMessageProvider,
   useThemeVars,
+  NFlex,
 } from "naive-ui";
 import IndexDialog, { type IJSONH, type IRenderOp } from "./indexDialog";
 
@@ -82,9 +82,9 @@ export default defineComponent({
     CodeEditInput,
     Render,
     NButton,
-    NSpace,
     NDialog,
     IndexDialog,
+    NFlex,
     NDialogProvider: NDialogProvider as any,
     NMessageProvider: NMessageProvider as any,
   },
@@ -339,7 +339,7 @@ export default defineComponent({
     <div class="b">
       <div class="top">
         <div></div>
-        <NSpace>
+        <NFlex>
           <NButton
             style="margin-right: 10px"
             type="primary"
@@ -374,7 +374,7 @@ export default defineComponent({
           >
             导出JSON
           </NButton>
-        </NSpace>
+        </NFlex>
       </div>
       <div class="content">
         <span class="null" v-if="cons.length <= 0"

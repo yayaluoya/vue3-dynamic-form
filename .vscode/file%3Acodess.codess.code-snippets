@@ -63,33 +63,51 @@
         ],
         "description": "非表单控件"
     },
-    "jsx/n-input javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>n-input",
+    "tsx/n-icon typescriptreact": {
+        "scope": "typescriptreact",
+        "prefix": "tsx>n-icon",
+        "body": [
+            "<NIcon size={20}>$0</NIcon>"
+        ],
+        "description": ""
+    },
+    "tsx/n-icon-button typescriptreact": {
+        "scope": "typescriptreact",
+        "prefix": "tsx>n-icon-button",
+        "body": [
+            "<NButton size=\"small\" quaternary circle onClick={() => {}}>",
+            "  <NIcon size={20}>$0</NIcon>",
+            "</NButton>"
+        ],
+        "description": ""
+    },
+    "tsx/n-input typescriptreact": {
+        "scope": "typescriptreact",
+        "prefix": "tsx>n-input",
         "body": [
             "<NInput v-model:value={$0} />"
         ],
         "description": ""
     },
-    "jsx/n-input-number javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>n-input-number",
+    "tsx/n-input-number typescriptreact": {
+        "scope": "typescriptreact",
+        "prefix": "tsx>n-input-number",
         "body": [
-            "<NInputNumber v-model:value=\"value\" />"
+            "<NInputNumber v-model:value={$0} />"
         ],
         "description": ""
     },
-    "jsx/n-input-textarea javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>n-input-textarea",
+    "tsx/n-input-textarea typescriptreact": {
+        "scope": "typescriptreact",
+        "prefix": "tsx>n-input-textarea",
         "body": [
             "<NInput v-model:value={$0} type=\"textarea\" />"
         ],
         "description": ""
     },
-    "jsx/n-switch javascriptreact": {
-        "scope": "javascriptreact",
-        "prefix": "jsx>n-switch",
+    "tsx/n-switch typescriptreact": {
+        "scope": "typescriptreact",
+        "prefix": "tsx>n-switch",
         "body": [
             "<NSwitch v-model:value={$0} />"
         ],

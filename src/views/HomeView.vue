@@ -7,7 +7,6 @@ import {
   lightTheme,
   darkTheme,
   NButton,
-  NSpace,
   NTag,
   NCard,
   NConfigProvider,
@@ -15,13 +14,14 @@ import {
   NText,
   NRadioGroup,
   NRadioButton,
+  NIcon,
 } from "naive-ui";
+import { LogoGithub } from "@vicons/ionicons5";
 
 export default defineComponent({
   components: {
     DynamicForm,
     NTag,
-    NSpace,
     NButton,
     NCard,
     NConfigProvider,
@@ -29,6 +29,8 @@ export default defineComponent({
     NText,
     NRadioGroup,
     NRadioButton,
+    NIcon,
+    LogoGithub,
   },
   setup() {
     let cons = ref([]);
@@ -76,12 +78,10 @@ export default defineComponent({
               href="https://github.com/yayaluoya/vue3-dynamic-form"
               target="_blank"
             >
-              <NFlex>
-                <img
-                  style="height: 20px; width: 20px; border-radius: 50%"
-                  src="@/assets/apple-touch-icon-144x144-b882e354c005.png"
-                  alt=""
-                />
+              <NFlex align="center" :size="[3, 0]">
+                <NIcon :size="20">
+                  <LogoGithub />
+                </NIcon>
                 <NText>Github</NText>
               </NFlex>
             </a>

@@ -9,12 +9,9 @@
   >.drag-handler,
   >.con-name,
   >.handler-button {
-    padding: 2px 3px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     position: absolute;
     z-index: 2;
+    padding: 3px;
 
     >.el-icon {
       color: var(--baseColor);
@@ -29,6 +26,7 @@
   >.drag-handler {
     top: 0;
     left: 0;
+    color: var(--baseColor);
     background: var(--primaryColorHover);
     opacity: .6;
     cursor: move;
@@ -40,28 +38,28 @@
     >span {
       font-size: 12px;
       font-style: normal;
-      color: var(--baseColor);
+
     }
   }
 
   >.con-name {
     top: 0;
     left: 0;
+    color: var(--baseColor);
     background: var(--primaryColorHover);
     opacity: .7;
 
     >span {
       font-size: 12px;
       font-style: normal;
-      color: var(--baseColor);
     }
   }
 
   >.handler-button {
-    padding: 3px 4px;
     bottom: 0;
     right: 0;
     cursor: pointer;
+    color: var(--baseColor);
     background: var(--primaryColorHover);
     opacity: .6;
 
@@ -69,6 +67,9 @@
       opacity: 1;
     }
 
+    >div {
+      display: inline-flex;
+    }
   }
 
   >.content {
