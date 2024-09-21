@@ -1,5 +1,4 @@
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
-import "../style/form-item.scss";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
 import {
@@ -286,7 +285,7 @@ export class FormItemCon {
       },
       {
         editor: (
-          <div class="form-item-rules">
+          <NFlex vertical style={"width: 100%"}>
             <Draggable
               class="draggable"
               modelValue={this.rule}
@@ -376,7 +375,6 @@ export class FormItemCon {
             </Draggable>
             <NButton
               type="primary"
-              style={"width: 100%"}
               onClick={() => {
                 this.rule.push({
                   key_: Math.max(...this.rule.map((_) => _.key_), 1) + 1,
@@ -387,7 +385,7 @@ export class FormItemCon {
             >
               增加校验规则
             </NButton>
-          </div>
+          </NFlex>
         ),
       },
     ];

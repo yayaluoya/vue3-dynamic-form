@@ -291,7 +291,7 @@ export class Grid extends NonForm {
       },
       {
         editor: (
-          <NFlex vertical>
+          <NFlex vertical style={"width: 100%"}>
             {this.list.map((_, i) => {
               return (
                 <NGrid xGap={5}>

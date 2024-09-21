@@ -10,6 +10,20 @@ import {
   type IConRightReterItemOp,
 } from "./BaseCon";
 import { NonForm } from "./NonForm";
+import {
+  NButton,
+  NFlex,
+  NGrid,
+  NGridItem,
+  NIcon,
+  NInput,
+  NSelect,
+  NSwitch,
+  NTabPane,
+  NTabs,
+  type TabsProps,
+} from "naive-ui";
+import { Move, RemoveCircle } from "@vicons/ionicons5";
 
 /**
  * 标签页
@@ -36,11 +50,11 @@ export class LabelPage extends NonForm {
     },
   ];
   activeName = 0;
-  tabsProps = {
+  tabsProps: TabsProps = {
     /** 风格类型 */
-    type: "border-card",
+    type: "line",
     /** 选项卡所在位置 */
-    tabPosition: "top",
+    placement: "top",
   };
 
   getChild() {
@@ -62,25 +76,20 @@ export class LabelPage extends NonForm {
       <div
         class={[
           "controls__ label-page",
-          activateCon?.key == this.key || this.tabsProps.type == "border-card"
-            ? ""
-            : "border",
+          activateCon?.key == this.key ? "" : "border",
         ].join(" ")}
       >
-        <el-tabs
-          model-value={this.activeName}
-          onTabChange={(_: any) => {
-            this.activeName = _;
-          }}
+        <NTabs
+          v-model:value={this.activeName}
           type={this.tabsProps.type}
-          tab-position={this.tabsProps.tabPosition}
-          style="margin: 1px;"
+          placement={this.tabsProps.placement}
+          tabs-padding={10}
         >
           {this.tabs.map((_, i) => {
             return (
-              <el-tab-pane
+              <NTabPane
                 key={_.key}
-                label={_.label}
+                tab={_.label}
                 name={i}
                 disabled={!_.activate}
               >
@@ -119,10 +128,10 @@ export class LabelPage extends NonForm {
                     }
                   />
                 )}
-              </el-tab-pane>
+              </NTabPane>
             );
           })}
-        </el-tabs>
+        </NTabs>
       </div>
     );
   }
@@ -133,43 +142,39 @@ export class LabelPage extends NonForm {
       {
         label: "风格类型",
         editor: (
-          <el-select
-            model-value={this.tabsProps.type}
-            size="small"
-            onChange={(v: any) => {
-              this.tabsProps.type = v;
-            }}
+          <NSelect
+            v-model:value={this.tabsProps.type}
             placeholder="请选择"
-            clearable
-          >
-            <el-option label="card" value="card" />
-            <el-option label="border-card" value="border-card" />
-          </el-select>
+            options={[
+              { label: "line", value: "line" },
+              { label: "card", value: "card" },
+              { label: "bar", value: "bar" },
+              { label: "segment", value: "segment" },
+            ]}
+          />
         ),
       },
       {
         label: "选项卡位置",
         editor: (
-          <el-radio-group
-            size="small"
-            model-value={this.tabsProps.tabPosition}
-            onChange={(v: any) => {
-              this.tabsProps.tabPosition = v;
-            }}
-          >
-            <el-radio-button label="top" value="top" />
-            <el-radio-button label="bottom" value="bottom" />
-            <el-radio-button label="left" value="left" />
-            <el-radio-button label="right" value="right" />
-          </el-radio-group>
+          <NSelect
+            v-model:value={this.tabsProps.placement}
+            placeholder="请选择"
+            options={[
+              { label: "top", value: "top" },
+              { label: "left", value: "left" },
+              { label: "right", value: "right" },
+              { label: "bottom", value: "bottom" },
+            ]}
+          />
         ),
       },
       {
-        label: "选项卡设置：",
+        label: "选项卡设置",
       },
       {
         editor: (
-          <div class="controls__ label-page-right">
+          <NFlex vertical style={"width: 100%"}>
             <Draggable
               class="draggable"
               modelValue={this.tabs}
@@ -187,50 +192,49 @@ export class LabelPage extends NonForm {
                   element: getArrayItemType<LabelPage["tabs"]>;
                 }) => {
                   return (
-                    <div class={"i " + (_.activate ? "activate" : "")}>
-                      <div>
-                        <span>激活</span>
-                        <el-switch
-                          size="small"
-                          model-value={_.activate}
-                          onChange={(v: any) => {
-                            _.activate = v;
-                          }}
-                        ></el-switch>
-                      </div>
-                      <div>
-                        <el-input
-                          size="small"
-                          model-value={_.label}
-                          onInput={(v: any) => {
-                            _.label = v;
-                          }}
-                        />
-                        <el-icon class="drag-handler">
-                          <Rank />
-                        </el-icon>
-                        <el-icon
-                          class="remove"
-                          onClick={() => {
-                            let i = this.tabs.findIndex(
-                              (__) => _.key == __.key
-                            );
-                            if (i >= 0) {
-                              this.tabs.splice(i, 1);
-                            }
-                          }}
-                        >
-                          <CircleClose />
-                        </el-icon>
-                      </div>
-                    </div>
+                    <NGrid yGap={5} xGap={5} style={"margin-bottom: 5px"}>
+                      <NGridItem span={7}>
+                        <NFlex align="center" wrap={false} size={"small"}>
+                          <span>激活</span>
+                          <NSwitch size="small" v-model:value={_.activate} />
+                        </NFlex>
+                      </NGridItem>
+                      <NGridItem span={17}>
+                        <NFlex align="center" wrap={false} size={"small"}>
+                          <NInput v-model:value={_.label} />
+                          <NIcon
+                            class="drag-handler"
+                            style="cursor: move;"
+                            size={20}
+                          >
+                            <Move />
+                          </NIcon>
+                          <NButton
+                            size="small"
+                            class="remove"
+                            quaternary
+                            circle
+                            onClick={() => {
+                              let i = this.tabs.findIndex(
+                                (__) => _.key == __.key
+                              );
+                              if (i >= 0) {
+                                this.tabs.splice(i, 1);
+                              }
+                            }}
+                          >
+                            <NIcon size={20}>
+                              <RemoveCircle />
+                            </NIcon>
+                          </NButton>
+                        </NFlex>
+                      </NGridItem>
+                    </NGrid>
                   );
                 },
               }}
             </Draggable>
-            <el-button
-              plain
-              size="small"
+            <NButton
               type="primary"
               onClick={() => {
                 this.tabs.push({
@@ -242,8 +246,8 @@ export class LabelPage extends NonForm {
               }}
             >
               增加选项卡
-            </el-button>
-          </div>
+            </NButton>
+          </NFlex>
         ),
       },
     ];
