@@ -1,6 +1,6 @@
+import { NCard, NInput, NSelect, NSwitch, type CardProps } from "naive-ui";
 import DraggableCon from "../com/draggable.vue";
 import Item from "../com/item.vue";
-import "../style/card.scss";
 import type {
   IConRenderOp,
   IConRightRenderOp,
@@ -19,9 +19,10 @@ export class Card extends NonForm {
   /** 单例对象 */
   static I = new Card();
 
-  props = {
-    /** 卡片阴影显示时机 */
-    shadow: "always",
+  props: CardProps = {
+    bordered: false,
+    hoverable: false,
+    size: "medium",
   };
   cardName = "name";
   cardFooter = "footer";
@@ -85,9 +86,13 @@ export class Card extends NonForm {
       Reflect.deleteProperty(_, "footer");
     }
     return (
-      <div class="controls__ card">
-        <el-card shadow={this.props.shadow}>{_}</el-card>
-      </div>
+      <NCard
+        bordered={this.props.bordered}
+        hoverable={this.props.hoverable}
+        size={this.props.size}
+      >
+        {_}
+      </NCard>
     );
   }
 
@@ -96,45 +101,33 @@ export class Card extends NonForm {
     let add: IConRightReterItemOp["childs"] = [
       {
         label: "标题",
-        editor: (
-          <el-input
-            size="small"
-            clearable
-            model-value={this.cardName}
-            onInput={(v: any) => {
-              this.cardName = v;
-            }}
-          />
-        ),
+        editor: <NInput v-model:value={this.cardName} />,
       },
       {
         label: "页脚",
-        editor: (
-          <el-input
-            size="small"
-            clearable
-            model-value={this.cardFooter}
-            onInput={(v: any) => {
-              this.cardFooter = v;
-            }}
-          />
-        ),
+        editor: <NInput v-model:value={this.cardFooter} />,
       },
       {
-        label: "阴影显示时机",
+        label: "显示卡片边框",
+        editor: <NSwitch v-model:value={this.props.bordered} />,
+      },
+      {
+        label: "可悬浮",
+        editor: <NSwitch v-model:value={this.props.hoverable} />,
+      },
+      {
+        label: "尺寸",
         editor: (
-          <el-select
-            model-value={this.props.shadow}
-            size="small"
-            onChange={(v: any) => {
-              this.props.shadow = v;
-            }}
+          <NSelect
+            v-model:value={this.props.size}
             placeholder="请选择"
-          >
-            <el-option label="always" value="always" />
-            <el-option label="never" value="never" />
-            <el-option label="hover" value="hover" />
-          </el-select>
+            options={[
+              { label: "small", value: "small" },
+              { label: "medium", value: "medium" },
+              { label: "large", value: "large" },
+              { label: "huge", value: "huge" },
+            ]}
+          />
         ),
       },
     ];
