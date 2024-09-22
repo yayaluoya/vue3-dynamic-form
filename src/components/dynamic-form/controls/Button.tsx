@@ -1,5 +1,11 @@
+import {
+  NButton,
+  NColorPicker,
+  NSelect,
+  NSwitch,
+  type ButtonProps,
+} from "naive-ui";
 import { predefineColors } from "../config/predefineColors";
-import "../style/button.scss";
 import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
 import { NonForm } from "./NonForm";
 
@@ -14,45 +20,63 @@ export class Button extends NonForm {
   /** 单例对象 */
   static I = new Button();
 
-  props = {
-    size: "",
-    type: "",
-    align: "left",
-    text: false,
-    disabled: false,
-    plain: false,
+  props: {
+    type: ButtonProps["type"];
+    size: ButtonProps["size"];
+    block: boolean;
+    bordered: boolean;
+    circle: boolean;
+    color: ButtonProps["color"];
+    dashed: boolean;
+    ghost: boolean;
+    quaternary: boolean;
+    round: boolean;
+    secondary: boolean;
+    strong: boolean;
+    tertiary: boolean;
+    text: boolean;
+    textColor: ButtonProps["textColor"];
+  } = {
+    type: "default",
+    size: "medium",
+    block: false,
+    bordered: true,
     circle: false,
     color: "",
-    margin: {
-      left: 0,
-      right: 0,
-    },
+    dashed: false,
+    ghost: false,
+    quaternary: false,
+    round: false,
+    secondary: false,
+    strong: false,
+    tertiary: false,
+    text: false,
+    textColor: "",
   };
   buttonText = "按钮";
 
   renderRaw() {
     return (
-      <div
-        class="controls__ button"
-        style={`
-          text-align: ${this.props.align};
-        `}
-      >
-        <el-button
-          size={this.props.size}
+      <div>
+        <NButton
           type={this.props.type}
-          text={this.props.text}
-          disabled={this.props.disabled}
-          plain={this.props.plain}
+          size={this.props.size}
+          block={this.props.block}
+          bordered={this.props.bordered}
           circle={this.props.circle}
           color={this.props.color}
-          style={`
-            margin-left: ${this.props.margin.left}px;
-            margin-right: ${this.props.margin.right}px;
-            `}
+          dashed={this.props.dashed}
+          ghost={this.props.ghost}
+          quaternary={this.props.quaternary}
+          round={this.props.round}
+          secondary={this.props.secondary}
+          strong={this.props.strong}
+          tertiary={this.props.tertiary}
+          text={this.props.text}
+          textColor={this.props.textColor}
         >
           {this.buttonText}
-        </el-button>
+        </NButton>
       </div>
     );
   }
@@ -61,157 +85,102 @@ export class Button extends NonForm {
     let _ = super.getRight(op);
     let add: IConRightReterItemOp["childs"] = [
       {
-        label: "文字",
-        editor: (
-          <el-input
-            size="small"
-            model-value={this.buttonText}
-            onInput={(v: any) => {
-              this.buttonText = v;
-            }}
-          />
-        ),
-      },
-      {
         label: "类型",
         editor: (
-          <el-select
-            model-value={this.props.type}
-            size="small"
-            onChange={(v: any) => {
-              this.props.type = v;
-            }}
+          <NSelect
+            v-model:value={this.props.type}
             placeholder="请选择"
-            clearable
-          >
-            <el-option label="primary" value="primary" />
-            <el-option label="success" value="success" />
-            <el-option label="warning" value="warning" />
-            <el-option label="danger" value="danger" />
-            <el-option label="info" value="info" />
-          </el-select>
-        ),
-      },
-      {
-        label: "文字按钮",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.text}
-            onChange={(v: any) => {
-              this.props.text = v;
+            options={[
+              { label: "default", value: "default" },
+              { label: "tertiary", value: "tertiary" },
+              { label: "primary", value: "primary" },
+              { label: "info", value: "info" },
+              { label: "success", value: "success" },
+              { label: "warning", value: "warning" },
+              { label: "error", value: "error" },
+            ]}
+            onChange={() => {
+              this.props.color = "";
+              this.props.textColor = "";
             }}
-          ></el-switch>
-        ),
-      },
-      {
-        label: "朴素按钮",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.plain}
-            onChange={(v: any) => {
-              this.props.plain = v;
-            }}
-          ></el-switch>
-        ),
-      },
-      {
-        label: "圆形按钮",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.circle}
-            onChange={(v: any) => {
-              this.props.circle = v;
-            }}
-          ></el-switch>
-        ),
-      },
-      {
-        label: "颜色",
-        editor: (
-          <el-color-picker
-            model-value={this.props.color}
-            onChange={(v: any) => {
-              this.props.color = v;
-            }}
-            predefine={predefineColors}
-            size="small"
           />
         ),
       },
       {
-        label: "大小",
+        label: "尺寸",
         editor: (
-          <el-select
-            model-value={this.props.size}
-            size="small"
-            onChange={(v: any) => {
-              this.props.size = v;
-            }}
+          <NSelect
+            v-model:value={this.props.size}
             placeholder="请选择"
-            clearable
-          >
-            <el-option label="large" value="large" />
-            <el-option label="default" value="default" />
-            <el-option label="small" value="small" />
-          </el-select>
-        ),
-      },
-      {
-        label: "对齐方式",
-        editor: (
-          <el-radio-group
-            size="small"
-            model-value={this.props.align}
-            onChange={(v: any) => {
-              this.props.align = v;
-            }}
-          >
-            <el-radio-button label="left" value="left" />
-            <el-radio-button label="center" value="center" />
-            <el-radio-button label="right" value="right" />
-          </el-radio-group>
-        ),
-      },
-      {
-        label: "左间隔",
-        editor: (
-          <el-input-number
-            size="small"
-            step={5}
-            model-value={this.props.margin.left}
-            onChange={(v: any) => {
-              this.props.margin.left = v;
-            }}
+            options={[
+              { label: "tiny", value: "tiny" },
+              { label: "small", value: "small" },
+              { label: "medium", value: "medium" },
+              { label: "large", value: "large" },
+            ]}
           />
         ),
       },
       {
-        label: "右间隔",
+        label: "显示为块级",
+        editor: <NSwitch v-model:value={this.props.block} />,
+      },
+      {
+        label: "显示 border",
+        editor: <NSwitch v-model:value={this.props.bordered} />,
+      },
+      {
+        label: "圆形",
+        editor: <NSwitch v-model:value={this.props.circle} />,
+      },
+      {
+        label: "按钮颜色",
         editor: (
-          <el-input-number
-            size="small"
-            step={5}
-            model-value={this.props.margin.right}
-            onChange={(v: any) => {
-              this.props.margin.right = v;
-            }}
+          <NColorPicker
+            v-model:value={this.props.color}
+            swatches={predefineColors}
           />
         ),
       },
       {
-        label: "是否禁用",
+        label: "虚线边框",
+        editor: <NSwitch v-model:value={this.props.dashed} />,
+      },
+      {
+        label: "透明",
+        editor: <NSwitch v-model:value={this.props.ghost} />,
+      },
+      {
+        label: "四级按钮",
+        editor: <NSwitch v-model:value={this.props.quaternary} />,
+      },
+      {
+        label: "显示圆角",
+        editor: <NSwitch v-model:value={this.props.round} />,
+      },
+      {
+        label: "次要按钮",
+        editor: <NSwitch v-model:value={this.props.secondary} />,
+      },
+      {
+        label: "文字加粗",
+        editor: <NSwitch v-model:value={this.props.strong} />,
+      },
+      {
+        label: "三级按钮",
+        editor: <NSwitch v-model:value={this.props.tertiary} />,
+      },
+      {
+        label: "文本按钮",
+        editor: <NSwitch v-model:value={this.props.text} />,
+      },
+      {
+        label: "文字颜色",
         editor: (
-          <el-switch
-            size="small"
-            step={5}
-            model-value={this.props.disabled}
-            onChange={(v: any) => {
-              this.props.disabled = v;
-            }}
-          ></el-switch>
+          <NColorPicker
+            v-model:value={this.props.textColor}
+            swatches={predefineColors}
+          />
         ),
       },
     ];

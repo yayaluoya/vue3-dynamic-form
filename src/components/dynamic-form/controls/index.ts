@@ -15,5 +15,6 @@ export { Radio } from "./Radio";
 export { Rate } from "./Rate";
 export { Select } from "./Select";
 export { Slider } from "./Slider";
+export { Split } from "./Split";
 export { Table } from "./Table";
 export { Test } from "./Test";

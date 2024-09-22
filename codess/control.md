@@ -2,7 +2,7 @@
 
 从基类继承的表单控件
 
-```js jsx
+```js jsx ts tsx
 /**
  *
  */
@@ -33,7 +33,7 @@ export class $0 extends BaseCon {
 
 非表单控件
 
-```js jsx
+```js jsx ts tsx
 /**
  *
  */
@@ -44,8 +44,6 @@ export class $0 extends NonForm {
   static ConName = "";
   /** 单例对象 */
   static I = new $0();
-
-  formDefaultValue = "";
 
   renderRaw() {
     return <div></div>;

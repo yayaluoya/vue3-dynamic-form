@@ -31,6 +31,7 @@ import {
   Rate,
   Slider,
   BaseCon,
+  Split,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -134,7 +135,7 @@ export default defineComponent({
       },
       {
         label: "容器类型",
-        cons: [Grid, Table, LabelPage, Card, Collapse],
+        cons: [Grid, Table, LabelPage, Card, Collapse, Split],
       },
       {
         label: "其他类型",

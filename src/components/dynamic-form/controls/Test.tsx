@@ -1,6 +1,13 @@
 import { BaseCon, type IConRenderOp } from "./BaseCon";
-import "../style/test.scss";
 import { FormItemCon } from "../com/FormItemCon";
+import {
+  NFlex,
+  NGrid,
+  NGridItem,
+  NInput,
+  NInputNumber,
+  NSwitch,
+} from "naive-ui";
 
 class FormItemCon_ extends FormItemCon {
   render() {
@@ -22,6 +29,7 @@ export class Test extends BaseCon {
   formDefaultValue = {
     number: 1,
     str: "字符串",
+    b: false,
   };
 
   init(config: Partial<Test>) {
@@ -31,28 +39,27 @@ export class Test extends BaseCon {
   renderRaw({ formData }: IConRenderOp) {
     let { value } = this.getFormValueRef(formData, this.formDefaultValue);
     return (
-      <div class="controls__ test">
+      <NFlex vertical>
         测试控件
-        <div style={`display: flex;`}>
-          number:{" "}
-          <el-input-number
-            size="small"
-            model-value={value.number}
-            onChange={(v: any) => {
-              value.number = v;
-            }}
-          />
-        </div>
-        <div style={`display: flex;`}>
-          str:{" "}
-          <el-input
-            model-value={value.str}
-            onInput={(v: any) => {
-              value.str = v;
-            }}
-          />
-        </div>
-      </div>
+        <NGrid xGap={5} yGap={5}>
+          <NGridItem span={4}>数字:</NGridItem>
+          <NGridItem span={20}>
+            <NInputNumber v-model:value={value.number} />
+          </NGridItem>
+        </NGrid>
+        <NGrid>
+          <NGridItem span={4}>字符串:</NGridItem>
+          <NGridItem span={20}>
+            <NInput v-model:value={value.str} />
+          </NGridItem>
+        </NGrid>
+        <NGrid>
+          <NGridItem span={4}>开关:</NGridItem>
+          <NGridItem span={20}>
+            <NSwitch v-model:value={value.b} />
+          </NGridItem>
+        </NGrid>
+      </NFlex>
     );
   }
 }

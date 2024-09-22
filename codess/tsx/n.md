@@ -22,6 +22,25 @@
 <NSwitch v-model:value={$0} />
 ```
 
+## select
+
+```tsx
+<NSelect
+  v-model:value={$0}
+  placeholder="请选择"
+  options={[
+    { label: "", value: "" },
+    { label: "", value: "" },
+  ]}
+/>
+```
+
+## color
+
+```tsx
+<NColorPicker v-model:value={$0} swatches={predefineColors} />
+```
+
 ## icon
 
 ```tsx

@@ -20,7 +20,6 @@ export {
   Test,
 } from "./src/components/dynamic-form/controls/index";
 export { ConT } from "./src/components/dynamic-form/ConT";
-export { FontStyleCon } from "./src/components/dynamic-form/com/FontStyleCon";
 export { FormItemCon } from "./src/components/dynamic-form/com/FormItemCon";
 export { getFormConfig } from "./src/components/dynamic-form/config/getFormConfig";
 export { default as vue3EditableForm } from "./src/components/dynamic-form/index.vue";

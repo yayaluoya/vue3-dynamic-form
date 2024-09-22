@@ -1,3 +1,4 @@
+import { NAlert, NInput, NSelect, NSwitch, type AlertProps } from "naive-ui";
 import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
 import { NonForm } from "./NonForm";
 
@@ -12,27 +13,33 @@ export class Alert extends NonForm {
   /** 单例对象 */
   static I = new Alert();
 
-  props = {
-    title: "alert",
-    type: "info",
-    description: "",
+  props: {
+    bordered: boolean;
+    closable: boolean;
+    showIcon: boolean;
+    title: string;
+    type: AlertProps["type"];
+    content: string;
+  } = {
+    bordered: true,
     closable: false,
-    center: false,
-    showIcon: false,
-    effect: "light",
+    showIcon: true,
+    title: "",
+    type: "default",
+    content: "",
   };
 
   renderRaw() {
     return (
-      <el-alert
+      <NAlert
+        bordered={this.props.bordered}
+        closable={this.props.closable}
+        show-icon={this.props.showIcon}
         title={this.props.title}
         type={this.props.type}
-        description={this.props.description}
-        closable={this.props.closable}
-        center={this.props.center}
-        show-icon={this.props.showIcon}
-        effect={this.props.effect}
-      />
+      >
+        {this.props.content}
+      </NAlert>
     );
   }
 
@@ -40,100 +47,40 @@ export class Alert extends NonForm {
     let _ = super.getRight(op);
     let add: IConRightReterItemOp["childs"] = [
       {
-        label: "标题",
-        editor: (
-          <el-input
-            size="small"
-            model-value={this.props.title}
-            onInput={(v: any) => {
-              this.props.title = v;
-            }}
-          />
-        ),
-      },
-      {
-        label: "描述性文本",
-        editor: (
-          <el-input
-            type="textarea"
-            rows={2}
-            size="small"
-            model-value={this.props.description}
-            onInput={(v: any) => {
-              this.props.description = v;
-            }}
-          />
-        ),
-      },
-      {
         label: "类型",
         editor: (
-          <el-select
-            model-value={this.props.type}
-            size="small"
-            onChange={(v: any) => {
-              this.props.type = v;
-            }}
+          <NSelect
+            v-model:value={this.props.type}
             placeholder="请选择"
-          >
-            <el-option label="success" value="success" />
-            <el-option label="warning" value="warning" />
-            <el-option label="info" value="info" />
-            <el-option label="error" value="error" />
-          </el-select>
+            options={[
+              { label: "info", value: "info" },
+              { label: "warning", value: "warning" },
+              { label: "error", value: "error" },
+              { label: "success", value: "success" },
+              { label: "default", value: "default" },
+            ]}
+          />
         ),
+      },
+      {
+        label: "标题",
+        editor: <NInput v-model:value={this.props.title} />,
+      },
+      {
+        label: "内容",
+        editor: <NInput type="textarea" v-model:value={this.props.content} />,
+      },
+      {
+        label: "边框",
+        editor: <NSwitch v-model:value={this.props.bordered} />,
       },
       {
         label: "可关闭",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.closable}
-            onChange={(v: any) => {
-              this.props.closable = v;
-            }}
-          ></el-switch>
-        ),
+        editor: <NSwitch v-model:value={this.props.closable} />,
       },
       {
-        label: "文字居中",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.center}
-            onChange={(v: any) => {
-              this.props.center = v;
-            }}
-          ></el-switch>
-        ),
-      },
-      {
-        label: "显示图标",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.showIcon}
-            onChange={(v: any) => {
-              this.props.showIcon = v;
-            }}
-          ></el-switch>
-        ),
-      },
-      {
-        label: "主题样式",
-        editor: (
-          <el-select
-            model-value={this.props.effect}
-            size="small"
-            onChange={(v: any) => {
-              this.props.effect = v;
-            }}
-            placeholder="请选择"
-          >
-            <el-option label="light" value="light" />
-            <el-option label="dark" value="dark" />
-          </el-select>
-        ),
+        label: "展示 icon",
+        editor: <NSwitch v-model:value={this.props.showIcon} />,
       },
     ];
     _.find((_) => _.key == "com")?.childs!.unshift(...add);

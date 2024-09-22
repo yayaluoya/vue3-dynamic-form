@@ -270,7 +270,6 @@ export class FormItemCon {
             <NSelect
               v-model:value={this.size}
               placeholder="请选择"
-              clearable
               options={[
                 { label: "large", value: "large" },
                 { label: "medium", value: "medium" },

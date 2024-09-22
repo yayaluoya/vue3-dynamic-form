@@ -1,3 +1,10 @@
+import {
+  NDivider,
+  NInput,
+  NSelect,
+  NSwitch,
+  type DividerProps,
+} from "naive-ui";
 import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
 import { NonForm } from "./NonForm";
 
@@ -12,22 +19,24 @@ export class Divider extends NonForm {
   /** 单例对象 */
   static I = new Divider();
 
-  props = {
-    direction: "horizontal",
-    borderStyle: "solid",
-    contentPosition: "center",
-    text: "",
+  props: {
+    dashed: boolean;
+    titlePlacement: DividerProps["titlePlacement"];
+    title: string;
+  } = {
+    dashed: false,
+    titlePlacement: "center",
+    title: "",
   };
 
   renderRaw() {
     return (
-      <el-divider
-        direction={this.props.direction}
-        border-style={this.props.borderStyle}
-        content-position={this.props.contentPosition}
+      <NDivider
+        dashed={this.props.dashed}
+        titlePlacement={this.props.titlePlacement}
       >
-        {this.props.text}
-      </el-divider>
+        {this.props.title}
+      </NDivider>
     );
   }
 
@@ -35,66 +44,26 @@ export class Divider extends NonForm {
     let _ = super.getRight(op);
     let add: IConRightReterItemOp["childs"] = [
       {
-        label: "方向",
-        editor: (
-          <el-radio-group
-            size="small"
-            model-value={this.props.direction}
-            onChange={(v: any) => {
-              this.props.direction = v;
-            }}
-          >
-            <el-radio-button label="水平" value="horizontal" />
-            <el-radio-button label="垂直" value="vertical" />
-          </el-radio-group>
-        ),
+        label: "虚线分割",
+        editor: <NSwitch v-model:value={this.props.dashed} />,
       },
       {
-        label: "样式",
+        label: "标题位置",
         editor: (
-          <el-select
-            model-value={this.props.borderStyle}
-            size="small"
-            onChange={(v: any) => {
-              this.props.borderStyle = v;
-            }}
+          <NSelect
+            v-model:value={this.props.titlePlacement}
             placeholder="请选择"
-          >
-            <el-option label="none" value="none" />
-            <el-option label="solid" value="solid" />
-            <el-option label="dashed" value="dashed" />
-            <el-option label="dotted" value="dotted" />
-            <el-option label="inset" value="inset" />
-          </el-select>
-        ),
-      },
-      {
-        label: "内容位置",
-        editor: (
-          <el-radio-group
-            size="small"
-            model-value={this.props.contentPosition}
-            onChange={(v: any) => {
-              this.props.contentPosition = v;
-            }}
-          >
-            <el-radio-button label="left" value="left" />
-            <el-radio-button label="center" value="center" />
-            <el-radio-button label="right" value="right" />
-          </el-radio-group>
-        ),
-      },
-      {
-        label: "文字内容",
-        editor: (
-          <el-input
-            size="small"
-            model-value={this.props.text}
-            onInput={(v: any) => {
-              this.props.text = v;
-            }}
+            options={[
+              { label: "left", value: "left" },
+              { label: "center", value: "center" },
+              { label: "right", value: "right" },
+            ]}
           />
         ),
+      },
+      {
+        label: "标题",
+        editor: <NInput v-model:value={this.props.title} />,
       },
     ];
     _.find((_) => _.key == "com")?.childs!.unshift(...add);
