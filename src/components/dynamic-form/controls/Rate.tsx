@@ -106,7 +106,6 @@ export class Rate extends BaseCon {
       this.props.showText
         ? {
             label: "辅助文字",
-            labelPlacement: "top",
             editor: (
               <div class="controls__ rate">
                 <div class="list">

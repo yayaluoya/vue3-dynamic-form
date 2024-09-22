@@ -7,6 +7,7 @@ import {
   NInput,
   NInputNumber,
   NSwitch,
+  NText,
 } from "naive-ui";
 
 class FormItemCon_ extends FormItemCon {
@@ -40,21 +41,27 @@ export class Test extends BaseCon {
     let { value } = this.getFormValueRef(formData, this.formDefaultValue);
     return (
       <NFlex vertical>
-        测试控件
+        <NText>测试控件</NText>
         <NGrid xGap={5} yGap={5}>
-          <NGridItem span={4}>数字:</NGridItem>
+          <NGridItem span={4}>
+            <NText>数字:</NText>
+          </NGridItem>
           <NGridItem span={20}>
             <NInputNumber v-model:value={value.number} />
           </NGridItem>
         </NGrid>
         <NGrid>
-          <NGridItem span={4}>字符串:</NGridItem>
+          <NGridItem span={4}>
+            <NText>字符串:</NText>
+          </NGridItem>
           <NGridItem span={20}>
             <NInput v-model:value={value.str} />
           </NGridItem>
         </NGrid>
         <NGrid>
-          <NGridItem span={4}>开关:</NGridItem>
+          <NGridItem span={4}>
+            <NText>开关:</NText>
+          </NGridItem>
           <NGridItem span={20}>
             <NSwitch v-model:value={value.b} />
           </NGridItem>

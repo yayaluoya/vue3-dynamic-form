@@ -138,7 +138,6 @@ export class Slider extends BaseCon {
       },
       {
         label: "标记",
-        labelPlacement: "top",
         editor: (
           <div class="controls__ slider-right">
             {this.props.marks.map((_, i) => {

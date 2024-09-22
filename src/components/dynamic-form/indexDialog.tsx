@@ -4,8 +4,8 @@ import Render from "./render.vue";
 import CodeEditInput from "./com/codeEditInput.vue";
 import { Clipboard } from "./tool/web/Clipboard";
 import { FileT } from "./tool/web/FileT";
-import type { BaseCon } from "lib";
 import type { TFormConfig } from "./config/getFormConfig";
+import type { BaseCon } from "./controls";
 
 export interface IRenderOp {
   cons?: BaseCon[];

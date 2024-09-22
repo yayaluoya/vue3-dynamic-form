@@ -35,7 +35,13 @@ export class Divider extends NonForm {
         dashed={this.props.dashed}
         titlePlacement={this.props.titlePlacement}
       >
-        {this.props.title}
+        {{
+          default: this.props.title
+            ? () => {
+                return this.props.title;
+              }
+            : undefined,
+        }}
       </NDivider>
     );
   }
@@ -63,7 +69,7 @@ export class Divider extends NonForm {
       },
       {
         label: "标题",
-        editor: <NInput v-model:value={this.props.title} />,
+        editor: <NInput v-model:value={this.props.title} clearable />,
       },
     ];
     _.find((_) => _.key == "com")?.childs!.unshift(...add);

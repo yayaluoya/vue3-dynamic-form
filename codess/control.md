@@ -23,7 +23,8 @@ export class $0 extends BaseCon {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    _.find((_) => _.title == "常用属性")?.childs!.unshift(...[]);
+    let add: IConRightReterItemOp["childs"] = [];
+    _.find((_) => _.title == "常用属性")?.childs!.unshift(...add);
     return _;
   }
 }
@@ -51,7 +52,8 @@ export class $0 extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    _.find((_) => _.title == "常用属性")?.childs!.unshift(...[]);
+    let add: IConRightReterItemOp["childs"] = [];
+    _.find((_) => _.title == "常用属性")?.childs!.unshift(...add);
     return _;
   }
 }

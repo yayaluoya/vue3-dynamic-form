@@ -126,7 +126,6 @@ export class Checkbox extends BaseCon {
       },
       {
         label: "选项设置",
-        labelPlacement: "top",
         editor: (
           <div class="controls__ checkbox-right">
             <Draggable

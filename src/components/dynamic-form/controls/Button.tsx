@@ -1,9 +1,11 @@
 import {
   NButton,
   NColorPicker,
+  NFlex,
   NSelect,
   NSwitch,
   type ButtonProps,
+  type FlexProps,
 } from "naive-ui";
 import { predefineColors } from "../config/predefineColors";
 import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
@@ -36,6 +38,7 @@ export class Button extends NonForm {
     tertiary: boolean;
     text: boolean;
     textColor: ButtonProps["textColor"];
+    justify: FlexProps["justify"];
   } = {
     type: "default",
     size: "medium",
@@ -52,12 +55,13 @@ export class Button extends NonForm {
     tertiary: false,
     text: false,
     textColor: "",
+    justify: "start",
   };
   buttonText = "按钮";
 
   renderRaw() {
     return (
-      <div>
+      <NFlex justify={this.props.justify}>
         <NButton
           type={this.props.type}
           size={this.props.size}
@@ -77,7 +81,7 @@ export class Button extends NonForm {
         >
           {this.buttonText}
         </NButton>
-      </div>
+      </NFlex>
     );
   }
 
@@ -117,6 +121,20 @@ export class Button extends NonForm {
               { label: "small", value: "small" },
               { label: "medium", value: "medium" },
               { label: "large", value: "large" },
+            ]}
+          />
+        ),
+      },
+      {
+        label: "对齐方式",
+        editor: (
+          <NSelect
+            v-model:value={this.props.justify}
+            placeholder="请选择"
+            options={[
+              { label: "start", value: "start" },
+              { label: "center", value: "center" },
+              { label: "end", value: "end" },
             ]}
           />
         ),

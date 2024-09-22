@@ -32,6 +32,8 @@ import {
   Slider,
   BaseCon,
   Split,
+  Interval,
+  Text,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -59,6 +61,7 @@ import {
   NMessageProvider,
   useThemeVars,
   NFlex,
+  NText,
 } from "naive-ui";
 import IndexDialog, { type IJSONH, type IRenderOp } from "./indexDialog";
 
@@ -88,6 +91,7 @@ export default defineComponent({
     NFlex,
     NDialogProvider: NDialogProvider as any,
     NMessageProvider: NMessageProvider as any,
+    NText,
   },
   props: {
     cons: {
@@ -139,7 +143,7 @@ export default defineComponent({
       },
       {
         label: "其他类型",
-        cons: [Divider, Alert, Button],
+        cons: [Divider, Interval, Alert, Button, Text],
       },
       {
         label: "扩展类型",
@@ -320,7 +324,7 @@ export default defineComponent({
                           on: Con.ConType === activateCon?.conType,
                         }"
                       >
-                        <span>{{ Con.ConName }}</span>
+                        <NText class="name">{{ Con.ConName }}</NText>
                         <div class="draggable-show-item">
                           <Item drag :formConfig="formConfig" :con="Con.I!" />
                         </div>
@@ -378,8 +382,8 @@ export default defineComponent({
         </NFlex>
       </div>
       <div class="content">
-        <span class="null" v-if="cons.length <= 0"
-          >请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</span
+        <NText class="null" v-if="cons.length <= 0">
+          请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</NText
         >
         <NScrollbar style="height: calc(var(--height) - 42px)">
           <NForm
@@ -481,11 +485,11 @@ export default defineComponent({
         &.on,
         &:hover {
           border-color: var(--primaryColorHover) !important;
-          > span {
+          > .name {
             color: var(--primaryColorHover);
           }
         }
-        > span {
+        > .name {
           font-family: "Source Han Sans CN";
           font-style: normal;
           font-weight: 400;
@@ -533,7 +537,6 @@ export default defineComponent({
 
       > .null {
         position: absolute;
-        font-size: 18px;
         pointer-events: none;
         z-index: 2;
         color: var(--textColor3);
