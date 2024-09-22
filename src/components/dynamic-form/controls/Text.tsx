@@ -25,7 +25,7 @@ export class Text extends NonForm {
     style: "",
   };
 
-  text = "";
+  text = "文字";
 
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);

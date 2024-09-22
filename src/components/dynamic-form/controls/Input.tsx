@@ -1,4 +1,11 @@
 import {
+  NInput,
+  NInputNumber,
+  NSelect,
+  NSwitch,
+  type InputProps,
+} from "naive-ui";
+import {
   BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
@@ -16,14 +23,20 @@ export class Input extends BaseCon {
   /** 单例对象 */
   static I = new Input();
 
-  props = {
+  props: {
+    type: InputProps["type"];
+    placeholder: string;
+    clearable: boolean;
+    maxlength: number;
+    rows: number;
+    showCount: boolean;
+  } = {
     type: "text",
-    maxlength: undefined,
-    minlength: undefined,
-    showWordLimit: false,
     placeholder: "",
     clearable: false,
-    rows: 2,
+    maxlength: 0,
+    rows: 3,
+    showCount: false,
   };
 
   formDefaultValue = "";
@@ -31,18 +44,14 @@ export class Input extends BaseCon {
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return (
-      <el-input
-        model-value={ref.value}
-        onInput={(v: any) => {
-          ref.value = v;
-        }}
+      <NInput
+        v-model:value={ref.value}
         type={this.props.type}
-        maxlength={this.props.maxlength}
-        minlength={this.props.minlength}
-        show-word-limit={this.props.showWordLimit}
         placeholder={this.props.placeholder}
         clearable={this.props.clearable}
+        maxlength={this.props.maxlength ? this.props.maxlength : undefined}
         rows={this.props.rows}
+        showCount={this.props.showCount}
       />
     );
   }
@@ -53,77 +62,39 @@ export class Input extends BaseCon {
       {
         label: "类型",
         editor: (
-          <el-select
-            model-value={this.props.type}
-            onChange={(v: any) => {
-              this.props.type = v;
-            }}
-            size="small"
-            placeholder="选择类型"
-            filterable
-          >
-            <el-option label="text" value="text" />
-            <el-option label="textarea" value="textarea" />
-          </el-select>
-        ),
-      },
-      {
-        label: "占位字符串",
-        editor: (
-          <el-input
-            size="small"
-            model-value={this.props.placeholder}
-            onInput={(v: any) => {
-              this.props.placeholder = v;
-            }}
+          <NSelect
+            v-model:value={this.props.type}
+            placeholder="请选择"
+            options={[
+              { label: "text", value: "text" },
+              { label: "textarea", value: "textarea" },
+              { label: "password", value: "password" },
+            ]}
           />
         ),
       },
-      ...(this.props.type != "textarea"
-        ? [
-            {
-              label: "可清除",
-              editor: (
-                <el-switch
-                  size="small"
-                  model-value={this.props.clearable}
-                  onChange={(v: any) => {
-                    this.props.clearable = v;
-                  }}
-                ></el-switch>
-              ),
-            },
-          ]
-        : []),
-      ...(this.props.type == "textarea"
-        ? [
-            {
-              label: "行数",
-              editor: (
-                <el-input-number
-                  size="small"
-                  model-value={this.props.rows}
-                  min={0}
-                  onChange={(_: any) => {
-                    this.props.rows = _;
-                  }}
-                />
-              ),
-            },
-            {
-              label: "显示统计字数",
-              editor: (
-                <el-switch
-                  size="small"
-                  model-value={this.props.showWordLimit}
-                  onChange={(v: any) => {
-                    this.props.showWordLimit = v;
-                  }}
-                ></el-switch>
-              ),
-            },
-          ]
-        : []),
+      {
+        label: "空白占位符",
+        editor: <NInput v-model:value={this.props.placeholder} />,
+      },
+      {
+        label: "可清空",
+        editor: <NSwitch v-model:value={this.props.clearable} />,
+      },
+      {
+        label: "最大输入长度",
+        editor: <NInputNumber v-model:value={this.props.maxlength} />,
+      },
+      this.props.type == "textarea"
+        ? {
+            label: "输入框行数",
+            editor: <NInputNumber v-model:value={this.props.rows} />,
+          }
+        : undefined,
+      {
+        label: "显示字数统计",
+        editor: <NSwitch v-model:value={this.props.showCount} />,
+      },
     ];
     _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
