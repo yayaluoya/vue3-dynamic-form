@@ -91,7 +91,7 @@ export default defineComponent({
       <DynamicForm
         class="dynamic-form"
         :cons="cons"
-        :extendCons="extendCons"
+        :extendCons="extendCons as any"
         :formConfig="formConfig"
         @update:cons="
           (v) => {

@@ -5,7 +5,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
-  plugins: [vue(), vueJsx(), dts({ tsconfigPath: "./tsconfig.app.json" })],
+  plugins: [vue(), vueJsx(), dts({ tsconfigPath: "./tsconfig.lib.json" })],
   build: {
     outDir: "dist-lib",
     lib: {

@@ -1,18 +1,10 @@
 {
-    "dependent": [
-        {
-            "package": "file:codess",
-            "prefix": ""
-        }
-    ],
-    "installRecord": {
-        "element-plus": {
-            "home": "https://codess.dumogu.top/manage-packets/element-plus/0",
-            "description": "element-plus项目常用的代码片段",
-            "version": "0",
-            "repository": "https://github.com/wudawuer/codess-element-plus/tree/master/snippets",
-            "prefix": ""
-        }
-    },
-    "document": "https://www.npmjs.com/package/codess"
+  "dependent": [
+    {
+      "package": "file:codess",
+      "prefix": ""
+    }
+  ],
+  "installRecord": {},
+  "document": "https://www.npmjs.com/package/codess"
 }

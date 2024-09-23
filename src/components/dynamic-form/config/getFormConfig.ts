@@ -17,7 +17,7 @@ export type TFormConfig = Pick<
 >;
 
 /**
- * 获取表单配置
+ * 获取默认表单配置
  */
 export function getFormConfig(): TFormConfig {
   return {

@@ -12,15 +12,17 @@ export {
   Grid,
   Input,
   InputNumber,
+  Interval,
   LabelPage,
   Radio,
   Rate,
   Select,
+  Slider,
   Split,
   Switch,
-  Slider,
   Table,
   Test,
+  Text,
 } from "./src/components/dynamic-form/controls/index";
 export { ConT } from "./src/components/dynamic-form/ConT";
 export { getFormConfig } from "./src/components/dynamic-form/config/getFormConfig";
