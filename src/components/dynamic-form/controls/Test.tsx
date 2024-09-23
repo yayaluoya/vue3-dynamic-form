@@ -1,5 +1,4 @@
 import { BaseCon, type IConRenderOp } from "./BaseCon";
-import { FormItemCon } from "../com/FormItemCon";
 import {
   NFlex,
   NGrid,
@@ -9,17 +8,12 @@ import {
   NSwitch,
   NText,
 } from "naive-ui";
-
-class FormItemCon_ extends FormItemCon {
-  render() {
-    return [];
-  }
-}
+import { BaseForm } from "./BaseForm";
 
 /**
  * 测试
  */
-export class Test extends BaseCon {
+export class Test extends BaseForm {
   /** 控件类型 */
   static ConType = "Test";
   /** 控件名字 */
@@ -32,10 +26,6 @@ export class Test extends BaseCon {
     str: "字符串",
     b: false,
   };
-
-  init(config: Partial<Test>) {
-    this.formItem = new FormItemCon_(config?.formItem || this.formItem);
-  }
 
   renderRaw({ formData }: IConRenderOp) {
     let { value } = this.getFormValueRef(formData, this.formDefaultValue);

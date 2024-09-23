@@ -6,9 +6,8 @@ import {
   BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
-import { NonForm } from "./NonForm";
 import {
   NButton,
   NCollapse,
@@ -27,7 +26,7 @@ import { Move, RemoveCircle } from "@vicons/ionicons5";
 /**
  * 折叠面板
  */
-export class Collapse extends NonForm {
+export class Collapse extends BaseCon {
   /** 控件类型 */
   static ConType = "Collapse";
   /** 控件名字 */
@@ -118,7 +117,7 @@ export class Collapse extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "手风琴模式",
         editor: <NSwitch v-model:value={this.collapseProps.accordion} />,

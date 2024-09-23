@@ -2,13 +2,12 @@ import {
   BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
 import "../style/table.scss";
 import Item from "../com/item.vue";
 import { predefineColors } from "../config/predefineColors";
-import { NonForm } from "./NonForm";
 import { NColorPicker, NDropdown, NFlex, NIcon, NInputNumber } from "naive-ui";
 import {
   ArrowBack,
@@ -32,7 +31,7 @@ import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
 /**
  * 单元格
  */
-class Cell extends NonForm {
+class Cell extends BaseCon {
   /** 控件类型 */
   static ConType = "Cell";
   /** 控件名字 */
@@ -338,7 +337,7 @@ class Cell extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "边框宽度",
         editor: <NInputNumber v-model:value={this.borderWidth} />,
@@ -361,7 +360,7 @@ class Cell extends NonForm {
 /**
  * 表格
  */
-export class Table extends NonForm {
+export class Table extends BaseCon {
   /** 控件类型 */
   static ConType = "Table";
   /** 控件名字 */
@@ -706,7 +705,7 @@ export class Table extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "边框宽度",
         editor: <NInputNumber v-model:value={this.borderWidth} />,

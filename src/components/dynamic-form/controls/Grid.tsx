@@ -5,9 +5,8 @@ import {
   BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
-import { NonForm } from "./NonForm";
 import {
   NButton,
   NFlex,
@@ -27,7 +26,7 @@ import {
 /**
  * 栅格列
  */
-class GridCol extends NonForm {
+class GridCol extends BaseCon {
   /** 控件类型 */
   static ConType = "GridCol";
   /** 控件名字 */
@@ -182,7 +181,7 @@ class GridCol extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "占据列数量",
         editor: (
@@ -204,7 +203,7 @@ class GridCol extends NonForm {
 /**
  * 栅格
  */
-export class Grid extends NonForm {
+export class Grid extends BaseCon {
   /** 控件类型 */
   static ConType = "Grid";
   /** 控件名字 */
@@ -271,7 +270,7 @@ export class Grid extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "栅格数量",
         editor: <NInputNumber v-model:value={this.props.cols} min={0} />,
@@ -285,7 +284,7 @@ export class Grid extends NonForm {
         editor: <NInputNumber v-model:value={this.props.yGap} min={0} />,
       },
     ];
-    let push: IConRightReterItemOp["childs"] = [
+    let push: IConRightRenderItemOp["childs"] = [
       {
         label: "当前栅格列",
       },

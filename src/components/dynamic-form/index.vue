@@ -34,6 +34,7 @@ import {
   Split,
   Interval,
   Text,
+  Switch,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -131,6 +132,7 @@ export default defineComponent({
           ColorPicker,
           Rate,
           Slider,
+          Switch,
         ],
       },
       {

@@ -1,16 +1,16 @@
 import {
-  BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
-import "../style/color-picker.scss";
 import { predefineColors } from "../config/predefineColors";
+import { NColorPicker, NGridItem, NSwitch } from "naive-ui";
+import { BaseOption, type IOpItem } from "./BaseOption";
 
 /**
  * 颜色选择器
  */
-export class ColorPicker extends BaseCon {
+export class ColorPicker extends BaseOption {
   /** 控件类型 */
   static ConType = "ColorPicker";
   /** 控件名字 */
@@ -18,89 +18,63 @@ export class ColorPicker extends BaseCon {
   /** 单例对象 */
   static I = new ColorPicker();
 
-  props: {
-    showAlpha: boolean;
-    predefine: string[];
-  } = {
+  props = {
     showAlpha: false,
-    predefine: [],
   };
 
   formDefaultValue = "";
 
+  constructor() {
+    super();
+    this.list = [];
+  }
+
+  getOp() {
+    let op = super.getOp();
+    op.value = "";
+    return op;
+  }
+
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return (
-      <el-color-picker
-        model-value={ref.value}
-        onChange={(v: any) => {
-          ref.value = v;
-        }}
+      <NColorPicker
+        v-model:value={ref.value}
         show-alpha={this.props.showAlpha}
-        predefine={this.props.predefine.filter(Boolean)}
+        swatches={this.list.map((_) => _.value).filter(Boolean)}
       />
     );
   }
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "选择透明度",
         editor: (
-          <el-switch
-            model-value={this.props.showAlpha}
-            onChange={(v: any) => {
+          <NSwitch
+            value={this.props.showAlpha}
+            onUpdate:value={(v) => {
               this.props.showAlpha = v;
               this.formDefaultValue = "";
-              this.upadteRenderKey();
             }}
-            size="small"
-          ></el-switch>
+          />
         ),
       },
-      {
-        label: "预定义颜色",
-        editor: (
-          <div class="controls__ color-picker">
-            <div class="list">
-              {this.props.predefine.map((_, i) => {
-                return (
-                  <div class="i">
-                    <el-color-picker
-                      size="small"
-                      model-value={_}
-                      onChange={(v: any) => {
-                        this.props.predefine[i] = v;
-                      }}
-                      show-alpha
-                      predefine={predefineColors}
-                    />
-                    <el-icon
-                      class="remove"
-                      onClick={() => {
-                        this.props.predefine.splice(i, 1);
-                      }}
-                    >
-                      <CircleClose />
-                    </el-icon>
-                  </div>
-                );
-              })}
-            </div>
-            <el-button
-              plain
-              size="small"
-              type="primary"
-              onClick={() => {
-                this.props.predefine.push("");
-              }}
-            >
-              增加选项
-            </el-button>
-          </div>
-        ),
-      },
+      ...this.getRightOptionEditor({
+        showActivate: false,
+        getLableEditor: () => undefined,
+        getValueEditor: (_) => {
+          return (
+            <NGridItem span={18}>
+              <NColorPicker
+                v-model:value={_.value}
+                swatches={predefineColors}
+              />
+            </NGridItem>
+          );
+        },
+      }),
     ];
     _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;

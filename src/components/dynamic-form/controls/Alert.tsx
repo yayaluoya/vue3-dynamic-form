@@ -1,11 +1,14 @@
 import { NAlert, NInput, NSelect, NSwitch, type AlertProps } from "naive-ui";
-import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
-import { NonForm } from "./NonForm";
+import {
+  BaseCon,
+  type IConRightRenderOp,
+  type IConRightRenderItemOp,
+} from "./BaseCon";
 
 /**
  * 提示
  */
-export class Alert extends NonForm {
+export class Alert extends BaseCon {
   /** 控件类型 */
   static ConType = "Alert";
   /** 控件名字 */
@@ -24,7 +27,7 @@ export class Alert extends NonForm {
     bordered: true,
     closable: false,
     showIcon: true,
-    title: "",
+    title: "标题",
     type: "default",
     content: "",
   };
@@ -38,14 +41,16 @@ export class Alert extends NonForm {
         title={this.props.title}
         type={this.props.type}
       >
-        {this.props.content}
+        {{
+          default: this.props.content ? () => this.props.content : undefined,
+        }}
       </NAlert>
     );
   }
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "类型",
         editor: (

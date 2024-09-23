@@ -2,10 +2,8 @@ import { customAlphabet } from "nanoid";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import { type TFormConfig } from "../config/getFormConfig";
 import "../style/controls.scss";
-import { FormItemCon } from "../com/FormItemCon";
 import type { JSX } from "vue/jsx-runtime";
 import {
-  NButton,
   NCollapseItem,
   NFlex,
   NFormItem,
@@ -45,8 +43,8 @@ export interface IConRightRenderOp {
   cons?: BaseCon[];
 }
 
-export interface IConRightReterItemOp {
-  key: "com" | "form";
+export interface IConRightRenderItemOp<K extends string = string> {
+  key: K;
   title: string;
   childs: (
     | {
@@ -57,10 +55,12 @@ export interface IConRightReterItemOp {
   )[];
 }
 
+export type BaseRightRenderK = "com";
+
 /**
  * 基类控件
  */
-export class BaseCon {
+export class BaseCon<RightRenderK extends string = string> {
   /** 单例对象 */
   static I?: BaseCon;
   /** 控件类型 */
@@ -79,12 +79,6 @@ export class BaseCon {
   /** 子控件 */
   childs: BaseCon[] = [];
 
-  /** 表单项组件 */
-  formItem = new FormItemCon();
-
-  /** 表单默认值 */
-  formDefaultValue: any = undefined;
-
   /** 是否可拖拽 */
   protected towable = true;
 
@@ -95,19 +89,10 @@ export class BaseCon {
     this.conType = (this.constructor as any).ConType;
     this.conName = (this.constructor as any).ConName;
     let key = BaseCon.getKey();
-    this.key = "key-" + key;
+    this.key = key;
     this.renderKey = this.key;
-    // 属性名默认和key同名
-    this.formItem.path =
-      this.conType.toLocaleLowerCase() + "-" + key.slice(0, 7);
-    this.formItem.label = this.conName;
     //
     this.init();
-  }
-
-  /** 获取表单属性名 */
-  getFormPath() {
-    return this.formItem.path;
   }
 
   /** 转JSON字符串 */
@@ -133,7 +118,6 @@ export class BaseCon {
     for (let i in config) {
       (this as any)[i] = ObjectUtils.clone2(config[i]);
     }
-    this.formItem = new FormItemCon(this.formItem);
     this.childs = toCons(this.childs);
     //
     this.init(config);
@@ -171,30 +155,6 @@ export class BaseCon {
   }
 
   /**
-   * 获取表单值ref，如果存在formdata的话就改formdata里面的值，反之则改formDefaultValue
-   * @param formData
-   */
-  getFormValueRef<V>(formData: any = undefined, v: V): { value: V } {
-    return Object.defineProperties(
-      {},
-      {
-        value: {
-          get: () => {
-            return formData
-              ? formData[this.formItem.path || ""]
-              : this.formDefaultValue;
-          },
-          set: (v) => {
-            formData
-              ? (formData[this.formItem.path || ""] = v)
-              : (this.formDefaultValue = v);
-          },
-        },
-      }
-    ) as any;
-  }
-
-  /**
    * 渲染拖拽时显示的元素
    * @param  op
    */
@@ -203,7 +163,7 @@ export class BaseCon {
   }
 
   /**
-   * 渲染行元素
+   * 顶层渲染方法
    * @param {RenderOp} op
    * @returns
    */
@@ -215,7 +175,7 @@ export class BaseCon {
   }: IConRenderOp): JSX.Element | undefined {
     return formData ? (
       this.hide ? undefined : (
-        this.renderFormItem(arguments[0])
+        this.renderMiddleware(arguments[0])
       )
     ) : (
       <div
@@ -268,13 +228,13 @@ export class BaseCon {
               </NFlex>,
             ]
           : null}
-        <div class="content">{this.renderFormItem(arguments[0])}</div>
+        <div class="content">{this.renderMiddleware(arguments[0])}</div>
       </div>
     );
   }
 
   /**
-   * 获取handler元素
+   * 获取顶层渲染方法的handler元素
    * @param op
    */
   getHandler({ ctx }: IConRenderOp): JSX.Element[] {
@@ -316,34 +276,17 @@ export class BaseCon {
   }
 
   /**
-   * 渲染表单元素
+   * 渲染中间件
+   * TODO 负责分离顶层渲染和底层渲染方法
    * @param op
    * @returns
    */
-  renderFormItem(op: IConRenderOp): JSX.Element {
-    let formItemProps = this.formItem.getFormItemProps();
-    return (
-      <NFormItem
-        path={formItemProps.path}
-        label={formItemProps.label}
-        label-align={formItemProps.labelAlign}
-        label-placement={formItemProps.labelPlacement}
-        label-style={formItemProps.labelStyle}
-        label-width={formItemProps.labelWidth}
-        rule={formItemProps.rule}
-        show-feedback={formItemProps.showFeedback}
-        show-label={formItemProps.showLabel}
-        show-require-mark={formItemProps.showRequireMark}
-        require-mark-placement={formItemProps.requireMarkPlacement}
-        size={formItemProps.size}
-      >
-        {this.renderRaw(op)}
-      </NFormItem>
-    );
+  renderMiddleware(op: IConRenderOp): JSX.Element {
+    return this.renderRaw(op);
   }
 
   /**
-   * 渲染
+   * 最底层渲染方法
    * @param op
    */
   renderRaw(op: IConRenderOp): JSX.Element {
@@ -384,8 +327,8 @@ export class BaseCon {
   /**
    * 获取右侧编辑栏默认展开的栏目
    */
-  getRightDefaultExpanded(): IConRightReterItemOp["key"][] {
-    return ["com", "form"];
+  getRightDefaultExpanded(): (RightRenderK | BaseRightRenderK)[] {
+    return ["com"];
   }
 
   /**
@@ -394,7 +337,9 @@ export class BaseCon {
    * @param hasEditor 是否获取编辑器
    * @returns
    */
-  getRight(op: IConRightRenderOp): IConRightReterItemOp[] {
+  getRight(
+    op: IConRightRenderOp
+  ): IConRightRenderItemOp<RightRenderK | BaseRightRenderK>[] {
     return [
       {
         key: "com",
@@ -405,11 +350,6 @@ export class BaseCon {
             editor: <NSwitch v-model:value={this.hide} />,
           },
         ],
-      },
-      {
-        key: "form",
-        title: "表单属性",
-        childs: [...this.formItem.render()],
       },
     ];
   }

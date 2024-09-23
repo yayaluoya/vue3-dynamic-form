@@ -8,17 +8,17 @@ import {
   type InputNumberProps,
 } from "naive-ui";
 import {
-  BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
 import { ArrayUtils } from "../tool/ArrayUtils";
+import { BaseForm } from "./BaseForm";
 
 /**
  * 数字输入框
  */
-export class InputNumber extends BaseCon {
+export class InputNumber extends BaseForm {
   /** 控件类型 */
   static ConType = "InputNumber";
   /** 控件名字 */
@@ -69,7 +69,7 @@ export class InputNumber extends BaseCon {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "占位字符串",
         editor: <NInput v-model:value={this.props.placeholder} />,

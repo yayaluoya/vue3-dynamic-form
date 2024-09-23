@@ -2,14 +2,16 @@ import {
   BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
-import "../style/rate.scss";
+import { BaseForm } from "./BaseForm";
+import { NColorPicker, NInputNumber, NRate, NSwitch } from "naive-ui";
+import { predefineColors } from "../config/predefineColors";
 
 /**
  * 评分
  */
-export class Rate extends BaseCon {
+export class Rate extends BaseForm {
   /** 控件类型 */
   static ConType = "Rate";
   /** 控件名字 */
@@ -18,11 +20,10 @@ export class Rate extends BaseCon {
   static I = new Rate();
 
   props = {
-    max: 5,
     allowHalf: false,
     clearable: false,
-    showText: false,
-    texts: ["", "", "", "", ""],
+    color: "",
+    count: 5,
   };
 
   formDefaultValue = 0;
@@ -30,112 +31,40 @@ export class Rate extends BaseCon {
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return (
-      <el-rate
-        model-value={ref.value}
-        onChange={(v: any) => {
-          ref.value = v;
-        }}
-        max={this.props.max}
-        allow-half={this.props.allowHalf}
+      <NRate
+        v-model:value={ref.value}
+        allowHalf={this.props.allowHalf}
         clearable={this.props.clearable}
-        show-text={this.props.showText}
-        texts={this.props.texts}
-      />
+        color={this.props.color}
+        count={this.props.count}
+      ></NRate>
     );
   }
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
-      {
-        label: "最大分值",
-        editor: (
-          <el-input-number
-            size="small"
-            min={1}
-            model-value={this.props.max}
-            onChange={(v: any) => {
-              this.props.max = v;
-              if (this.props.texts.length > v) {
-                this.props.texts = this.props.texts.slice(0, v);
-              } else {
-                this.props.texts.push(
-                  ...new Array(v - this.props.texts.length).fill("")
-                );
-              }
-            }}
-          />
-        ),
-      },
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "允许半选",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.allowHalf}
-            onChange={(v: any) => {
-              this.props.allowHalf = v;
-            }}
-          ></el-switch>
-        ),
+        editor: <NSwitch v-model:value={this.props.allowHalf} />,
       },
       {
         label: "可清除",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.clearable}
-            onChange={(v: any) => {
-              this.props.clearable = v;
-            }}
-          ></el-switch>
-        ),
+        editor: <NSwitch v-model:value={this.props.clearable} />,
       },
       {
-        label: "显示辅助文字",
+        label: "图标个数",
+        editor: <NInputNumber v-model:value={this.props.count} />,
+      },
+      {
+        label: "已激活图标颜色",
         editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.showText}
-            onChange={(v: any) => {
-              this.props.showText = v;
-            }}
-          ></el-switch>
+          <NColorPicker
+            v-model:value={this.props.color}
+            swatches={predefineColors}
+          />
         ),
       },
-      this.props.showText
-        ? {
-            label: "辅助文字",
-            editor: (
-              <div class="controls__ rate">
-                <div class="list">
-                  {this.props.texts.map((_, i) => {
-                    return (
-                      <div class="i">
-                        <span>{i + 1}</span>
-                        <el-input
-                          size="small"
-                          model-value={_}
-                          onInput={(v: any) => {
-                            this.props.texts[i] = v;
-                          }}
-                        />
-                        <el-icon
-                          class="remove"
-                          onClick={() => {
-                            this.props.texts.splice(i, 1);
-                          }}
-                        >
-                          <CircleClose />
-                        </el-icon>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ),
-          }
-        : undefined,
     ];
     _.find((_) => _.title == "常用属性")?.childs!.unshift(...add);
     return _;

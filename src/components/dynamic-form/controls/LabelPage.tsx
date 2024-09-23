@@ -7,9 +7,8 @@ import {
   BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
-import { NonForm } from "./NonForm";
 import {
   NButton,
   NFlex,
@@ -28,7 +27,7 @@ import { Move, RemoveCircle } from "@vicons/ionicons5";
 /**
  * 标签页
  */
-export class LabelPage extends NonForm {
+export class LabelPage extends BaseCon {
   /** 控件类型 */
   static ConType = "LabelPage";
   /** 控件名字 */
@@ -138,7 +137,7 @@ export class LabelPage extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "风格类型",
         editor: (

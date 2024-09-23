@@ -8,13 +8,16 @@ import {
   type FlexProps,
 } from "naive-ui";
 import { predefineColors } from "../config/predefineColors";
-import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
-import { NonForm } from "./NonForm";
+import {
+  type IConRightRenderOp,
+  type IConRightRenderItemOp,
+  BaseCon,
+} from "./BaseCon";
 
 /**
  * 按钮
  */
-export class Button extends NonForm {
+export class Button extends BaseCon {
   /** 控件类型 */
   static ConType = "Button";
   /** 控件名字 */
@@ -87,7 +90,7 @@ export class Button extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "类型",
         editor: (

@@ -26,22 +26,22 @@
             "",
             "  getRight(op: IConRightRenderOp) {",
             "    let _ = super.getRight(op);",
-            "    let add: IConRightReterItemOp[\"childs\"] = [];",
-            "    _.find((_) => _.title == \"常用属性\")?.childs!.unshift(...add);",
+            "    let add: IConRightRenderItemOp[\"childs\"] = [];",
+            "    _.find((_) => _.key == \"com\")?.childs!.unshift(...add);",
             "    return _;",
             "  }",
             "}"
         ],
         "description": "从基类继承的表单控件"
     },
-    "con-non-form javascript|javascriptreact|typescript|typescriptreact": {
+    "con-form javascript|javascriptreact|typescript|typescriptreact": {
         "scope": "javascript,javascriptreact,typescript,typescriptreact",
-        "prefix": "con-non-form",
+        "prefix": "con-form",
         "body": [
             "/**",
             " *",
             " */",
-            "export class $0 extends NonForm {",
+            "export class $0 extends BaseForm {",
             "  /** 控件类型 */",
             "  static ConType = \"$0\";",
             "  /** 控件名字 */",
@@ -55,13 +55,13 @@
             "",
             "  getRight(op: IConRightRenderOp) {",
             "    let _ = super.getRight(op);",
-            "    let add: IConRightReterItemOp[\"childs\"] = [];",
-            "    _.find((_) => _.title == \"常用属性\")?.childs!.unshift(...add);",
+            "    let add: IConRightRenderItemOp[\"childs\"] = [];",
+            "    _.find((_) => _.key == \"com\")?.childs!.unshift(...add);",
             "    return _;",
             "  }",
             "}"
         ],
-        "description": "非表单控件"
+        "description": "表单控件"
     },
     "con-right-item javascript|typescript|javascriptreact|typescriptreact": {
         "scope": "javascript,typescript,javascriptreact,typescriptreact",

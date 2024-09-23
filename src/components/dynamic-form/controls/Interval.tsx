@@ -1,12 +1,15 @@
 import { NInputNumber } from "naive-ui";
-import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
-import { NonForm } from "./NonForm";
+import {
+  type IConRightRenderOp,
+  type IConRightRenderItemOp,
+  BaseCon,
+} from "./BaseCon";
 import type { IRenderOp } from "../indexDialog";
 
 /**
  * 空白间隔
  */
-export class Interval extends NonForm {
+export class Interval extends BaseCon {
   /** 控件类型 */
   static ConType = "Interval";
   /** 控件名字 */
@@ -32,7 +35,7 @@ export class Interval extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "高度",
         editor: <NInputNumber v-model:value={this.props.height} min={10} />,

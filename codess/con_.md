@@ -16,29 +16,28 @@ export class $0 extends BaseCon {
 
   formDefaultValue = "";
 
-  renderRaw({ formData }: IConRenderOp) {
-    let ref = this.getFormValueRef(formData, this.formDefaultValue);
+  renderRaw() {
     return <div></div>;
   }
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [];
-    _.find((_) => _.title == "常用属性")?.childs!.unshift(...add);
+    let add: IConRightRenderItemOp["childs"] = [];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }
 ```
 
-## non-form
+## form
 
-非表单控件
+表单控件
 
 ```js jsx ts tsx
 /**
  *
  */
-export class $0 extends NonForm {
+export class $0 extends BaseForm {
   /** 控件类型 */
   static ConType = "$0";
   /** 控件名字 */
@@ -46,14 +45,15 @@ export class $0 extends NonForm {
   /** 单例对象 */
   static I = new $0();
 
-  renderRaw() {
+  renderRaw({formData}: IConRenderOp) {
+    let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return <div></div>;
   }
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [];
-    _.find((_) => _.title == "常用属性")?.childs!.unshift(...add);
+    let add: IConRightRenderItemOp["childs"] = [];
+    _.find((_) => _.key == "com")?.childs!.unshift(...add);
     return _;
   }
 }

@@ -1,17 +1,17 @@
 import { NCard, NInput, NSelect, NSwitch, type CardProps } from "naive-ui";
 import DraggableCon from "../com/draggable.vue";
 import Item from "../com/item.vue";
-import type {
-  IConRenderOp,
-  IConRightRenderOp,
-  IConRightReterItemOp,
+import {
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightRenderItemOp,
+  BaseCon,
 } from "./BaseCon";
-import { NonForm } from "./NonForm";
 
 /**
  * 卡片
  */
-export class Card extends NonForm {
+export class Card extends BaseCon {
   /** 控件类型 */
   static ConType = "Card";
   /** 控件名字 */
@@ -20,7 +20,7 @@ export class Card extends NonForm {
   static I = new Card();
 
   props: CardProps = {
-    bordered: false,
+    bordered: true,
     hoverable: false,
     size: "medium",
   };
@@ -98,7 +98,7 @@ export class Card extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "标题",
         editor: <NInput v-model:value={this.cardName} />,

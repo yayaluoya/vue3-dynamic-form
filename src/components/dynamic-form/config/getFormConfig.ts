@@ -23,8 +23,8 @@ export function getFormConfig(): TFormConfig {
   return {
     inline: false,
     labelWidth: "120px",
-    labelAlign: "right",
-    labelPlacement: "left",
+    labelAlign: "left",
+    labelPlacement: "top",
     showFeedback: true,
     showLabel: true,
     showRequireMark: true,

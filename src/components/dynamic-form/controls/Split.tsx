@@ -1,9 +1,8 @@
-import { NonForm } from "./NonForm";
-import type {
+import {
   BaseCon,
-  IConRenderOp,
-  IConRightRenderOp,
-  IConRightReterItemOp,
+  type IConRenderOp,
+  type IConRightRenderOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
 import { NSelect, NSlider, NSplit, NSwitch, type SplitProps } from "naive-ui";
@@ -11,7 +10,7 @@ import { NSelect, NSlider, NSplit, NSwitch, type SplitProps } from "naive-ui";
 /**
  * 面板分割
  */
-export class Split extends NonForm {
+export class Split extends BaseCon {
   /** 控件类型 */
   static ConType = "Split";
   /** 控件名字 */
@@ -90,7 +89,7 @@ export class Split extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "分割大小",
         editor: (

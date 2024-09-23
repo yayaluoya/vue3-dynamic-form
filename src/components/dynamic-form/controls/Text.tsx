@@ -1,15 +1,15 @@
-import { NonForm } from "./NonForm";
 import {
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
+  BaseCon,
 } from "./BaseCon";
 import { NFlex, NInput, NSelect, NText, type FlexProps } from "naive-ui";
 
 /**
  * 文字
  */
-export class Text extends NonForm {
+export class Text extends BaseCon {
   /** 控件类型 */
   static ConType = "Text";
   /** 控件名字 */
@@ -27,8 +27,7 @@ export class Text extends NonForm {
 
   text = "文字";
 
-  renderRaw({ formData }: IConRenderOp) {
-    let ref = this.getFormValueRef(formData, this.formDefaultValue);
+  renderRaw() {
     return (
       <NFlex vertical align={this.props.align} style={`width: 100%`}>
         {this.text
@@ -43,7 +42,7 @@ export class Text extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "对齐方式",
         editor: (

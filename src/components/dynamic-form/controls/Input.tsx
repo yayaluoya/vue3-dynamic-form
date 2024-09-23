@@ -6,16 +6,16 @@ import {
   type InputProps,
 } from "naive-ui";
 import {
-  BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
-  type IConRightReterItemOp,
+  type IConRightRenderItemOp,
 } from "./BaseCon";
+import { BaseForm } from "./BaseForm";
 
 /**
  * 输入框
  */
-export class Input extends BaseCon {
+export class Input extends BaseForm {
   /** 控件类型 */
   static ConType = "Input";
   /** 控件名字 */
@@ -58,7 +58,7 @@ export class Input extends BaseCon {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "类型",
         editor: (

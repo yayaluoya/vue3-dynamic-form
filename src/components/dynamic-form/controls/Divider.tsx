@@ -5,13 +5,13 @@ import {
   NSwitch,
   type DividerProps,
 } from "naive-ui";
-import type { IConRightRenderOp, IConRightReterItemOp } from "./BaseCon";
-import { NonForm } from "./NonForm";
+import type { IConRightRenderOp, IConRightRenderItemOp } from "./BaseCon";
+import { BaseForm } from "./BaseForm";
 
 /**
  * 分隔线
  */
-export class Divider extends NonForm {
+export class Divider extends BaseForm {
   /** 控件类型 */
   static ConType = "Divider";
   /** 控件名字 */
@@ -48,7 +48,7 @@ export class Divider extends NonForm {
 
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
-    let add: IConRightReterItemOp["childs"] = [
+    let add: IConRightRenderItemOp["childs"] = [
       {
         label: "虚线分割",
         editor: <NSwitch v-model:value={this.props.dashed} />,
