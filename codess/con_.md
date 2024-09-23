@@ -58,3 +58,12 @@ export class $0 extends NonForm {
   }
 }
 ```
+
+## right-item
+
+```js ts jsx tsx
+{
+  label: "$1",
+  editor: $0,
+},
+```

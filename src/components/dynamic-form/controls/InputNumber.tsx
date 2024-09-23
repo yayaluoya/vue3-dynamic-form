@@ -1,9 +1,19 @@
 import {
+  NCheckbox,
+  NFlex,
+  NInput,
+  NInputNumber,
+  NSelect,
+  NSwitch,
+  type InputNumberProps,
+} from "naive-ui";
+import {
   BaseCon,
   type IConRenderOp,
   type IConRightRenderOp,
   type IConRightReterItemOp,
 } from "./BaseCon";
+import { ArrayUtils } from "../tool/ArrayUtils";
 
 /**
  * 数字输入框
@@ -16,33 +26,43 @@ export class InputNumber extends BaseCon {
   /** 单例对象 */
   static I = new InputNumber();
 
-  props = {
+  props: {
+    placeholder: string;
+    bordered: boolean;
+    clearable: boolean;
+    max: number;
+    min: number;
+    showButton: boolean;
+    buttonPlacement: InputNumberProps["buttonPlacement"];
+    step: number;
+  } = {
     placeholder: "",
-    useMin: false,
+    bordered: true,
+    clearable: false,
+    max: 100,
     min: 0,
-    useMax: false,
-    max: 0,
+    showButton: true,
+    buttonPlacement: "right",
     step: 1,
-    controls: true,
-    controlsPosition: "",
   };
+
+  enableProps: ("max" | "min")[] = [];
 
   formDefaultValue = 0;
 
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return (
-      <el-input-number
-        model-value={ref.value}
-        onInput={(v: any) => {
-          ref.value = v;
-        }}
+      <NInputNumber
+        v-model:value={ref.value}
         placeholder={this.props.placeholder}
-        min={this.props.useMin ? this.props.min : undefined}
-        max={this.props.useMax ? this.props.max : undefined}
+        bordered={this.props.bordered}
+        clearable={this.props.clearable}
+        max={this.enableProps.includes("max") ? this.props.max : undefined}
+        min={this.enableProps.includes("min") ? this.props.min : undefined}
+        showButton={this.props.showButton}
+        buttonPlacement={this.props.buttonPlacement}
         step={this.props.step}
-        controls={this.props.controls}
-        controls-position={this.props.controlsPosition}
       />
     );
   }
@@ -52,105 +72,69 @@ export class InputNumber extends BaseCon {
     let add: IConRightReterItemOp["childs"] = [
       {
         label: "占位字符串",
+        editor: <NInput v-model:value={this.props.placeholder} />,
+      },
+      {
+        label: "最大值",
         editor: (
-          <el-input
-            size="small"
-            model-value={this.props.placeholder}
-            onInput={(v: any) => {
-              this.props.placeholder = v;
-            }}
-          />
+          <NFlex align="center" wrap={false}>
+            <NCheckbox
+              size="small"
+              checked={this.enableProps.includes("max")}
+              onUpdate:checked={(v) => {
+                v
+                  ? this.enableProps.push("max")
+                  : ArrayUtils.eliminate(this.enableProps, "max");
+              }}
+            ></NCheckbox>
+            <NInputNumber v-model:value={this.props.max} />
+          </NFlex>
         ),
       },
       {
-        label: "最小值限制",
+        label: "最小值",
         editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.useMin}
-            onChange={(v: any) => {
-              this.props.useMin = v;
-            }}
-          ></el-switch>
+          <NFlex align="center" wrap={false}>
+            <NCheckbox
+              size="small"
+              checked={this.enableProps.includes("min")}
+              onUpdate:checked={(v) => {
+                v
+                  ? this.enableProps.push("min")
+                  : ArrayUtils.eliminate(this.enableProps, "min");
+              }}
+            ></NCheckbox>
+            <NInputNumber v-model:value={this.props.min} />
+          </NFlex>
         ),
       },
-      this.props.useMin
-        ? {
-            label: "最小值",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.props.min}
-                onChange={(_: any) => {
-                  this.props.min = _;
-                }}
-              />
-            ),
-          }
-        : undefined,
       {
-        label: "最大值限制",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.useMax}
-            onChange={(v: any) => {
-              this.props.useMax = v;
-            }}
-          ></el-switch>
-        ),
+        label: "边框",
+        editor: <NSwitch v-model:value={this.props.bordered} />,
       },
-      this.props.useMax
-        ? {
-            label: "最大值",
-            editor: (
-              <el-input-number
-                size="small"
-                model-value={this.props.max}
-                onChange={(_: any) => {
-                  this.props.max = _;
-                }}
-              />
-            ),
-          }
-        : undefined,
       {
         label: "步数",
-        editor: (
-          <el-input-number
-            size="small"
-            model-value={this.props.step}
-            onChange={(_: any) => {
-              this.props.step = _;
-            }}
-          />
-        ),
+        editor: <NInputNumber v-model:value={this.props.step} />,
       },
       {
-        label: "使用控制按钮",
-        editor: (
-          <el-switch
-            size="small"
-            model-value={this.props.controls}
-            onChange={(v: any) => {
-              this.props.controls = v;
-            }}
-          ></el-switch>
-        ),
+        label: "可清除",
+        editor: <NSwitch v-model:value={this.props.clearable} />,
+      },
+      {
+        label: "使用加减按钮",
+        editor: <NSwitch v-model:value={this.props.showButton} />,
       },
       {
         label: "控制按钮位置",
         editor: (
-          <el-radio-group
-            size="small"
-            model-value={this.props.controlsPosition}
-            onChange={(v: any) => {
-              this.props.controlsPosition = v;
-            }}
-          >
-            <el-radio-button label="default" value="" />
-            <el-radio-button label="right" value="right" />
-          </el-radio-group>
+          <NSelect
+            v-model:value={this.props.buttonPlacement}
+            placeholder="请选择"
+            options={[
+              { label: "right", value: "right" },
+              { label: "both", value: "both" },
+            ]}
+          />
         ),
       },
     ];
