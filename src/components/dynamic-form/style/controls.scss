@@ -12,15 +12,6 @@
     position: absolute;
     z-index: 2;
     padding: 3px;
-
-    >.el-icon {
-      color: var(--baseColor);
-      margin-right: 4px;
-    }
-
-    >*:nth-last-child(1) {
-      margin-right: 0;
-    }
   }
 
   >.drag-handler {

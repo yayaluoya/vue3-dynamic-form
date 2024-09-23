@@ -106,7 +106,7 @@ export class Button extends BaseCon {
               { label: "warning", value: "warning" },
               { label: "error", value: "error" },
             ]}
-            onChange={() => {
+            onUpdate:value={() => {
               this.props.color = "";
               this.props.textColor = "";
             }}
@@ -160,6 +160,7 @@ export class Button extends BaseCon {
           <NColorPicker
             v-model:value={this.props.color}
             swatches={predefineColors}
+            actions={["clear"]}
           />
         ),
       },
@@ -201,6 +202,7 @@ export class Button extends BaseCon {
           <NColorPicker
             v-model:value={this.props.textColor}
             swatches={predefineColors}
+            actions={["clear"]}
           />
         ),
       },

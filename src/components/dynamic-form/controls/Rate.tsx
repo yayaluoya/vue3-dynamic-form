@@ -62,6 +62,7 @@ export class Rate extends BaseForm {
           <NColorPicker
             v-model:value={this.props.color}
             swatches={predefineColors}
+            actions={["clear"]}
           />
         ),
       },

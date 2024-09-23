@@ -69,6 +69,11 @@ export class Split extends BaseCon {
     };
     return (
       <NSplit
+        style={`${
+          activateCon?.key != this.key
+            ? "border: 1px dashed var(--borderColor)"
+            : ""
+        }`}
         max={this.props.max}
         min={this.props.min}
         resizeTriggerSize={this.props.resizeTriggerSize}

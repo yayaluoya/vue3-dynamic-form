@@ -15,9 +15,7 @@
     "上传包到服务器": "sfs -s  -c ./sfs-v1.config.cjs"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.3.1",
     "@vicons/ionicons5": "^0.12.0",
-    "element-plus": "^2.8.3",
     "nanoid": "^5.0.7",
     "pinia": "^2.1.7",
     "server-file-sync": "^1.7.2",

@@ -1,5 +1,4 @@
 import DraggableCon from "../com/draggable.vue";
-import "../style/label-page.scss";
 import Item from "../com/item.vue";
 import Draggable from "vuedraggable";
 import draggableC from "../config/draggableC";
@@ -72,66 +71,59 @@ export class LabelPage extends BaseCon {
 
   renderRaw({ ctx, formConfig, cons, activateCon, formData }: IConRenderOp) {
     return (
-      <div
-        class={[
-          "controls__ label-page",
-          activateCon?.key == this.key ? "" : "border",
-        ].join(" ")}
+      <NTabs
+        style={`${
+          activateCon?.key != this.key
+            ? "border: 1px dashed var(--borderColor)"
+            : ""
+        }`}
+        v-model:value={this.activeName}
+        type={this.tabsProps.type}
+        placement={this.tabsProps.placement}
+        tabs-padding={10}
       >
-        <NTabs
-          v-model:value={this.activeName}
-          type={this.tabsProps.type}
-          placement={this.tabsProps.placement}
-          tabs-padding={10}
-        >
-          {this.tabs.map((_, i) => {
-            return (
-              <NTabPane
-                key={_.key}
-                tab={_.label}
-                name={i}
-                disabled={!_.activate}
-              >
-                {formData ? (
-                  _.activate ? (
-                    _.childs.map((con) => {
-                      return (
-                        <Item
-                          key={con.key}
-                          parent={this}
-                          formConfig={formConfig}
-                          formData={formData}
-                          cons={cons}
-                          con={con}
-                          formRender
-                        />
-                      );
-                    })
-                  ) : null
-                ) : (
-                  <DraggableCon
-                    parent={this}
-                    cons={_.childs}
-                    formConfig={formConfig}
-                    activateCon={activateCon}
-                    onUpdate:cons={(__) => {
-                      _.childs = __;
-                    }}
-                    onUpdate:activateCon={(_) => {
-                      ctx.emit("activateConF", _);
-                    }}
-                    style={
-                      _.childs.length <= 0
-                        ? "min-height: 80px;"
-                        : "min-height: 20px;"
-                    }
-                  />
-                )}
-              </NTabPane>
-            );
-          })}
-        </NTabs>
-      </div>
+        {this.tabs.map((_, i) => {
+          return (
+            <NTabPane key={_.key} tab={_.label} name={i} disabled={!_.activate}>
+              {formData ? (
+                _.activate ? (
+                  _.childs.map((con) => {
+                    return (
+                      <Item
+                        key={con.key}
+                        parent={this}
+                        formConfig={formConfig}
+                        formData={formData}
+                        cons={cons}
+                        con={con}
+                        formRender
+                      />
+                    );
+                  })
+                ) : null
+              ) : (
+                <DraggableCon
+                  parent={this}
+                  cons={_.childs}
+                  formConfig={formConfig}
+                  activateCon={activateCon}
+                  onUpdate:cons={(__) => {
+                    _.childs = __;
+                  }}
+                  onUpdate:activateCon={(_) => {
+                    ctx.emit("activateConF", _);
+                  }}
+                  style={
+                    _.childs.length <= 0
+                      ? "min-height: 80px;"
+                      : "min-height: 20px;"
+                  }
+                />
+              )}
+            </NTabPane>
+          );
+        })}
+      </NTabs>
     );
   }
 

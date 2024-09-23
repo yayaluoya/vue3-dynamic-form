@@ -348,6 +348,7 @@ class Cell extends BaseCon {
           <NColorPicker
             v-model:value={this.borderColor}
             swatches={predefineColors}
+            actions={["clear"]}
           />
         ),
       },
@@ -373,7 +374,7 @@ export class Table extends BaseCon {
     [new Cell(), new Cell()],
   ];
 
-  borderColor = "#afafaf";
+  borderColor = "";
   borderWidth = 1;
 
   initConfig(configs: any, toCons: any) {
@@ -676,7 +677,11 @@ export class Table extends BaseCon {
                     return __.disappear ? null : (
                       <td
                         style={`
-                        border-color: ${__.borderColor || this.borderColor};
+                        border-color: ${
+                          __.borderColor ||
+                          this.borderColor ||
+                          "var(--borderColor)"
+                        };
                         border-width: ${__.borderWidth || this.borderWidth}px;
                         `}
                         key={col}
@@ -716,6 +721,7 @@ export class Table extends BaseCon {
           <NColorPicker
             v-model:value={this.borderColor}
             swatches={predefineColors}
+            actions={["clear"]}
           />
         ),
       },

@@ -20,6 +20,7 @@ export class ColorPicker extends BaseOption {
 
   props = {
     showAlpha: false,
+    clearable: false,
   };
 
   formDefaultValue = "";
@@ -37,11 +38,13 @@ export class ColorPicker extends BaseOption {
 
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
+    let swatches = this.list.map((_) => _.value).filter(Boolean);
     return (
       <NColorPicker
         v-model:value={ref.value}
         show-alpha={this.props.showAlpha}
-        swatches={this.list.map((_) => _.value).filter(Boolean)}
+        swatches={swatches.length <= 0 ? undefined : swatches}
+        actions={this.props.clearable ? ["clear"] : undefined}
       />
     );
   }
@@ -49,6 +52,10 @@ export class ColorPicker extends BaseOption {
   getRight(op: IConRightRenderOp) {
     let _ = super.getRight(op);
     let add: IConRightRenderItemOp["childs"] = [
+      {
+        label: "可清除",
+        editor: <NSwitch v-model:value={this.props.clearable} />,
+      },
       {
         label: "选择透明度",
         editor: (

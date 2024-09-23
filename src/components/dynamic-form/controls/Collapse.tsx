@@ -68,6 +68,11 @@ export class Collapse extends BaseCon {
   renderRaw({ ctx, formConfig, cons, activateCon, formData }: IConRenderOp) {
     return (
       <NCollapse
+        style={`${
+          activateCon?.key != this.key
+            ? "border: 1px dashed var(--borderColor)"
+            : ""
+        }`}
         v-model:expanded-names={this.activeNames}
         accordion={this.collapseProps.accordion}
         arrowPlacement={this.collapseProps.arrowPlacement}

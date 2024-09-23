@@ -516,16 +516,6 @@ export default defineComponent({
       padding: 0 10px;
       box-sizing: border-box;
       border-bottom: 1px solid var(--dividerColor);
-      > div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
-      > div:nth-child(2) {
-        > .el-icon {
-          cursor: pointer;
-        }
-      }
     }
     > .content {
       width: 100%;
