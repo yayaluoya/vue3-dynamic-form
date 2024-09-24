@@ -35,6 +35,16 @@ module.exports = async function () {
           },
         ],
       },
+      {
+        key: "docs",
+        title: "文档代码",
+        paths: [
+          {
+            local: path.join(__dirname, "./docs/.vitepress/dist/index.html"),
+            remote: remoteRootPath + "-docs/index.html",
+          },
+        ],
+      },
     ],
     connectConfig: {},
     watch: false,
