@@ -5,21 +5,12 @@ layout: home
 hero:
   name: "vue3-dynamic-form"
   text: "vue3可编辑表单"
-  tagline: My great project tagline
+  tagline: 拖动式的生成动态表单，而且通过typescript面向对象开发的，能非常方便的扩展控件，内部ui使用的naive-ui库，所以能非常方便的定制主题。
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Start
+      link: /install
     - theme: alt
-      text: API Examples
-      link: /api-examples
-
-features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      text: 试一试
+      link: https://vue3-dynamic-form.dumogu.top/
 ---
-

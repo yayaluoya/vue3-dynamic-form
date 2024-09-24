@@ -40,17 +40,14 @@ export default defineConfig({
   description: "vue3可编辑表单",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: "Home", link: "/" },
-      { text: "Examples", link: "/markdown-examples" },
-    ],
+    nav: [{ text: "主页", link: "/" }],
 
     sidebar: [
       {
-        text: "Examples",
+        text: "文档",
         items: [
-          { text: "Markdown Examples", link: "/markdown-examples" },
-          { text: "Runtime API Examples", link: "/api-examples" },
+          { text: "安装使用", link: "/install" },
+          { text: "控件列表", link: "/cons" },
         ],
       },
     ],
