@@ -275,160 +275,170 @@ export default defineComponent({
     --textColor3: ${themeVars.textColor3};
     `"
   >
-    <div class="a">
-      <NTabs
-        v-model:value="leftTabsActiveNames"
-        type="line"
-        :tabs-padding="10"
-        pane-wrapper-style="padding: 0 10px"
-        animated
-      >
-        <NTabPane tab="组件库" name="con">
-          <NScrollbar style="height: calc(var(--height) - 60px)">
-            <NForm
-              :inline="formConfig.inline"
-              :label-width="formConfig.labelWidth"
-              :label-align="formConfig.labelAlign"
-              :label-placement="formConfig.labelPlacement"
-              :show-feedback="formConfig.showFeedback"
-              :show-label="formConfig.showLabel"
-              :show-require-mark="formConfig.showRequireMark"
-              :require-mark-placement="formConfig.requireMarkPlacement"
-              :size="formConfig.size"
-            >
-              <NCollapse :default-expanded-names="ConsCollapseActiveNames">
-                <NCollapseItem
-                  v-for="(item, index) in Cons"
-                  :key="index"
-                  :title="item.label"
-                  :name="item.label"
-                >
-                  <Draggable
-                    :class="draggableC.class + ' a'"
-                    :list="item.cons"
-                    :group="{
-                      name: draggableC.group,
-                      pull: 'clone',
-                      put: false,
-                    }"
-                    :clone="cloneComponent"
-                    :sort="false"
-                    @start="draggableLoading = true"
-                    @end="draggableLoading = false"
-                    item-key="type"
-                  >
-                    <template
-                      #item="{ element: Con }: { element: typeof BaseCon }"
-                    >
-                      <div
-                        class="draggable-item"
-                        :class="{
-                          on: Con.ConType === activateCon?.conType,
-                        }"
-                      >
-                        <NText class="name">{{ Con.ConName }}</NText>
-                        <div class="draggable-show-item">
-                          <Item drag :formConfig="formConfig" :con="Con.I!" />
-                        </div>
-                      </div>
-                    </template>
-                  </Draggable>
-                </NCollapseItem>
-              </NCollapse>
-            </NForm>
-          </NScrollbar>
-        </NTabPane>
-        <NTabPane tab="表单模板" name="template">
-          <NScrollbar style="height: calc(var(--height) - 60px)"></NScrollbar>
-        </NTabPane>
-      </NTabs>
-    </div>
-    <div class="b">
-      <div class="top">
-        <div></div>
-        <NFlex>
-          <NButton
-            style="margin-right: 10px"
-            type="primary"
-            :disabled="cons.length <= 0"
-            text
-            @click="updateCons([])"
-          >
-            清空
-          </NButton>
-          <NButton
-            style="margin-right: 10px"
-            type="primary"
-            :disabled="cons.length <= 0"
-            text
-            @click="preview()"
-          >
-            预览
-          </NButton>
-          <NButton
-            style="margin-right: 10px"
-            type="primary"
-            text
-            @click="importJSON()"
-          >
-            导入JSON
-          </NButton>
-          <NButton
-            style="margin-right: 10px"
-            type="primary"
-            text
-            @click="exportJSON()"
-          >
-            导出JSON
-          </NButton>
-        </NFlex>
-      </div>
-      <div class="content">
-        <NText class="null" v-if="cons.length <= 0">
-          请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</NText
-        >
-        <NScrollbar style="height: calc(var(--height) - 42px)">
-          <NForm
-            :inline="formConfig.inline"
-            :label-width="formConfig.labelWidth"
-            :label-align="formConfig.labelAlign"
-            :label-placement="formConfig.labelPlacement"
-            :show-feedback="formConfig.showFeedback"
-            :show-label="formConfig.showLabel"
-            :show-require-mark="formConfig.showRequireMark"
-            :require-mark-placement="formConfig.requireMarkPlacement"
-            :size="formConfig.size"
-          >
-            <div class="draggable-con-div">
-              <DraggableCon
-                class="draggable-con"
-                :class="{
-                  draggableLoading: draggableLoading,
-                }"
-                :cons="cons"
-                :formConfig="formConfig"
-                :activateCon="activateCon"
-                @update:cons="
-                  (_) => {
-                    updateCons(_);
-                  }
-                "
-                @update:activateCon="
-                  (_) => {
-                    activateCon = _;
-                  }
-                "
-              />
-            </div>
-          </NForm>
-        </NScrollbar>
-      </div>
-    </div>
-    <div class="c">
-      <Right :cons="cons" :activateCon="activateCon" :formConfig="formConfig" />
-    </div>
     <NMessageProvider>
       <NDialogProvider>
+        <div class="a">
+          <NTabs
+            v-model:value="leftTabsActiveNames"
+            type="line"
+            :tabs-padding="10"
+            pane-wrapper-style="padding: 0 10px"
+            animated
+          >
+            <NTabPane tab="组件库" name="con">
+              <NScrollbar style="height: calc(var(--height) - 60px)">
+                <NForm
+                  :inline="formConfig.inline"
+                  :label-width="formConfig.labelWidth"
+                  :label-align="formConfig.labelAlign"
+                  :label-placement="formConfig.labelPlacement"
+                  :show-feedback="formConfig.showFeedback"
+                  :show-label="formConfig.showLabel"
+                  :show-require-mark="formConfig.showRequireMark"
+                  :require-mark-placement="formConfig.requireMarkPlacement"
+                  :size="formConfig.size"
+                >
+                  <NCollapse :default-expanded-names="ConsCollapseActiveNames">
+                    <NCollapseItem
+                      v-for="(item, index) in Cons"
+                      :key="index"
+                      :title="item.label"
+                      :name="item.label"
+                    >
+                      <Draggable
+                        :class="draggableC.class + ' a'"
+                        :list="item.cons"
+                        :group="{
+                          name: draggableC.group,
+                          pull: 'clone',
+                          put: false,
+                        }"
+                        :clone="cloneComponent"
+                        :sort="false"
+                        @start="draggableLoading = true"
+                        @end="draggableLoading = false"
+                        item-key="type"
+                      >
+                        <template
+                          #item="{ element: Con }: { element: typeof BaseCon }"
+                        >
+                          <div
+                            class="draggable-item"
+                            :class="{
+                              on: Con.ConType === activateCon?.conType,
+                            }"
+                          >
+                            <NText class="name">{{ Con.ConName }}</NText>
+                            <div class="draggable-show-item">
+                              <Item
+                                drag
+                                :formConfig="formConfig"
+                                :con="Con.I!"
+                              />
+                            </div>
+                          </div>
+                        </template>
+                      </Draggable>
+                    </NCollapseItem>
+                  </NCollapse>
+                </NForm>
+              </NScrollbar>
+            </NTabPane>
+            <NTabPane tab="表单模板" name="template">
+              <NScrollbar
+                style="height: calc(var(--height) - 60px)"
+              ></NScrollbar>
+            </NTabPane>
+          </NTabs>
+        </div>
+        <div class="b">
+          <div class="top">
+            <div></div>
+            <NFlex>
+              <NButton
+                style="margin-right: 10px"
+                type="primary"
+                :disabled="cons.length <= 0"
+                text
+                @click="updateCons([])"
+              >
+                清空
+              </NButton>
+              <NButton
+                style="margin-right: 10px"
+                type="primary"
+                :disabled="cons.length <= 0"
+                text
+                @click="preview()"
+              >
+                预览
+              </NButton>
+              <NButton
+                style="margin-right: 10px"
+                type="primary"
+                text
+                @click="importJSON()"
+              >
+                导入JSON
+              </NButton>
+              <NButton
+                style="margin-right: 10px"
+                type="primary"
+                text
+                @click="exportJSON()"
+              >
+                导出JSON
+              </NButton>
+            </NFlex>
+          </div>
+          <div class="content">
+            <NText class="null" v-if="cons.length <= 0">
+              请从左侧列表中选择一个组件, 然后用鼠标拖动组件放置于此处</NText
+            >
+            <NScrollbar style="height: calc(var(--height) - 42px)">
+              <NForm
+                :inline="formConfig.inline"
+                :label-width="formConfig.labelWidth"
+                :label-align="formConfig.labelAlign"
+                :label-placement="formConfig.labelPlacement"
+                :show-feedback="formConfig.showFeedback"
+                :show-label="formConfig.showLabel"
+                :show-require-mark="formConfig.showRequireMark"
+                :require-mark-placement="formConfig.requireMarkPlacement"
+                :size="formConfig.size"
+              >
+                <div class="draggable-con-div">
+                  <DraggableCon
+                    class="draggable-con"
+                    :class="{
+                      draggableLoading: draggableLoading,
+                    }"
+                    :cons="cons"
+                    :formConfig="formConfig"
+                    :activateCon="activateCon"
+                    @update:cons="
+                      (_) => {
+                        updateCons(_);
+                      }
+                    "
+                    @update:activateCon="
+                      (_) => {
+                        activateCon = _;
+                      }
+                    "
+                  />
+                </div>
+              </NForm>
+            </NScrollbar>
+          </div>
+        </div>
+        <div class="c">
+          <Right
+            :cons="cons"
+            :activateCon="activateCon"
+            :formConfig="formConfig"
+          />
+        </div>
         <IndexDialog
           :ref="
             (_: any) => {

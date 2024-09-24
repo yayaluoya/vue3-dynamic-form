@@ -1,4 +1,9 @@
-import { BaseCon, type IConRenderOp } from "./BaseCon";
+import {
+  BaseCon,
+  type IConRenderOp,
+  type IConRightRenderItemOp,
+  type IConRightRenderOp,
+} from "./BaseCon";
 import {
   NFlex,
   NGrid,
@@ -8,7 +13,7 @@ import {
   NSwitch,
   NText,
 } from "naive-ui";
-import { BaseForm } from "./BaseForm";
+import { BaseForm, type IRule } from "./BaseForm";
 
 /**
  * 测试
@@ -26,6 +31,27 @@ export class Test extends BaseForm {
     str: "字符串",
     b: false,
   };
+
+  props = {
+    minNumber: 10,
+  };
+
+  getRule(): IRule[] {
+    return [
+      ...super.getRule(),
+      {
+        type: "object",
+        message: "",
+        fields: {
+          number: {
+            type: "number",
+            min: this.props.minNumber,
+            message: "数字不能小于" + this.props.minNumber,
+          },
+        },
+      },
+    ];
+  }
 
   renderRaw({ formData }: IConRenderOp) {
     let { value } = this.getFormValueRef(formData, this.formDefaultValue);
@@ -58,5 +84,22 @@ export class Test extends BaseForm {
         </NGrid>
       </NFlex>
     );
+  }
+
+  getRight(op: IConRightRenderOp) {
+    let _ = super.getRight(op);
+    _.find((_) => _.key == "form")?.childs.push(
+      ...[
+        {
+          label: "数字最小值",
+          editor: <NInputNumber v-model:value={this.props.minNumber} />,
+        },
+      ]
+    );
+    return _;
+  }
+
+  getRightRule() {
+    return [];
   }
 }

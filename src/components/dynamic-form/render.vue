@@ -5,6 +5,12 @@ import type { BaseCon } from "./controls";
 import type { TFormConfig } from "./config/getFormConfig";
 import { NForm, NFormItem, useThemeVars } from "naive-ui";
 
+interface ValidateError {
+  message?: string;
+  fieldValue?: any;
+  field?: string;
+}
+
 export default defineComponent({
   components: { Item, NForm, NFormItem },
   props: {
@@ -23,17 +29,18 @@ export default defineComponent({
   },
   emits: [],
   setup(props, ctx) {
-    const formEl = ref();
+    const formEl = ref<InstanceType<typeof NForm>>();
     const themeVars = useThemeVars();
 
     /** 验证表单 */
     function validate() {
-      return formEl.value.validate(...arguments);
+      return formEl.value?.validate().catch((e: ValidateError[][]) => {
+        throw e;
+      })!;
     }
 
-    /** 清理某个字段的表单验证信息。 */
     function restoreValidation() {
-      return formEl.value.restoreValidation(...arguments);
+      return formEl.value?.restoreValidation();
     }
     return { formEl, themeVars, validate, restoreValidation };
   },

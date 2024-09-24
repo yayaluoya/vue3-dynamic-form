@@ -50,6 +50,14 @@ export class InputNumber extends BaseForm {
 
   formDefaultValue = 0;
 
+  constructor() {
+    super();
+    this.addRule({
+      type: "number",
+      message: "",
+    });
+  }
+
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return (

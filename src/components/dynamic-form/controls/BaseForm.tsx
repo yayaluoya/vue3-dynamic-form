@@ -1,4 +1,5 @@
 import {
+  NAlert,
   NButton,
   NCard,
   NCheckbox,
@@ -8,8 +9,12 @@ import {
   NGridItem,
   NIcon,
   NInput,
+  NInputNumber,
+  NScrollbar,
   NSelect,
   NSwitch,
+  NText,
+  useDialog,
   type FormItemProps,
   type FormItemRule,
 } from "naive-ui";
@@ -19,9 +24,27 @@ import {
   BaseCon,
   type BaseRightRenderK,
   type IConRenderOp,
+  type IConRightRenderItemOp,
   type IConRightRenderOp,
 } from "./BaseCon";
-import { Move, RemoveCircle } from "@vicons/ionicons5";
+import { AddCircle, Move, RemoveCircle } from "@vicons/ionicons5";
+import type { JSX } from "vue/jsx-runtime";
+
+export interface IRule {
+  type: FormItemRule["type"] | "";
+  message: string;
+  required?: boolean;
+  trigger?: FormItemRule["trigger"];
+  level?: FormItemRule["level"];
+  validator?: string;
+  pattern?: string;
+  min?: number;
+  max?: number;
+  len?: number;
+  enum?: string;
+  whitespace?: boolean;
+  fields?: Record<string, IRule>;
+}
 
 /**
  * 表单控件基类
@@ -40,7 +63,9 @@ export class BaseForm extends BaseCon<"form"> {
   private requireMarkPlacement: FormItemProps["requireMarkPlacement"] = "right";
   private size: FormItemProps["size"] = "medium";
   /** 校验规则列表 */
-  private rule: (FormItemRule & { key_: number })[] = [];
+  private rule: (IRule & {
+    key: string;
+  })[] = [];
 
   private selfProps: (keyof Pick<
     FormItemProps,
@@ -63,7 +88,63 @@ export class BaseForm extends BaseCon<"form"> {
     this.label = this.conName;
   }
 
+  /**
+   * 添加一个表单验证规则
+   * @param op
+   * @param editable
+   */
+  addRule(op: IRule) {
+    this.rule.push({
+      ...op,
+      key: BaseCon.getHash(),
+    });
+  }
+
+  /**
+   * 获取规则前的一个处理函数，适用于动态添加规则
+   * @returns
+   */
+  getRule(): IRule[] {
+    return this.rule;
+  }
+
   getFormItemProps(): FormItemProps {
+    let hRule = (rule: IRule) => {
+      let _: FormItemRule = {
+        type: rule.type || undefined,
+        message: rule.message,
+        required: rule.required,
+        trigger: rule.trigger,
+        level: rule.level,
+        pattern: rule.pattern,
+        min: rule.min,
+        max: rule.max,
+        len: rule.len,
+        enum: rule.enum?.split(",") || [],
+        whitespace: rule.whitespace,
+        validator: rule.validator
+          ? (rule_, value, callback) => {
+              try {
+                return new Function(
+                  "rule",
+                  "value",
+                  "callback",
+                  rule.validator!
+                )(rule_, value, callback);
+              } catch (e) {
+                console.error("校验函数错了", rule_, value, this, e);
+              }
+            }
+          : undefined,
+        fields: rule.fields
+          ? Object.keys(rule.fields).reduce<Record<string, any>>((a, b) => {
+              (a as any)[b] = hRule(rule.fields![b]);
+              return a;
+            }, {})
+          : undefined,
+      };
+      return _;
+    };
     return {
       label: this.label,
       path: this.path,
@@ -90,7 +171,9 @@ export class BaseForm extends BaseCon<"form"> {
         ? this.requireMarkPlacement
         : undefined,
       size: this.selfProps.includes("size") ? this.size : undefined,
-      rule: this.rule,
+      rule: this.getRule().map((_) => {
+        return hRule(_);
+      }),
     };
   }
 
@@ -339,37 +422,98 @@ export class BaseForm extends BaseCon<"form"> {
             </NFlex>
           ),
         },
-        {
-          label: "校验规则",
-        },
-        {
-          editor: (
-            <NFlex vertical style={"width: 100%"}>
-              <Draggable
-                class="draggable"
-                modelValue={this.rule}
-                onUpdate:modelValue={(_: any[]) => {
-                  this.rule = [..._];
-                }}
-                animation={draggableC.animation}
-                handle=".drag-handler"
-                item-key="key"
-              >
-                {{
-                  item: ({
-                    element: _,
-                  }: {
-                    element: getArrayItemType<BaseForm["rule"]>;
-                  }) => {
-                    return (
-                      <NCard
-                        style="margin-bottom: 10px;width: 100%"
-                        size="small"
-                      >
-                        <NFlex wrap={false} justify="space-between">
-                          <NGrid yGap={5} xGap={5}>
-                            <NGridItem span={10}>类型</NGridItem>
-                            <NGridItem span={14}>
+        ...this.getRightRule(),
+      ],
+    });
+    return _;
+  }
+
+  getRightRule(): IConRightRenderItemOp["childs"] {
+    const dialog = useDialog();
+    let getP = (
+      r: IRule,
+      p: keyof IRule,
+      title: string,
+      h: JSX.Element,
+      branch = false
+    ) => {
+      if (typeof r[p] == "undefined") {
+        return;
+      }
+      return (
+        <>
+          <NGridItem span={branch ? 24 : 10}>{title}</NGridItem>
+          <NGridItem span={branch ? 24 : 14}>{h}</NGridItem>
+        </>
+      );
+    };
+    let getPAdd = function <T extends keyof IRule>(
+      r: IRule,
+      p: T,
+      df: IRule[T],
+      title: string,
+      content: string,
+      d = false
+    ) {
+      return (
+        <>
+          <NGridItem span={3}>
+            <NSwitch
+              disabled={d}
+              value={typeof r[p] != "undefined"}
+              onUpdate:value={(v) => {
+                v ? (r[p] = df) : ((r as any)[p] = undefined);
+              }}
+            ></NSwitch>
+          </NGridItem>
+          <NGridItem span={21}>
+            <NAlert type="warning" title={title}>
+              <NFlex vertical>
+                {content
+                  .split(/\n/)
+                  .map((_) => _.trim())
+                  .filter(Boolean)
+                  .map((_) => (
+                    <NText>{_}</NText>
+                  ))}
+              </NFlex>
+            </NAlert>
+          </NGridItem>
+        </>
+      );
+    };
+    return [
+      {
+        label: "校验列表",
+      },
+      {
+        editor: (
+          <NFlex vertical style={"width: 100%"}>
+            <Draggable
+              class="draggable"
+              modelValue={this.rule}
+              onUpdate:modelValue={(_: any[]) => {
+                this.rule = [..._];
+              }}
+              animation={draggableC.animation}
+              handle=".drag-handler"
+              item-key="key"
+            >
+              {{
+                item: ({
+                  element: _,
+                }: {
+                  element: getArrayItemType<BaseForm["rule"]>;
+                }) => {
+                  return (
+                    <NCard style="margin-bottom: 10px;width: 100%" size="small">
+                      <NFlex wrap={false} justify="space-between">
+                        <NGrid yGap={5} xGap={5}>
+                          {[
+                            getP(
+                              _,
+                              "type",
+                              "数据类型",
                               <NSelect
                                 v-model:value={_.type}
                                 placeholder="请选择"
@@ -377,81 +521,289 @@ export class BaseForm extends BaseCon<"form"> {
                                   { label: "string", value: "string" },
                                   { label: "number", value: "number" },
                                   { label: "boolean", value: "boolean" },
-                                  { label: "method", value: "method" },
-                                  { label: "regexp", value: "regexp" },
                                   { label: "integer", value: "integer" },
                                   { label: "float", value: "float" },
                                   { label: "array", value: "array" },
-                                  { label: "object", value: "object" },
                                   { label: "enum", value: "enum" },
                                   { label: "date", value: "date" },
                                   { label: "url", value: "url" },
                                   { label: "hex", value: "hex" },
                                   { label: "email", value: "email" },
-                                  { label: "pattern", value: "pattern" },
-                                  { label: "any", value: "any" },
                                 ]}
                               />
-                            </NGridItem>
-                            <NGridItem span={10}>必填</NGridItem>
-                            <NGridItem span={14}>
-                              <NSwitch v-model:value={_.required} />
-                            </NGridItem>
-                            <NGridItem span={10}>错误提示</NGridItem>
-                            <NGridItem span={14}>
+                            ),
+                            getP(
+                              _,
+                              "message",
+                              "错误提示",
                               <NInput v-model:value={_.message} />
-                            </NGridItem>
-                          </NGrid>
-                          <NFlex vertical align="center">
-                            <NIcon
-                              class="drag-handler"
-                              style="cursor: move;"
-                              size={20}
-                            >
-                              <Move />
-                            </NIcon>
+                            ),
+                            getP(
+                              _,
+                              "required",
+                              "必填",
+                              <NSwitch v-model:value={_.required} />
+                            ),
+                            getP(
+                              _,
+                              "trigger",
+                              "触发方式",
+                              <NSelect
+                                v-model:value={_.trigger}
+                                multiple
+                                placeholder="请选择"
+                                options={[
+                                  { label: "input", value: "input" },
+                                  { label: "change", value: "change" },
+                                  { label: "blur", value: "blur" },
+                                  { label: "focus", value: "focus" },
+                                ]}
+                              />
+                            ),
+                            getP(
+                              _,
+                              "level",
+                              "错误提示类型",
+                              <NSelect
+                                v-model:value={_.level}
+                                placeholder="请选择"
+                                options={[
+                                  { label: "error", value: "error" },
+                                  { label: "warning", value: "warning" },
+                                ]}
+                              />
+                            ),
+                            getP(
+                              _,
+                              "pattern",
+                              "正则校验",
+                              <NInput v-model:value={_.pattern} />
+                            ),
+                            getP(
+                              _,
+                              "min",
+                              "最小值",
+                              <NInputNumber v-model:value={_.min} />
+                            ),
+                            getP(
+                              _,
+                              "max",
+                              "最大值",
+                              <NInputNumber v-model:value={_.max} />
+                            ),
+                            getP(
+                              _,
+                              "len",
+                              "最值",
+                              <NInputNumber v-model:value={_.len} />
+                            ),
+                            getP(
+                              _,
+                              "enum",
+                              "枚举",
+                              <NInput v-model:value={_.enum} />
+                            ),
+                            getP(
+                              _,
+                              "whitespace",
+                              "空格检测",
+                              <NSwitch v-model:value={_.whitespace} />
+                            ),
+                            getP(
+                              _,
+                              "validator",
+                              "校验函数",
+                              <NFlex vertical>
+                                <NText>
+                                  function (rule, value, callback) {"{"}
+                                </NText>
+                                <NInput
+                                  v-model:value={_.validator}
+                                  type="textarea"
+                                />
+                                <NText>{"}"}</NText>
+                              </NFlex>,
+                              true
+                            ),
+                          ]}
+                          <NGridItem span={10}>
                             <NButton
                               size="small"
-                              class="remove"
-                              quaternary
-                              circle
+                              renderIcon={() => <AddCircle />}
                               onClick={() => {
-                                let i = this.rule.findIndex(
-                                  (__) => _.key == __.key
-                                );
-                                if (i >= 0) {
-                                  this.rule.splice(i, 1);
-                                }
+                                let d = dialog.success({
+                                  showIcon: false,
+                                  style: `width: 500px;`,
+                                  title: "添加规则",
+                                  content: () => {
+                                    return (
+                                      <NScrollbar style="height: 600px">
+                                        <NGrid yGap={5} xGap={5}>
+                                          {[
+                                            getPAdd(
+                                              _,
+                                              "type",
+                                              "string",
+                                              "数据类型",
+                                              `
+                                            string: 必须是字符串类型。
+                                            number: 必须是数字类型。
+                                            boolean: 必须是boolean类型。
+                                            integer: 必须是数字类型和整数。
+                                            float: 必须是数字类型和浮点数类型。
+                                            array: 数组。
+                                            enum: 取值必须在enum中存在。
+                                            date: 取值必须由date决定
+                                            url: 必须是url类型。
+                                            hex: 必须是hex类型。
+                                            email: 必须是email类型。
+                                            `,
+                                              true
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "message",
+                                              "",
+                                              "错误提示",
+                                              `验证失败时提示的消息`
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "required",
+                                              false,
+                                              "是否必填",
+                                              "必需的规则属性指示该字段必须存在于正在验证的源对象上"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "trigger",
+                                              [],
+                                              "触发方式",
+                                              "触发校验的时机"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "level",
+                                              "error",
+                                              "错误提示类型",
+                                              `
+                                            error: 报错。
+                                            warning: 警告。
+                                            `
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "pattern",
+                                              "",
+                                              "匹配值的正则表达式",
+                                              "匹配值的正则表达式"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "min",
+                                              0,
+                                              "最小值",
+                                              "对于字符串和数组类型，比较是根据长度进行的，对于数字类型，数字不得小于 min"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "max",
+                                              0,
+                                              "最大值",
+                                              "对于字符串和数组类型，比较是根据长度进行的，对于数字类型，数字不得大于 max"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "len",
+                                              0,
+                                              "长度验证",
+                                              "要验证字段的确切长度，请指定len属性。对于字符串和数组类型，比较是在length属性上执行的，对于数字类型，该属性表示数字的精确匹配，也就是说，它可能只严格等于len。"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "enum",
+                                              "",
+                                              "枚举",
+                                              "要验证可能值列表中的值，请使用带有枚举属性的enum类型，该属性列出该字段的有效值"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "whitespace",
+                                              false,
+                                              "空格检测",
+                                              "通常将只包含空格的必填字段视为错误。规则必须是字符串类型。"
+                                            ),
+                                            getPAdd(
+                                              _,
+                                              "validator",
+                                              "",
+                                              "字段自定义验证函数",
+                                              `字段自定义验证函数 参数为:
+                                              rule: 当前字段的校验规则
+                                              value: 当前字段的值
+                                              callback: xxx
+                                              `
+                                            ),
+                                          ]}
+                                        </NGrid>
+                                      </NScrollbar>
+                                    );
+                                  },
+                                });
                               }}
                             >
-                              <NIcon size={20}>
-                                <RemoveCircle />
-                              </NIcon>
+                              启用规则
                             </NButton>
-                          </NFlex>
+                          </NGridItem>
+                          <NGridItem span={14}></NGridItem>
+                        </NGrid>
+                        <NFlex vertical align="center">
+                          <NIcon
+                            class="drag-handler"
+                            style="cursor: move;"
+                            size={20}
+                          >
+                            <Move />
+                          </NIcon>
+                          <NButton
+                            size="small"
+                            quaternary
+                            circle
+                            onClick={() => {
+                              let i = this.rule.findIndex(
+                                (__) => _.key == __.key
+                              );
+                              if (i >= 0) {
+                                this.rule.splice(i, 1);
+                              }
+                            }}
+                          >
+                            <NIcon size={20}>
+                              <RemoveCircle />
+                            </NIcon>
+                          </NButton>
                         </NFlex>
-                      </NCard>
-                    );
-                  },
-                }}
-              </Draggable>
-              <NButton
-                type="primary"
-                onClick={() => {
-                  this.rule.push({
-                    key_: Math.max(...this.rule.map((_) => _.key_), 1) + 1,
-                    required: false,
-                    message: "",
-                  });
-                }}
-              >
-                增加校验规则
-              </NButton>
-            </NFlex>
-          ),
-        },
-      ],
-    });
-    return _;
+                      </NFlex>
+                    </NCard>
+                  );
+                },
+              }}
+            </Draggable>
+            <NButton
+              type="primary"
+              onClick={() => {
+                this.rule.push({
+                  key: BaseCon.getHash(),
+                  type: "",
+                  message: "",
+                });
+              }}
+            >
+              增加校验
+            </NButton>
+          </NFlex>
+        ),
+      },
+    ];
   }
 }

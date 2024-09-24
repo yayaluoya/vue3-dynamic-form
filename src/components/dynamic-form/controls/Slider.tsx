@@ -145,7 +145,6 @@ export class Slider extends BaseForm {
                     <NGridItem span={3}>
                       <NButton
                         size="small"
-                        class="remove"
                         quaternary
                         circle
                         onClick={() => {

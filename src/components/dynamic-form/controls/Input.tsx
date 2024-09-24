@@ -41,6 +41,14 @@ export class Input extends BaseForm {
 
   formDefaultValue = "";
 
+  constructor() {
+    super();
+    this.addRule({
+      type: "string",
+      message: "",
+    });
+  }
+
   renderRaw({ formData }: IConRenderOp) {
     let ref = this.getFormValueRef(formData, this.formDefaultValue);
     return (

@@ -102,7 +102,6 @@ export class BaseOption extends BaseForm {
                         </NIcon>
                         <NButton
                           size="small"
-                          class="remove"
                           quaternary
                           circle
                           onClick={() => {

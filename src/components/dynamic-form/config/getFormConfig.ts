@@ -27,7 +27,7 @@ export function getFormConfig(): TFormConfig {
     labelPlacement: "top",
     showFeedback: true,
     showLabel: true,
-    showRequireMark: true,
+    showRequireMark: false,
     requireMarkPlacement: "right",
     size: "medium",
   };
