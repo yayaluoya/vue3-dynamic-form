@@ -56,7 +56,7 @@ export class ConT {
         let formItemProp = _.getFormItemProps();
         formItemProp.path &&
           (fromData[_.getFormItemProps().path!] = ObjectUtils.clone2(
-            _.formDefaultValue
+            _.getFormDefaultValue()
           ));
       }
     });

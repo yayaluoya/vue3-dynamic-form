@@ -88,6 +88,10 @@ export class BaseForm extends BaseCon<"form"> {
     this.label = this.conName;
   }
 
+  getFormDefaultValue() {
+    return this.formDefaultValue;
+  }
+
   /**
    * 添加一个表单验证规则
    * @param op
@@ -634,7 +638,7 @@ export class BaseForm extends BaseCon<"form"> {
                                 let d = dialog.success({
                                   showIcon: false,
                                   style: `width: 500px;`,
-                                  title: "添加规则",
+                                  title: "启用规则",
                                   content: () => {
                                     return (
                                       <NScrollbar style="height: 600px">

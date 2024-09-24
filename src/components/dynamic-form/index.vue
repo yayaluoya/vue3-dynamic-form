@@ -35,6 +35,9 @@ import {
   Interval,
   Text,
   Switch,
+  DatePicker,
+  TimePicker,
+  Upload,
 } from "./controls";
 import Draggable from "vuedraggable";
 import DraggableCon from "./com/draggable.vue";
@@ -133,11 +136,13 @@ export default defineComponent({
           Rate,
           Slider,
           Switch,
+          DatePicker,
+          TimePicker,
         ],
       },
       {
         label: "高级类型",
-        cons: [],
+        cons: [Upload],
       },
       {
         label: "容器类型",

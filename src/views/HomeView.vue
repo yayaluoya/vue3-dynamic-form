@@ -70,8 +70,7 @@ export default defineComponent({
               <NRadioButton label="深色" value="dark" />
               <NRadioButton label="浅色" value="light" />
             </NRadioGroup>
-            <NTag type="warning">开发中...</NTag></NFlex
-          >
+          </NFlex>
           <NFlex align="center">
             <NTag type="success">vue3+ts+naive-ui</NTag>
             <a

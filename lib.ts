@@ -8,6 +8,7 @@ export {
   Checkbox,
   Collapse,
   ColorPicker,
+  DatePicker,
   Divider,
   Grid,
   Input,
@@ -23,6 +24,8 @@ export {
   Table,
   Test,
   Text,
+  TimePicker,
+  Upload,
 } from "./src/components/dynamic-form/controls/index";
 export { ConT } from "./src/components/dynamic-form/ConT";
 export { getFormConfig } from "./src/components/dynamic-form/config/getFormConfig";
