@@ -12,6 +12,7 @@
     position: absolute;
     z-index: 2;
     padding: 3px;
+    box-sizing: border-box;
   }
 
   > .drag-handler {

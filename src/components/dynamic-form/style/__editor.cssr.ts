@@ -3,7 +3,7 @@
  */
 import { useSsrAdapter } from '@css-render/vue3-ssr'
 import {c} from "../_utils/cssr";
-const className = 'editor-dzmumx8w4sqi7m1';
+const className = 'editor-dg39c2o963y0mau';
 const cssr = c('.' + className,
 [
   c(`&`,`
@@ -131,6 +131,7 @@ const cssr = c('.' + className,
   padding: 10px;
         width: 100%;
         background-color: var(--dividerColor);
+        box-sizing: border-box;
     `, 
 [
   c(`> .draggable-con`,`

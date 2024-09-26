@@ -3,7 +3,7 @@
  */
 import { useSsrAdapter } from '@css-render/vue3-ssr'
 import {c} from "../../_utils/cssr";
-const className = 'draggable-8ds5en35x5hyttt';
+const className = 'draggable-jn9lva8f25fiayo';
 const cssr = c('.' + className,
 [
   c(`&`,`
@@ -12,6 +12,7 @@ const cssr = c('.' + className,
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
     `, 
 [
   c(`> .draggable-item`,`

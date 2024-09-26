@@ -100,6 +100,7 @@
         padding: 10px;
         width: 100%;
         background-color: var(--dividerColor);
+        box-sizing: border-box;
 
         > .draggable-con {
           min-height: calc(var(--height) - 40px - 22px);

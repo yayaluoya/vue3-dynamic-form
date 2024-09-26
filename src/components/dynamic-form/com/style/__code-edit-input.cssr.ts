@@ -3,7 +3,7 @@
  */
 import { useSsrAdapter } from '@css-render/vue3-ssr'
 import {c} from "../../_utils/cssr";
-const className = 'code-edit-input-ozwclp3ni21lkhi';
+const className = 'code-edit-input-ol2kyoa4ohd1ezc';
 const cssr = c('.' + className,
 [
   c(`&`,`

@@ -3,7 +3,7 @@
  */
 import { useSsrAdapter } from '@css-render/vue3-ssr'
 import {c} from "../../_utils/cssr";
-const className = 'table-b6p8e3086n5z6on';
+const className = 'table-woiq231qrc3o2hr';
 const cssr = c('.' + className,
 [
   c(`&.table`,`

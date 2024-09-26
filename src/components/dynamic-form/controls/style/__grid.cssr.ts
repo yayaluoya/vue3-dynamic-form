@@ -3,7 +3,7 @@
  */
 import { useSsrAdapter } from '@css-render/vue3-ssr'
 import {c} from "../../_utils/cssr";
-const className = 'grid-2has7ddogdo5clm';
+const className = 'grid-ai3mapev87tn49b';
 const cssr = c('.' + className,
 [
   c(`&.grid`,`

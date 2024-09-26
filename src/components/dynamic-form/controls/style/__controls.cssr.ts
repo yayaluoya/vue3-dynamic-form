@@ -3,7 +3,7 @@
  */
 import { useSsrAdapter } from '@css-render/vue3-ssr'
 import {c} from "../../_utils/cssr";
-const className = 'controls-f11vrnnxuvvgnon';
+const className = 'controls-bvjli7rm2mvo3x5';
 const cssr = c('.' + className,
 [
   c(`&`,`
@@ -23,6 +23,7 @@ const cssr = c('.' + className,
   position: absolute;
     z-index: 2;
     padding: 3px;
+    box-sizing: border-box;
     `, 
 [
       
