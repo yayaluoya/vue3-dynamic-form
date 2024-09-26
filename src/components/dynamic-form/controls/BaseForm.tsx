@@ -29,6 +29,7 @@ import {
 } from "./BaseCon";
 import { AddCircle, Move, RemoveCircle } from "@vicons/ionicons5";
 import type { JSX } from "vue/jsx-runtime";
+import CodeEditInput from "../com/codeEditInput.vue";
 
 export interface IRule {
   type: FormItemRule["type"] | "";
@@ -621,9 +622,14 @@ export class BaseForm extends BaseCon<"form"> {
                                 <NText>
                                   function (rule, value, callback) {"{"}
                                 </NText>
-                                <NInput
-                                  v-model:value={_.validator}
-                                  type="textarea"
+                                <CodeEditInput
+                                  value={_.validator}
+                                  onUpdate:value={(v) => {
+                                    _.validator = v;
+                                  }}
+                                  options={{
+                                    lang: "javascript",
+                                  }}
                                 />
                                 <NText>{"}"}</NText>
                               </NFlex>,

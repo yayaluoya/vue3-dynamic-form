@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@vicons/ionicons5": "^0.12.0",
+    "color": "^4.2.3",
     "nanoid": "^5.0.7",
     "pinia": "^2.1.7",
     "server-file-sync": "^1.7.2",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@css-render/vue3-ssr": "^0.15.14",
     "@tsconfig/node20": "^20.1.4",
+    "@types/color": "^3.0.6",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.14.5",
     "@vitejs/plugin-vue": "^5.0.5",

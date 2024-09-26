@@ -8,10 +8,13 @@ import "ace-builds/src-noconflict/mode-markdown";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-json";
+import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/theme-github_light_default";
 // import 'ace-builds/src-noconflict/ext-language_tools';
 import { defineComponent, ref, reactive, toRef, computed } from "vue";
 import { className } from "./style/__code-edit-input.cssr";
+import { useThemeVars } from "naive-ui";
+import Color from "color";
 
 export default defineComponent({
   name: "CodeEditInput",
@@ -36,6 +39,7 @@ export default defineComponent({
   },
   emits: ["update:value"],
   setup(props, { emit }) {
+    const themeVars = useThemeVars();
     const editorRef = ref(null); // 用于保存 Ace 编辑器实例
     const dataContainer = reactive({
       options: {
@@ -52,6 +56,16 @@ export default defineComponent({
       readonly: toRef(props, "readonly"),
       options_1: toRef(props, "options"),
     });
+    const theme = computed(() => {
+      let c = Color(themeVars.value.baseColor);
+      if (c.isDark()) {
+        return "github_dark";
+      } else if (c.isLight()) {
+        return "github_light_default";
+      } else {
+        return "github";
+      }
+    });
     const value = computed({
       get() {
         return props.value;
@@ -60,17 +74,12 @@ export default defineComponent({
         emit("update:value", value_);
       },
     });
-    // watch(value, (newCode) => {
-    //     if (!editorRef.value) return;
-    //     let instance = editorRef.value.getAceInstance();
-    //     if(!instance || !instance.resize) return;
-    //     instance.resize();
-    // });
     return {
       className,
       dataContainer,
       value,
       editorRef,
+      theme,
     };
   },
 });
@@ -82,7 +91,7 @@ export default defineComponent({
     :class="className"
     v-model:value="value"
     :lang="dataContainer.options_1.lang"
-    :theme="dataContainer.options_1.theme || 'github_light_default'"
+    :theme="theme"
     :options="{
       ...dataContainer.options,
       ...dataContainer.options_1,
