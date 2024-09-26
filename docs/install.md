@@ -8,13 +8,7 @@
 npm i vue3-editable-form-builds
 ```
 
-然后在 main.js 里面引入样式文件就可以使用咯
-
-```js
-import "vue3-editable-form-builds/style.css";
-```
-
-到这里所有的准备工作就完成了，不用依赖别的组件库哦。
+安装一下就能直接使用了哦，不用引入 css 文件，也不用依赖别的组件库哦。
 
 `vue3-editable-form-builds` 导出的模块如下
 
