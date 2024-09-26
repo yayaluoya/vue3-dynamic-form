@@ -36,21 +36,19 @@ export class Test extends BaseForm {
     minNumber: 10,
   };
 
-  getRule(): IRule[] {
-    return [
-      ...super.getRule(),
-      {
-        type: "object",
-        message: "",
-        fields: {
-          number: {
-            type: "number",
-            min: this.props.minNumber,
-            message: "数字不能小于" + this.props.minNumber,
-          },
+  constructor() {
+    super();
+    this.addRule({
+      type: "object",
+      message: "",
+      fields: {
+        number: {
+          type: "number",
+          min: this.props.minNumber,
+          message: "数字不能小于" + this.props.minNumber,
         },
       },
-    ];
+    });
   }
 
   renderRaw({ formData }: IConRenderOp) {

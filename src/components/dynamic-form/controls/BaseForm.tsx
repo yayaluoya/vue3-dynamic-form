@@ -105,14 +105,6 @@ export class BaseForm extends BaseCon<"form"> {
     });
   }
 
-  /**
-   * 获取规则前的一个处理函数，适用于动态添加规则
-   * @returns
-   */
-  getRule(): IRule[] {
-    return this.rule;
-  }
-
   getFormItemProps(): FormItemProps {
     let hRule = (rule: IRule) => {
       let _: FormItemRule = {
@@ -176,7 +168,7 @@ export class BaseForm extends BaseCon<"form"> {
         ? this.requireMarkPlacement
         : undefined,
       size: this.selfProps.includes("size") ? this.size : undefined,
-      rule: this.getRule().map((_) => {
+      rule: this.rule.map((_) => {
         return hRule(_);
       }),
     };
@@ -461,30 +453,37 @@ export class BaseForm extends BaseCon<"form"> {
       d = false
     ) {
       return (
-        <>
-          <NGridItem span={3}>
-            <NSwitch
-              disabled={d}
-              value={typeof r[p] != "undefined"}
-              onUpdate:value={(v) => {
-                v ? (r[p] = df) : ((r as any)[p] = undefined);
-              }}
-            ></NSwitch>
-          </NGridItem>
-          <NGridItem span={21}>
-            <NAlert type="warning" title={title}>
-              <NFlex vertical>
-                {content
-                  .split(/\n/)
-                  .map((_) => _.trim())
-                  .filter(Boolean)
-                  .map((_) => (
-                    <NText>{_}</NText>
-                  ))}
-              </NFlex>
-            </NAlert>
-          </NGridItem>
-        </>
+        <NCard size="small">
+          {{
+            header: () => {
+              return (
+                <NFlex align="center">
+                  <NText>{title}</NText>
+                  <NSwitch
+                    disabled={d}
+                    value={typeof r[p] != "undefined"}
+                    onUpdate:value={(v) => {
+                      v ? (r[p] = df) : ((r as any)[p] = undefined);
+                    }}
+                  ></NSwitch>
+                </NFlex>
+              );
+            },
+            default: () => {
+              return (
+                <NFlex vertical>
+                  {content
+                    .split(/\n/)
+                    .map((_) => _.trim())
+                    .filter(Boolean)
+                    .map((_) => (
+                      <NText>{_}</NText>
+                    ))}
+                </NFlex>
+              );
+            },
+          }}
+        </NCard>
       );
     };
     return [
@@ -639,7 +638,6 @@ export class BaseForm extends BaseCon<"form"> {
                           <NGridItem span={10}>
                             <NButton
                               size="small"
-                              renderIcon={() => <AddCircle />}
                               onClick={() => {
                                 let d = dialog.success({
                                   showIcon: false,
@@ -648,7 +646,7 @@ export class BaseForm extends BaseCon<"form"> {
                                   content: () => {
                                     return (
                                       <NScrollbar style="height: 600px">
-                                        <NGrid yGap={5} xGap={5}>
+                                        <NFlex vertical>
                                           {[
                                             getPAdd(
                                               _,
@@ -755,7 +753,7 @@ export class BaseForm extends BaseCon<"form"> {
                                               `
                                             ),
                                           ]}
-                                        </NGrid>
+                                        </NFlex>
                                       </NScrollbar>
                                     );
                                   },
