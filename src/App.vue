@@ -9,7 +9,6 @@ export default defineComponent({
 </script>
 
 <template>
-  <header></header>
   <RouterView />
 </template>
 

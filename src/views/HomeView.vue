@@ -15,6 +15,7 @@ import {
   NRadioGroup,
   NRadioButton,
   NIcon,
+  NThemeEditor,
 } from "naive-ui";
 import { LogoGithub } from "@vicons/ionicons5";
 
@@ -31,6 +32,7 @@ export default defineComponent({
     NRadioButton,
     NIcon,
     LogoGithub,
+    NThemeEditor,
   },
   setup() {
     let cons = ref([]);
@@ -67,8 +69,8 @@ export default defineComponent({
           <NFlex align="center"
             ><h3>vue3-dynamic-form</h3>
             <NRadioGroup v-model:value="theme" size="small">
-              <NRadioButton label="深色" value="dark" />
-              <NRadioButton label="浅色" value="light" />
+              <NRadioButton label="深色主题" value="dark" />
+              <NRadioButton label="浅色主题" value="light" />
             </NRadioGroup>
           </NFlex>
           <NFlex align="center">
