@@ -49,7 +49,6 @@ export default defineComponent({
 
 <template>
   <div
-    class="dynamic-form-render"
     :style="`
     --primaryColor: ${themeVars.primaryColor};
     --primaryColorHover: ${themeVars.primaryColorHover};
@@ -59,6 +58,7 @@ export default defineComponent({
     --textColor1: ${themeVars.textColor1};
     --textColor2: ${themeVars.textColor2};
     --textColor3: ${themeVars.textColor3};
+    width: 100%;
     `"
   >
     <NForm
@@ -87,9 +87,3 @@ export default defineComponent({
     </NForm>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.dynamic-form-render {
-  width: 100%;
-}
-</style>

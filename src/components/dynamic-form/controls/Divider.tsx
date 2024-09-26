@@ -5,13 +5,16 @@ import {
   NSwitch,
   type DividerProps,
 } from "naive-ui";
-import type { IConRightRenderOp, IConRightRenderItemOp } from "./BaseCon";
-import { BaseForm } from "./BaseForm";
+import {
+  type IConRightRenderOp,
+  type IConRightRenderItemOp,
+  BaseCon,
+} from "./BaseCon";
 
 /**
  * 分隔线
  */
-export class Divider extends BaseForm {
+export class Divider extends BaseCon {
   /** 控件类型 */
   static ConType = "Divider";
   /** 控件名字 */

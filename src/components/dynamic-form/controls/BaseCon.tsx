@@ -1,7 +1,6 @@
 import { customAlphabet } from "nanoid";
 import { ObjectUtils } from "../tool/obj/ObjectUtils";
 import { type TFormConfig } from "../config/getFormConfig";
-import "../style/controls.scss";
 import type { JSX } from "vue/jsx-runtime";
 import {
   NCollapseItem,
@@ -19,6 +18,7 @@ import {
   Move,
   RemoveCircle,
 } from "@vicons/ionicons5";
+import { className } from "./style/__controls.cssr";
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 15);
@@ -180,9 +180,7 @@ export class BaseCon<RightRenderK extends string = string> {
     ) : (
       <div
         key={this.renderKey}
-        class={["controller", activateCon?.key == this.key ? "on" : ""].join(
-          " "
-        )}
+        class={[className, activateCon?.key == this.key ? "on" : ""].join(" ")}
         onClick={(e) => {
           e.stopPropagation();
           ctx.emit("activateConF", this);

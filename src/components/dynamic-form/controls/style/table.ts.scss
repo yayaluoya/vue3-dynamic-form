@@ -1,11 +1,11 @@
-.controls__.table {
-
-  >table {
+&.table {
+  > table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
 
-    tr {}
+    tr {
+    }
 
     td {
       height: 50px;
@@ -16,7 +16,7 @@
   }
 
   &.form-render {
-    >table {
+    > table {
       td {
         border: 1px solid var(--borderColor);
       }
@@ -24,14 +24,14 @@
   }
 }
 
-.controls__.cell {
+&.cell {
   height: 100%;
 
   &:not(.form-render).border {
     border: 1px dashed var(--borderColor);
   }
 
-  >.content {
+  > .content {
     height: 100%;
   }
 }

@@ -6,6 +6,7 @@ import Item from "./item.vue";
 import { BaseCon } from "../controls/BaseCon.jsx";
 import { ArrayUtils } from "../tool/ArrayUtils";
 import type { TFormConfig } from "../config/getFormConfig";
+import { className } from "./style/__draggable.cssr";
 
 export default defineComponent({
   components: { Draggable, Item },
@@ -55,14 +56,21 @@ export default defineComponent({
       ctx.emit("update:cons", [...props.cons]);
     }
 
-    return { draggableC, activateConChange, draggableChange, removeF, moveF };
+    return {
+      className,
+      draggableC,
+      activateConChange,
+      draggableChange,
+      removeF,
+      moveF,
+    };
   },
 });
 </script>
 
 <template>
   <Draggable
-    :class="draggableC.class"
+    :class="draggableC.class + ' ' + className"
     :group="draggableC.group"
     :modelValue="cons"
     @update:modelValue="draggableChange"
@@ -100,18 +108,3 @@ export default defineComponent({
     </template>
   </Draggable>
 </template>
-
-<style lang="scss" scoped>
-.dynamic-form-draggable {
-  padding: 5px;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  ::v-deep > .draggable-item {
-    > *:not(.draggable-show-item) {
-      display: none;
-    }
-  }
-}
-</style>

@@ -11,6 +11,7 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-github_light_default";
 // import 'ace-builds/src-noconflict/ext-language_tools';
 import { defineComponent, ref, reactive, toRef, computed } from "vue";
+import { className } from "./style/__code-edit-input.cssr";
 
 export default defineComponent({
   name: "CodeEditInput",
@@ -66,6 +67,7 @@ export default defineComponent({
     //     instance.resize();
     // });
     return {
+      className,
       dataContainer,
       value,
       editorRef,
@@ -77,7 +79,7 @@ export default defineComponent({
 <template>
   <VAceEditor
     ref="editorRef"
-    class="code-edit-input need-scrollbar"
+    :class="className"
     v-model:value="value"
     :lang="dataContainer.options_1.lang"
     :theme="dataContainer.options_1.theme || 'github_light_default'"
@@ -88,11 +90,3 @@ export default defineComponent({
     :readonly="dataContainer.readonly"
   />
 </template>
-
-<style lang="scss" scoped>
-.code-edit-input {
-  width: 100%;
-  border-radius: 4px;
-  overflow: hidden;
-}
-</style>

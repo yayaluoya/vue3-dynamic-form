@@ -5,7 +5,6 @@ import {
   type IConRightRenderItemOp,
 } from "./BaseCon";
 import DraggableCon from "../com/draggable.vue";
-import "../style/table.scss";
 import Item from "../com/item.vue";
 import { predefineColors } from "../config/predefineColors";
 import { NColorPicker, NDropdown, NFlex, NIcon, NInputNumber } from "naive-ui";
@@ -27,6 +26,8 @@ import {
   RemoveCircle,
 } from "@vicons/ionicons5";
 import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
+import { className } from "./style/__table.cssr";
+import { className as controlsClassName } from "./style/__controls.cssr";
 
 /**
  * 单元格
@@ -57,7 +58,9 @@ class Cell extends BaseCon {
     return (
       <div
         class={[
-          "controller controls__ cell",
+          className,
+          controlsClassName,
+          "cell",
           activateCon?.key == this.key ? "on" : "border",
           formData ? "form-render" : "",
         ].join(" ")}
@@ -666,7 +669,7 @@ export class Table extends BaseCon {
   renderRaw(op: IConRenderOp) {
     return (
       <div
-        class={["controls__ table", op.formData ? "form-render" : ""].join(" ")}
+        class={[className, "table", op.formData ? "form-render" : ""].join(" ")}
       >
         <table>
           <tbody>

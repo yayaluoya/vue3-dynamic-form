@@ -56,7 +56,7 @@ export default defineComponent({
       const activateCon = props.activateCon;
       const formConfig = props.formConfig;
       return (
-        <div class="right">
+        <div class="right" style="width: 100%">
           <NTabs
             v-model:value={tabsActiveName.value}
             type="line"
@@ -163,9 +163,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped lang="scss">
-.right {
-  width: 100%;
-}
-</style>

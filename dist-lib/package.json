@@ -7,6 +7,11 @@
   "scripts": {
     "npm-publish": "npm publish"
   },
+  "dependencies": {
+    "@css-render/plugin-bem": "^0.15.14",
+    "@css-render/vue3-ssr": "^0.15.14",
+    "css-render": "^0.15.14"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/yayaluoya/vue3-dynamic-form.git"

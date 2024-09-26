@@ -1,4 +1,4 @@
-.controls__.grid {
+&.grid {
   &:not(.form-render) {
     padding: 5px;
   }
@@ -8,7 +8,7 @@
   }
 }
 
-.controls__.grid-col {
+&.col {
   &:not(.form-render).border {
     border: 1px dashed var(--borderColor);
   }

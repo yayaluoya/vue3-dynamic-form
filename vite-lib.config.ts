@@ -15,12 +15,7 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ["vue"],
-      output: {
-        globals: {
-          vue: "Vue",
-        },
-      },
+      external: ["vue", "@css-render/vue3-ssr", "css-render"],
     },
   },
 });

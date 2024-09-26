@@ -14,6 +14,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
+    "打包scss-cssr.ts": "node ./.node/scss-handle.js",
     "打包代码片段": "codess b",
     "上传代码包到服务器": "sfs -s  -c ./sfs-v1.config.cjs"
   },
@@ -29,6 +30,7 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@css-render/vue3-ssr": "^0.15.14",
     "@tsconfig/node20": "^20.1.4",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.14.5",
@@ -37,6 +39,8 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
     "codess": "^1.1.5",
+    "css-render": "^0.15.14",
+    "glob": "^11.0.0",
     "jsdom": "^24.1.0",
     "naive-ui": "^2.39.0",
     "npm-run-all2": "^6.2.0",

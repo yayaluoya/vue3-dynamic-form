@@ -1,4 +1,4 @@
-.controller {
+& {
   position: relative;
   border: 2px solid transparent;
 
@@ -6,64 +6,63 @@
     border: 2px solid var(--primaryColorHover);
   }
 
-  >.drag-handler,
-  >.con-name,
-  >.handler-button {
+  > .drag-handler,
+  > .con-name,
+  > .handler-button {
     position: absolute;
     z-index: 2;
     padding: 3px;
   }
 
-  >.drag-handler {
+  > .drag-handler {
     top: 0;
     left: 0;
     color: var(--baseColor);
     background: var(--primaryColorHover);
-    opacity: .6;
+    opacity: 0.6;
     cursor: move;
 
     &:hover {
       opacity: 1;
     }
 
-    >span {
+    > span {
       font-size: 12px;
       font-style: normal;
-
     }
   }
 
-  >.con-name {
+  > .con-name {
     top: 0;
     left: 0;
     color: var(--baseColor);
     background: var(--primaryColorHover);
-    opacity: .7;
+    opacity: 0.7;
 
-    >span {
+    > span {
       font-size: 12px;
       font-style: normal;
     }
   }
 
-  >.handler-button {
+  > .handler-button {
     bottom: 0;
     right: 0;
     cursor: pointer;
     color: var(--baseColor);
     background: var(--primaryColorHover);
-    opacity: .6;
+    opacity: 0.6;
 
     &:hover {
       opacity: 1;
     }
 
-    >div {
+    > div {
       display: inline-flex;
     }
   }
 
-  >.content {
+  > .content {
     position: relative;
     z-index: 1;
   }

@@ -1,5 +1,4 @@
 import DraggableCon from "../com/draggable.vue";
-import "../style/grid.scss";
 import Item from "../com/item.vue";
 import {
   BaseCon,
@@ -22,6 +21,8 @@ import {
   EyeOff,
   RemoveCircle,
 } from "@vicons/ionicons5";
+import { className } from "./style/__grid.cssr";
+import { className as controlsClassName } from "./style/__controls.cssr";
 
 /**
  * 栅格列
@@ -61,8 +62,8 @@ class GridCol extends BaseCon {
     return (
       <NGridItem
         class={[
-          formData ? "" : "controller",
-          "controls__ grid-col",
+          formData ? "" : controlsClassName,
+          className + " col",
           activateCon?.key == this.key ? "on" : "border",
           formData ? "form-render" : "",
         ].join(" ")}
@@ -250,7 +251,7 @@ export class Grid extends BaseCon {
     return (
       <NGrid
         class={[
-          "controls__ grid",
+          className + " grid",
           op.activateCon?.key == this.key ? "" : "border",
           op.formData ? "form-render" : "",
         ].join(" ")}
