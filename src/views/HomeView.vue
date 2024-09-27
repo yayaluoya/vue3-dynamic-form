@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import DynamicForm from "@/components/dynamic-form/index.vue";
 import { getFormConfig } from "@/components/dynamic-form/config/getFormConfig";
 import { Test } from "@/components/dynamic-form/controls";
@@ -19,13 +19,6 @@ import {
 } from "naive-ui";
 import { LogoGithub } from "@vicons/ionicons5";
 
-const templates: string[] = [];
-
-let m = import.meta.glob("./templates/*.json", { eager: true });
-for (let k in m) {
-  templates.push(JSON.stringify(((await m[k]) as any).default));
-}
-
 export default defineComponent({
   components: {
     DynamicForm,
@@ -42,10 +35,19 @@ export default defineComponent({
     NThemeEditor,
   },
   setup() {
+    const templates = ref<string[]>([]);
     let cons = ref([]);
     let extendCons = ref([Test]);
     let formConfig = ref(getFormConfig());
     let theme = ref<"light" | "dark">("light");
+
+    onMounted(async () => {
+      let m = import.meta.glob("./templates/*.json", { eager: true });
+      for (let k in m) {
+        templates.value.push(JSON.stringify(((await m[k]) as any).default));
+      }
+    });
+
     return {
       cons,
       formConfig,

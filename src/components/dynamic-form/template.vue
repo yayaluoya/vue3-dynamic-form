@@ -44,8 +44,9 @@ export default defineComponent({
         style: `width: 1000px;`,
         title: "导入模板",
         content: () => {
+          const Render_ = Render as any;
           return (
-            <Render
+            <Render_
               style="pointer-events: none"
               cons={props.cons}
               form-config={props.formConfig}
