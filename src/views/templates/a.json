@@ -1,0 +1,160 @@
+{
+  "formConfig": {
+    "inline": false,
+    "labelWidth": "120px",
+    "labelAlign": "left",
+    "labelPlacement": "top",
+    "showFeedback": true,
+    "showLabel": true,
+    "showRequireMark": true,
+    "requireMarkPlacement": "right",
+    "size": "medium"
+  },
+  "cons": [
+    {
+      "conType": "Input",
+      "key": "ef4z031f88bpzkp",
+      "childs": [],
+      "hide": false,
+      "label": "1.姓名",
+      "path": "input-ef4z031",
+      "labelAlign": "right",
+      "labelPlacement": "left",
+      "labelStyle": "",
+      "labelWidth": "auto",
+      "showFeedback": true,
+      "showLabel": true,
+      "showRequireMark": true,
+      "requireMarkPlacement": "right",
+      "size": "medium",
+      "rule": [
+        {
+          "type": "string",
+          "message": "姓名是必填的",
+          "required": true,
+          "key": "xlz1wvyk5riw9im"
+        }
+      ],
+      "selfProps": [],
+      "formDefaultValue": "",
+      "props": {
+        "type": "text",
+        "placeholder": "",
+        "clearable": false,
+        "maxlength": 0,
+        "rows": 3,
+        "showCount": false
+      }
+    },
+    {
+      "conType": "Input",
+      "key": "f2teq7l3cdsvh67",
+      "childs": [],
+      "hide": false,
+      "label": "2.年龄",
+      "path": "input-f2teq7l",
+      "labelAlign": "right",
+      "labelPlacement": "left",
+      "labelStyle": "",
+      "labelWidth": "auto",
+      "showFeedback": true,
+      "showLabel": true,
+      "showRequireMark": true,
+      "requireMarkPlacement": "right",
+      "size": "medium",
+      "rule": [
+        {
+          "type": "string",
+          "message": "年龄是必填的",
+          "required": true,
+          "key": "6sv6aw8aybtt7mq"
+        }
+      ],
+      "selfProps": [],
+      "formDefaultValue": "",
+      "props": {
+        "type": "text",
+        "placeholder": "",
+        "clearable": false,
+        "maxlength": 0,
+        "rows": 3,
+        "showCount": false
+      }
+    },
+    {
+      "conType": "Input",
+      "key": "gw0v2vvgkl0h0at",
+      "childs": [],
+      "hide": false,
+      "label": "3.住址",
+      "path": "input-gw0v2vv",
+      "labelAlign": "right",
+      "labelPlacement": "left",
+      "labelStyle": "",
+      "labelWidth": "auto",
+      "showFeedback": true,
+      "showLabel": true,
+      "showRequireMark": true,
+      "requireMarkPlacement": "right",
+      "size": "medium",
+      "rule": [
+        {
+          "type": "string",
+          "message": "住址是必填的",
+          "required": true,
+          "key": "ira48yh9bvcy2gu"
+        }
+      ],
+      "selfProps": [],
+      "formDefaultValue": "",
+      "props": {
+        "type": "text",
+        "placeholder": "",
+        "clearable": false,
+        "maxlength": 0,
+        "rows": 3,
+        "showCount": false
+      }
+    },
+    {
+      "conType": "Input",
+      "key": "qtizz2fd89rjmci",
+      "childs": [],
+      "hide": false,
+      "label": "4.邮箱",
+      "path": "input-qtizz2f",
+      "labelAlign": "right",
+      "labelPlacement": "left",
+      "labelStyle": "",
+      "labelWidth": "auto",
+      "showFeedback": true,
+      "showLabel": true,
+      "showRequireMark": true,
+      "requireMarkPlacement": "right",
+      "size": "medium",
+      "rule": [
+        {
+          "type": "string",
+          "message": "邮箱是必填的",
+          "required": true,
+          "key": "iw5rm068wk3214y"
+        },
+        {
+          "key": "3mktta4cep3eyf5",
+          "type": "email",
+          "message": "请输入正确格式的邮箱"
+        }
+      ],
+      "selfProps": [],
+      "formDefaultValue": "",
+      "props": {
+        "type": "text",
+        "placeholder": "",
+        "clearable": false,
+        "maxlength": 0,
+        "rows": 3,
+        "showCount": false
+      }
+    }
+  ]
+}

@@ -46,6 +46,7 @@ export class Input extends BaseForm {
     this.addRule({
       type: "string",
       message: "",
+      required: false,
     });
   }
 

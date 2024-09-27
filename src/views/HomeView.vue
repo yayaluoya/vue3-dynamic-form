@@ -19,6 +19,13 @@ import {
 } from "naive-ui";
 import { LogoGithub } from "@vicons/ionicons5";
 
+const templates: string[] = [];
+
+let m = import.meta.glob("./templates/*.json", { eager: true });
+for (let k in m) {
+  templates.push(JSON.stringify(((await m[k]) as any).default));
+}
+
 export default defineComponent({
   components: {
     DynamicForm,
@@ -46,6 +53,7 @@ export default defineComponent({
       theme,
       lightTheme,
       darkTheme,
+      templates,
     };
   },
 });
@@ -102,6 +110,7 @@ export default defineComponent({
             cons = v;
           }
         "
+        :templates="templates"
       />
     </div>
   </NConfigProvider>

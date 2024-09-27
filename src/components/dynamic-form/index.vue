@@ -8,6 +8,7 @@ import {
   toRef,
   nextTick,
   type PropType,
+  computed,
 } from "vue";
 import draggableC from "./config/draggableC";
 import Right from "./right/index.vue";
@@ -68,6 +69,7 @@ import {
   NText,
 } from "naive-ui";
 import IndexDialog, { type IJSONH, type IRenderOp } from "./indexDialog";
+import Template from "./template.vue";
 import { className } from "./style/__editor.cssr";
 
 export default defineComponent({
@@ -97,6 +99,7 @@ export default defineComponent({
     NDialogProvider: NDialogProvider as any,
     NMessageProvider: NMessageProvider as any,
     NText,
+    Template,
   },
   props: {
     cons: {
@@ -111,6 +114,10 @@ export default defineComponent({
     formConfig: {
       type: Object as PropType<TFormConfig>,
       required: true,
+    },
+    templates: {
+      type: Array as PropType<string[]>,
+      default: () => [],
     },
   },
   emits: ["update:cons"],
@@ -159,6 +166,29 @@ export default defineComponent({
       },
     ]);
     const ConsCollapseActiveNames = ref(Cons.map((_) => _.label));
+
+    const templatesComputed = computed(() => {
+      return props.templates
+        .map((_) => {
+          try {
+            let {
+              cons: consConfig,
+              formConfig,
+            }: { cons: any[]; formConfig: TFormConfig } = JSON.parse(_);
+            let cons = ConT.toCons(consConfig);
+            return {
+              config: _,
+              cons,
+              formConfig: formConfig,
+              formData: ConT.getFromData(cons),
+            };
+          } catch (e) {
+            console.error("解析templates错误", e);
+            return;
+          }
+        })
+        .filter(Boolean);
+    });
 
     /** 当前激活的控件 */
     const activateCon = ref<BaseCon>();
@@ -228,6 +258,18 @@ export default defineComponent({
       DialogI.value?.importExport(JSONH);
     }
 
+    function useTemplate(jsonText: string) {
+      let { formConfig, cons } = JSON.parse(jsonText) as {
+        formConfig: TFormConfig;
+        cons: BaseCon[];
+      };
+      updateCons(ConT.toCons(cons, props.extendCons));
+      for (let i in formConfig) {
+        (props.formConfig as any)[i] = (formConfig as any)[i];
+      }
+      activateCon.value = undefined;
+    }
+
     function getContentHeight() {
       rootHeight.value = rootElRef.value!.getBoundingClientRect().height;
     }
@@ -259,6 +301,8 @@ export default defineComponent({
       preview,
       renderOp,
       DialogI,
+      templatesComputed,
+      useTemplate,
     };
   },
 });
@@ -352,9 +396,17 @@ export default defineComponent({
               </NScrollbar>
             </NTabPane>
             <NTabPane tab="表单模板" name="template">
-              <NScrollbar
-                style="height: calc(var(--height) - 60px)"
-              ></NScrollbar>
+              <NScrollbar style="height: calc(var(--height) - 60px)">
+                <Template
+                  v-for="(item, index) in templatesComputed"
+                  :key="index"
+                  :config="item!.config"
+                  :cons="item!.cons"
+                  :formConfig="item!.formConfig"
+                  :formData="item!.formData"
+                  :useTemplate="useTemplate"
+                ></Template>
+              </NScrollbar>
             </NTabPane>
           </NTabs>
         </div>
