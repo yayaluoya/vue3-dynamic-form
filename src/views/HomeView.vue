@@ -18,6 +18,7 @@ import {
   NThemeEditor,
 } from "naive-ui";
 import { LogoGithub } from "@vicons/ionicons5";
+import { useThemeStore } from "@/stores/theme";
 
 export default defineComponent({
   components: {
@@ -35,11 +36,11 @@ export default defineComponent({
     NThemeEditor,
   },
   setup() {
-    const templates = ref<string[]>([]);
+    let themeStore = useThemeStore();
+    let templates = ref<string[]>([]);
     let cons = ref([]);
     let extendCons = ref([Test]);
     let formConfig = ref(getFormConfig());
-    let theme = ref<"light" | "dark">("light");
 
     onMounted(async () => {
       let m = import.meta.glob("./templates/*.json", { eager: true });
@@ -52,7 +53,7 @@ export default defineComponent({
       cons,
       formConfig,
       extendCons,
-      theme,
+      themeStore,
       lightTheme,
       darkTheme,
       templates,
@@ -67,7 +68,7 @@ export default defineComponent({
       {
         light: lightTheme,
         dark: darkTheme,
-      }[theme]
+      }[themeStore.theme]
     "
   >
     <div class="home">
@@ -78,7 +79,15 @@ export default defineComponent({
         <NFlex justify="space-between" align="center">
           <NFlex align="center"
             ><h3>vue3-dynamic-form</h3>
-            <NRadioGroup v-model:value="theme" size="small">
+            <NRadioGroup
+              :value="themeStore.theme"
+              @update:value="
+                (v) => {
+                  themeStore.setTheme(v);
+                }
+              "
+              size="small"
+            >
               <NRadioButton label="深色主题" value="dark" />
               <NRadioButton label="浅色主题" value="light" />
             </NRadioGroup>
