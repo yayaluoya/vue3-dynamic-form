@@ -11,15 +11,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: master
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
+
       - name: test ssh
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -30,12 +28,30 @@ jobs:
           script: |
             whoami
             echo "ssh正常连接"
-      - name: Install npm dependencies
-        run: npm i
+            
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 使用 Node.js ${{ matrix.node-version }} 版本
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: 安装依赖
+        run: pnpm install
+
       - name: Run build web task
-        run: npm run build --if-present
+        run: pnpm run build
+
       - name: Run build doc task
-        run: npm run docs:build --if-present
+        run: pnpm run docs:build
+        
       - name: Deploy web to Server
         uses: easingthemes/ssh-deploy@main
         with:
@@ -46,6 +62,7 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ vars.REMOTE_WEB_DIR }}
           EXCLUDE: ''
+          
       - name: Deploy doc to Server
         uses: easingthemes/ssh-deploy@main
         with:

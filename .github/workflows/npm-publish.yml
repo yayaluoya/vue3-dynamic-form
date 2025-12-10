@@ -15,20 +15,32 @@ permissions:
 jobs:
   build-and-publish-npm:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+
     steps:
       - uses: actions/checkout@v3
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
         with:
-          ref: master
-      - uses: actions/setup-node@v4
+          version: 9
+
+      - name: 使用 Node.js ${{ matrix.node-version }} 版本
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org/
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
 
       - name: Update npm
         run: npm install -g npm@latest
 
-      - run: npm i
-      - run: npm run lib-build
+      - name: 安装依赖
+        run: pnpm install
+
+      - run: pnpm run lib-build
+      
       - run: |
           cd dist-lib
           npm run publish
