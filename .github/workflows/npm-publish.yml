@@ -5,9 +5,13 @@ name: Publish Package to npmjs
 
 on:
   push:
-    tags:
-      - "release/lib-*"
+    branches:
+      - master
 
+# 权限配置
+permissions:
+  id-token: write # Required for OIDC
+  contents: write # 允许仓库内容修改，用于创建 标签和版本
 jobs:
   build-and-publish-npm:
     runs-on: ubuntu-latest
@@ -19,8 +23,29 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - run: npm i
       - run: npm run lib-build
-      - run: npm run publish
+      - run: |
+          cd dist-lib
+          npm run publish
+      
+      - name: Read version from package.json
+        id: read_version
+        run: |
+          VERSION=$(jq -r .version dist-lib/package.json)
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.read_version.outputs.VERSION  }}
+          release_name: Release v${{ steps.read_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
